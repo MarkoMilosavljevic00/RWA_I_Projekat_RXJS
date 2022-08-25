@@ -1,0 +1,32 @@
+{
+  "name": "rxjs-project",
+  "version": "1.0.0",
+  "description": "RxJS projekat iz predmeta Razvoj Web Aplikacija",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.config.js",
+    "watch": "webpack --watch --config webpack.config.js",
+    "api": "json-server --watch ./db/db.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MarkoMilosavljevic00/RxJS-Project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MarkoMilosavljevic00/RxJS-Project/issues"
+  },
+  "homepage": "https://github.com/MarkoMilosavljevic00/RxJS-Project#readme",
+  "devDependencies": {
+    "ts-loader": "^9.3.1",
+    "typescript": "^4.7.4",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0"
+  },
+  "dependencies": {
+    "json-server": "^0.17.0",
+    "rxjs": "^7.5.6"
+  }
+}
