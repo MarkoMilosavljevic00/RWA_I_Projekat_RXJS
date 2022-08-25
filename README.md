@@ -1,2 +1,2 @@
-# RxJS-Project-FightingFantasy
+# RxJS-Project
 RxJS projekat iz predmeta Razvoj Web Aplikacija
