@@ -1,6 +1,6 @@
 export enum WeightClass{
-    Lightweight,
-    Welterweight,
-    MiddleWeight,
-    LightHeavyWeight
+    Lightweight = "Lightweight",
+    Welterweight = "Welterweight",
+    Middleweight = "Middleweight",
+    Lightheavyweight = "Lightheavyweight"
 }

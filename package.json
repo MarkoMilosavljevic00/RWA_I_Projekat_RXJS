@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MarkoMilosavljevic00/RxJS-Project.git"
+    "url": "git+https://github.com/MarkoMilosavljevic00/rwa-rxjs-project.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/MarkoMilosavljevic00/RxJS-Project/issues"
+    "url": "https://github.com/MarkoMilosavljevic00/rwa-rxjs-project/issues"
   },
-  "homepage": "https://github.com/MarkoMilosavljevic00/RxJS-Project#readme",
+  "homepage": "https://github.com/MarkoMilosavljevic00/rwa-rxjs-project#readme",
   "devDependencies": {
     "ts-loader": "^9.3.1",
     "typescript": "^4.7.4",
