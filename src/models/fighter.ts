@@ -1,4 +1,4 @@
-import { WeightClass } from "../enums/WeightClassesEnum";
+import { WeightClass } from "../enums/WeightClassEnum";
 
 export class Fighter{
     id: number;

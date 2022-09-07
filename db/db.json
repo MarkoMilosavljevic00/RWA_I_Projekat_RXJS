@@ -3,52 +3,52 @@
     {
       "id": 1,
       "name": "Marko",
-      "difficult": "Easy"
+      "difficulty": "Easy"
     },
     {
       "id": 2,
       "name": "Milan",
-      "difficult": "Medium"
+      "difficulty": "Medium"
     },
     {
       "id": 3,
       "name": "Aleksa",
-      "difficult": "Hard"
+      "difficulty": "Hard"
     },
     {
       "id": 4,
       "name": "Stevan",
-      "difficult": "Medium"
+      "difficulty": "Medium"
     },
     {
       "id": 5,
       "name": "Stojan",
-      "difficult": "Easy"
+      "difficulty": "Easy"
     },
     {
       "id": 6,
       "name": "Milovan",
-      "difficult": "Medium"
+      "difficulty": "Medium"
     },
     {
       "id": 7,
       "name": "Nenad",
-      "difficult": "Hard"
+      "difficulty": "Hard"
     },
     {
       "id": 8,
       "name": "Senad",
-      "difficult": "Easy"
+      "difficulty": "Easy"
     },
     {
       "id": 9,
       "name": "Ivan",
-      "difficult": "Medium"
+      "difficulty": "Medium"
     },
     {
       "id": 10,
       "name": "Nikola",
-      "difficult": "Hard"
+      "difficulty": "Hard"
     }
   ]
 }
