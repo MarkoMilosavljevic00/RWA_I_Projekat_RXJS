@@ -1,16 +1,16 @@
-import { createFindingOpponentObs, startNewGame } from "./observables";
-import { newGameSub } from "./subscriptions";
-import { createFindingOpponentElements, drawDivs } from "./view";
+import { createFindingOpponentObs, startGame } from "./observables";
+import { startGameSub } from "./subscriptions";
+import { createFindingOpponentElements } from "./view/creatingElements";
+import { renderDivs, renderElements } from "./view/rendering";
+import { initFindingOpponentDiv } from "./view/view";
 
-const topDiv: HTMLDivElement = document.createElement("div");
 
 function init() {
-  const findingOpponentDiv: HTMLDivElement = document.createElement("div");
-  createFindingOpponentElements(findingOpponentDiv);
-  drawDivs(document.body, findingOpponentDiv);
+  let findingOpponentDiv = initFindingOpponentDiv();
+  renderDivs(document.body, findingOpponentDiv);
 
-  var findingOpponent$ = createFindingOpponentObs(findingOpponentDiv);
-  newGameSub(document.body, findingOpponentDiv, findingOpponent$);
+  let findingOpponent$ = createFindingOpponentObs(findingOpponentDiv);
+  startGameSub(document.body, findingOpponentDiv, findingOpponent$);
 }
 
 init();

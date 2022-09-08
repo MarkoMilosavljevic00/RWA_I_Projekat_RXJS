@@ -1,13 +1,17 @@
 import { Observable } from "rxjs";
 import { Fighter } from "./fighter";
+import { Result } from "./result";
 
-export class Fight{
-    fighters: Fighter[];
-    fighter$: Observable<Fighter[]>;
+export class FightPick{
+    blueCorner: Fighter;
+    redCorner: Fighter;
 
-    constructor(fighters: Fighter[]){
-        this.fighters = fighters;
-    }
+    yourPick: Result;
+    opponentPick: Result;
+
+    result: Result;
+
+    //fighter$: Observable<Fighter[]>;
 
     getFavourite(fighters: Fighter[]){
         if(fighters[0].rating() > fighters[1].rating())
@@ -22,4 +26,7 @@ export class Fight{
         else 
             return 1
     }
+
+
+    
 }

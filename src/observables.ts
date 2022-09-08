@@ -1,8 +1,10 @@
 import { from, fromEvent, map, Observable, switchMap } from "rxjs";
-import { API_URL, INITIAL_SCORE, NUMBER_OF_OPPONENTS } from "./constants";
+import { API_URL} from "./constants";
 import { DifficultyLevel } from "./enums/DifficultyLevelEnum";
 import { Opponent } from "./models/opponent";
-import { createTopDivElements, drawDivs, replaceContainer, setResult } from "./view";
+import { createTopElements } from "./view/creatingElements";
+import { renderDivs, replaceContainer, setResult } from "./view/rendering";
+import { initGameDiv, initTopDiv } from "./view/view";
 
 export function createFindingOpponentObs(
   findingOpponentDiv: HTMLDivElement
@@ -19,9 +21,7 @@ export function createFindingOpponentObs(
   );
 }
 
-export function createRestartScoreObs() {
-
-}
+export function createRestartScoreObs() {}
 
 function getOpponents(difficulty: DifficultyLevel): Observable<Opponent[]> {
   return from(
@@ -41,24 +41,16 @@ function selectDifficulty(findingOpponentDiv: HTMLDivElement): DifficultyLevel {
   return DifficultyLevel[difficultyString as keyof typeof DifficultyLevel];
 }
 
-export function startNewGame(
+export function startGame(
   host: HTMLElement,
   findingOpponentDiv: HTMLDivElement,
   opponent: Opponent,
   findingOpponent$: Observable<Opponent>
 ) {
-  var mainDiv: HTMLDivElement = document.createElement("div");
-  var topDiv: HTMLDivElement = document.createElement("div");
-  var gameDiv: HTMLDivElement = document.createElement("div");
+  let container: HTMLDivElement = document.createElement("div");
 
-  replaceContainer(host, mainDiv, findingOpponentDiv);
-
-  createTopDivElements(topDiv, findingOpponentDiv, opponent);
-  //console.log(topDiv)
-  setResult(INITIAL_SCORE, topDiv);
-  // createGameDivElements(gameDiv);
-  drawDivs(mainDiv, topDiv, gameDiv);
-
-  //createRestartScoreObs(topDiv, gameDiv);
+  replaceContainer(host, container, findingOpponentDiv);
+  let topDiv = initTopDiv(findingOpponentDiv, opponent);
+  let gameDiv = initGameDiv();
+  renderDivs(container, topDiv, gameDiv);
 }
-

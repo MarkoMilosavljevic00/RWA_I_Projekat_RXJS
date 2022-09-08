@@ -1,13 +1,13 @@
 import { Observable } from "rxjs";
 import { Opponent } from "./models/opponent";
-import { startNewGame } from "./observables";
+import { startGame } from "./observables";
 
-export function newGameSub(
+export function startGameSub(
   host: HTMLElement,
   findingOpponentDiv: HTMLDivElement,
   findingOpponent$: Observable<Opponent>
 ) {
   findingOpponent$.subscribe((opponent) =>
-    startNewGame(host, findingOpponentDiv, opponent, findingOpponent$)
+    startGame(host, findingOpponentDiv, opponent, findingOpponent$)
   );
 }

@@ -7,12 +7,76 @@ html {
   align-self: center;
 }
 
+.initialDiv{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .container{
   display: flex;
   flex-direction: column;
 }
 
-.topDiv{
+.topDiv {
   display: flex;
   flex-direction: row;
+  justify-content: center;
 }
+
+.initialDiv{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-style: solid;
+}
+
+.yourPointsDiv{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-style: solid;
+}
+
+.opponentPointsDiv{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-style: solid;
+}
+
+.opponentStatsDiv{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-style: solid;
+}
+
+.gameDiv{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.resultDiv{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-style: solid;
+}
+
+.yourPicksDiv{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-style: solid;
+}
+
+.opponentPicksDiv{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-style: solid;
+}
+
