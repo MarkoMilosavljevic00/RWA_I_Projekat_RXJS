@@ -1,7 +1,6 @@
 import { CLASSES_OF_ELEMENTS, INDEXES, INITIAL } from "../constants";
 import { DifficultyLevel } from "../enums/DifficultyLevelEnum";
-import { Opponent } from "../models/opponent";
-import { renderDivs, renderElements, setResult } from "./rendering";
+import { Opponent } from "../model/opponent";
 
 export function createFindingOpponentElements() :HTMLElement[] {
   let findingOpponentLabel = document.createElement("label");
@@ -37,7 +36,6 @@ export function createTopElements(
   let pointsDivs = createPointsElements();
   let yourPointsDiv = pointsDivs[INDEXES.FIRST_SCORE];
   let opponentPointsDiv = pointsDivs[INDEXES.SECOND_SCORE];
-  setResult(INITIAL.SCORE, yourPointsDiv, opponentPointsDiv);
   
   createRestartButton(findingOpponentDiv);
   
@@ -64,12 +62,12 @@ function createOpponentStatsDiv(opponent: Opponent) {
 
   let opponentNameLabel = document.createElement("label");
   opponentNameLabel.className = CLASSES_OF_ELEMENTS.OPP_NAME_LABEL;
-  opponentNameLabel.innerHTML = `Name: ${opponent.name}`;
+  //opponentNameLabel.innerHTML = `Name: ${opponent.name}`;
   opponentStatsDiv.appendChild(opponentNameLabel);
 
   let opponentDifficultyLabel = document.createElement("label");
-  opponentDifficultyLabel.className = CLASSES_OF_ELEMENTS.OPP_DIFFICULTY_LABEL;
-  opponentDifficultyLabel.innerHTML = `Difficulty level: ${opponent.difficulty}`;
+  opponentDifficultyLabel.className = CLASSES_OF_ELEMENTS.OPP_DIFF_LABEL;
+  //opponentDifficultyLabel.innerHTML = `Difficulty level: ${opponent.difficulty}`;
   opponentStatsDiv.appendChild(opponentDifficultyLabel);
 
   return opponentStatsDiv;
@@ -131,6 +129,6 @@ export function createResultsElements() {
   resultLabel.innerHTML = "Results: ";
 
   let resultFightCardDiv: HTMLDivElement = document.createElement("div");
-  resultFightCardDiv.className = CLASSES_OF_ELEMENTS.RESULTS_FIGHTCARD_DIV;
+  resultFightCardDiv.className = CLASSES_OF_ELEMENTS.RESULT_FIGHTCARD_DIV;
   return [resultLabel, resultFightCardDiv];
 }

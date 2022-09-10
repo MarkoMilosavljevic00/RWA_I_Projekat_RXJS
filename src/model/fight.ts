@@ -2,7 +2,7 @@ import { Observable } from "rxjs";
 import { Fighter } from "./fighter";
 import { Result } from "./result";
 
-export class FightPick{
+export class Fight{
     blueCorner: Fighter;
     redCorner: Fighter;
 

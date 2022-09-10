@@ -15,13 +15,17 @@ export function replaceContainer(
 ) {
   host.removeChild(oldContainer);
   host.appendChild(newContainer);
-  newContainer.className = CLASSES_OF_ELEMENTS.CONTAINER;
+  // newContainer.className = CLASSES_OF_ELEMENTS.CONTAINER;
 }
 
-export function setResult(score: number, yourPointsDiv: HTMLDivElement, opponentPointsDiv: HTMLDivElement) {
-  let yourPoints = yourPointsDiv.querySelector(`.${CLASSES_OF_ELEMENTS.YOUR_POINTS}`);
-  let opponentPoints = opponentPointsDiv.querySelector(`.${CLASSES_OF_ELEMENTS.OPP_POINTS}`);
+export function setLabel(
+  label: HTMLElement,
+  newText: string
+) {
+  label.innerHTML = newText;
+}
 
-  yourPoints.innerHTML = score.toString();
-  opponentPoints.innerHTML = score.toString();
+export function selectElement(placeHolder: HTMLElement, selection: string){
+  let element: HTMLElement = placeHolder.querySelector(`.${selection}`);
+  return element;
 }

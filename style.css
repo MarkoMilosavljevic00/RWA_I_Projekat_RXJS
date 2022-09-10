@@ -7,14 +7,14 @@ html {
   align-self: center;
 }
 
-.initialDiv{
+.initialDiv {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-.container{
+.container {
   display: flex;
   flex-direction: column;
 }
@@ -25,58 +25,57 @@ html {
   justify-content: center;
 }
 
-.initialDiv{
+.initialDiv {
   display: flex;
   flex-direction: column;
   align-items: center;
   border-style: solid;
 }
 
-.yourPointsDiv{
+.yourPointsDiv {
   display: flex;
   flex-direction: column;
   align-items: center;
   border-style: solid;
 }
 
-.opponentPointsDiv{
+.opponentPointsDiv {
   display: flex;
   flex-direction: column;
   align-items: center;
   border-style: solid;
 }
 
-.opponentStatsDiv{
+.opponentStatsDiv {
   display: flex;
   flex-direction: column;
   align-items: center;
   border-style: solid;
 }
 
-.gameDiv{
+.gameDiv {
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
 
-.resultDiv{
+.resultDiv {
   display: flex;
   flex-direction: column;
   align-items: center;
   border-style: solid;
 }
 
-.yourPicksDiv{
+.yourPicksDiv {
   display: flex;
   flex-direction: column;
   align-items: center;
   border-style: solid;
 }
 
-.opponentPicksDiv{
+.opponentPicksDiv {
   display: flex;
   flex-direction: column;
   align-items: center;
   border-style: solid;
 }
-
