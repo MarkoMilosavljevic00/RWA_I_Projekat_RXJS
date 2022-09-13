@@ -1,7 +1,17 @@
 import { Observable, Subject, Subscription } from "rxjs";
+import { CLASSES_OF_ELEMENTS } from "../constants";
 import { Fight } from "../model/fight";
+import { FightCard } from "../model/fightCard";
+import { Fighter } from "../model/fighter";
 import { Opponent } from "../model/opponent";
-import { restartGame, startGame } from "./gameLogic";
+import {
+  clearChilds,
+  fillSelect,
+  findNewOpponent,
+  restartGame,
+  selectSelectionEl,
+  startGame,
+} from "./gameLogic";
 
 export function startGameSub(
   host: HTMLElement,
@@ -10,32 +20,72 @@ export function startGameSub(
   controlStartGameOb$: Subject<any>
 ) {
   return findingOpponent$.subscribe((opponent) => {
-    startGame(host, findingOpponentDiv, opponent, findingOpponent$, controlStartGameOb$);
+    startGame(
+      host,
+      findingOpponentDiv,
+      opponent,
+      findingOpponent$,
+      controlStartGameOb$
+    );
   });
 }
 
-export function unsubscribeStartGameSub(controlStartGameOb$: Subject<any>) {
-  controlStartGameOb$.next(1);
-  controlStartGameOb$.complete();
+export function gameSub(ob$: Observable<[Event, number[]]>) {
+  return ob$.subscribe((data2) => {
+    console.log(data2);
+  });
 }
 
 export function findNewOpponentSub(
   container: HTMLElement,
-  fightCard: Fight[],
+  fightCard: FightCard,
   findingOpponent$: Observable<Opponent>
 ) {
-  return findingOpponent$.subscribe((opponent) => {
-    restartGame(container, fightCard, opponent);
+  return findingOpponent$.subscribe((newOpponent) => {
+    findNewOpponent(container, fightCard, newOpponent);
   });
 }
 
 export function restartGameSub(
   container: HTMLElement,
-  fightCard: Fight[],
-  restartGame$: Observable<Event>,
-  opponent: Opponent
+  fightCard: FightCard,
+  restartGame$: Observable<Event>
 ) {
   return restartGame$.subscribe(() => {
-    restartGame(container, fightCard, opponent)
+    restartGame(container, fightCard);
+  });
+}
+
+export function changeWeightClassSub(
+  container: HTMLDivElement,
+  changeWeightClassOb$: Observable<Fighter[]>
+) {
+  return changeWeightClassOb$.subscribe((fighters) => {
+    let blueCornerSelect = selectSelectionEl(container, CLASSES_OF_ELEMENTS.BLUE_CORNER_SEL);
+    let redCornerSelect = selectSelectionEl(container, CLASSES_OF_ELEMENTS.RED_CORNER_SEL);
+
+    clearChilds(blueCornerSelect);
+    clearChilds(redCornerSelect);
+
+    let namesOfFigters: string[] = [];
+    let idsOfFighters: string[] = [];
+
+    fighters.forEach((fighter) => {
+      namesOfFigters.push(fighter.name);
+      idsOfFighters.push(fighter.id.toString());
+    });
+
+    fillSelect(
+      container,
+      CLASSES_OF_ELEMENTS.BLUE_CORNER_SEL,
+      namesOfFigters,
+      idsOfFighters
+    );
+    fillSelect(
+      container,
+      CLASSES_OF_ELEMENTS.RED_CORNER_SEL,
+      namesOfFigters,
+      idsOfFighters
+    );
   });
 }

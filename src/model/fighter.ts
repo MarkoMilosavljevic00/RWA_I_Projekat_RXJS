@@ -10,13 +10,13 @@ export class Fighter{
     constructor(
         id: number,
         name: string,
-        weightclass: WeightClass,
+        weightClass: WeightClass,
         standup: number,
         grappling: number,
     ){
         this.id = id;
         this.name = name;
-        this.weightclass = weightclass;
+        this.weightclass = weightClass;
         this.standup = standup;
         this.grappling = grappling;
     }

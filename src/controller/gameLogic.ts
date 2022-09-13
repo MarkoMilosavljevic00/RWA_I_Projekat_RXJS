@@ -5,55 +5,106 @@ import {
   renderDivs,
   renderElements,
   replaceContainer,
-  selectElement,
   setLabel,
 } from "../view/render";
-import { findNewOpponentSub, restartGameSub, startGameSub, unsubscribeStartGameSub } from "./subscriptions";
+import {
+  changeWeightClassSub,
+  findNewOpponentSub,
+  gameSub,
+  restartGameSub,
+  startGameSub
+} from "./subscriptions";
 import { CLASSES_OF_ELEMENTS, INITIAL } from "../constants";
 import {
   createFindingOpponentElements,
+  createNewPickElements,
   createOpponentPicksElements,
   createResultsElements,
   createTopElements,
   createYourPicksElements,
 } from "../view/creatingElements";
 import { Fight } from "../model/fight";
-import { createControlFlowObs, createFindingOpponentObs, createRestartGameObs } from "./observables";
-
-export function init() {
-  let findingOpponentDiv = initFindingOpponentDiv();
-  renderDivs(document.body, findingOpponentDiv);
-
-  let controlStartGameOb$ = createControlFlowObs();
-  let findingOpponent$ = createFindingOpponentObs(findingOpponentDiv, controlStartGameOb$);
-  startGameSub(document.body, findingOpponentDiv, findingOpponent$, controlStartGameOb$);
-}
+import {
+  completeControlFlowObs,
+  createControlFlowObs,
+  createFindingOpponentObs,
+  createButtonObs,
+  //createGameObs,
+  createSelectOptionObs,
+  createChangeWeightClassObs,
+} from "./observables";
+import { FightCard } from "../model/fightCard";
+import { WeightClass } from "../enums/WeightClassEnum";
 
 export function startGame(
   host: HTMLElement,
   findingOpponentDiv: HTMLDivElement,
   opponent: Opponent,
   findingOpponent$: Observable<Opponent>,
-  controlStartGameOb$: Subject<any>
+  controlStartGameFindingOb$: Subject<any>
+  ) {
+  let fightCard: FightCard = new FightCard();
+  let container: HTMLDivElement = initStartingContainer(
+    host,
+    findingOpponentDiv,
+    opponent
+  );
+  
+  completeControlFlowObs(controlStartGameFindingOb$);
+
+  let restartGameOb$ = createButtonObs(container, CLASSES_OF_ELEMENTS.RESTART_BTN);
+  restartGameSub(container,fightCard,restartGameOb$);
+  findNewOpponentSub(container,fightCard,findingOpponent$);
+
+  let changeWeightClassOb$ = createChangeWeightClassObs(container, CLASSES_OF_ELEMENTS.WEIGHT_CLASS_SEL);
+  changeWeightClassSub(container, changeWeightClassOb$);
+  //let gameOb$ = createGameObs(container, fightCard);
+  //gameSub(gameOb$);
+   
+
+}
+
+export function findNewOpponent(
+  container: HTMLElement,
+  fightCard: FightCard,
+  opponent: Opponent
 ) {
-  let container: HTMLDivElement = initStartingContainer(host, findingOpponentDiv, opponent);
-  let fightCard: Fight[] = [];
-
-  unsubscribeStartGameSub(controlStartGameOb$);
-  findNewOpponentSub(container, fightCard, findingOpponent$);
-
-  let restartGameOb$ = createRestartGameObs(container);
-  restartGameSub(container, fightCard, restartGameOb$, opponent);
-}
-
-
-export function restartGame(container: HTMLElement,fightCard: Fight[], opponent: Opponent) {
-  resetTopDiv(opponent, container);
+  updateTopDiv(opponent, container);
   resetGameDiv(container);
-  fightCard = [];
+  fightCard = new FightCard();
 }
 
-function initStartingContainer(host: HTMLElement, findingOpponentDiv: HTMLDivElement, opponent: Opponent) {
+export function restartGame(
+  container: HTMLElement,
+  fightCard: FightCard
+) {
+  resetTopDiv(container);
+  resetGameDiv(container);
+  fightCard = new FightCard();
+}
+
+export function init() {
+  let findingOpponentDiv = initFindingOpponentDiv();
+  renderDivs(document.body, findingOpponentDiv);
+
+  let controlStartGameFindingOb$ = createControlFlowObs();
+  let findingOpponent$ = createFindingOpponentObs(
+    findingOpponentDiv,
+    controlStartGameFindingOb$
+  );
+  startGameSub(
+    document.body,
+    findingOpponentDiv,
+    findingOpponent$,
+    controlStartGameFindingOb$
+  );
+}
+
+function initStartingContainer(
+  host: HTMLElement,
+  findingOpponentDiv: HTMLDivElement,
+  opponent: Opponent
+) {
   let container: HTMLDivElement = document.createElement("div");
   container.className = container.className = CLASSES_OF_ELEMENTS.CONTAINER;
 
@@ -80,10 +131,10 @@ export function initTopDiv(
   let topDiv: HTMLDivElement = document.createElement("div");
   topDiv.className = CLASSES_OF_ELEMENTS.TOP_DIV;
 
-  let topElements = createTopElements(findingOpponentDiv, opponent);
+  let topElements = createTopElements(findingOpponentDiv);
 
   renderElements(topDiv, ...topElements);
-  setResultForBoth(INITIAL.SCORE, topDiv);
+  setScoreForBoth(INITIAL.SCORE, topDiv);
   setOpponent(opponent, topDiv);
   return topDiv;
 }
@@ -109,6 +160,16 @@ export function initYourPicksDiv() {
   return yourPicksDiv;
 }
 
+export function initNewPickDiv() {
+  let newPickDiv = document.createElement("div");
+  newPickDiv.className = CLASSES_OF_ELEMENTS.NEW_PICK_DIV;
+
+  let newPickElements = createNewPickElements();
+  renderElements(newPickDiv, ...newPickElements);
+
+  return newPickDiv;
+}
+
 export function initOpponentPicksDiv() {
   let opponentPicksDiv: HTMLDivElement = document.createElement("div");
   opponentPicksDiv.className = CLASSES_OF_ELEMENTS.OPP_PICKS_DIV;
@@ -127,7 +188,7 @@ export function initResultsDiv() {
   return resultDiv;
 }
 
-export function setResult(
+export function setScore(
   score: number,
   placeHolder: HTMLElement,
   selection: string
@@ -136,12 +197,18 @@ export function setResult(
   setLabel(label, score.toString());
 }
 
-export function setResultForBoth(score: number, placeHolder: HTMLElement) {
-  setResult(score, placeHolder, CLASSES_OF_ELEMENTS.YOUR_POINTS);
-  setResult(score, placeHolder, CLASSES_OF_ELEMENTS.OPP_POINTS);
+export function setScoreForBoth(score: number, placeHolder: HTMLElement) {
+  setScore(score, placeHolder, CLASSES_OF_ELEMENTS.YOUR_POINTS);
+  setScore(score, placeHolder, CLASSES_OF_ELEMENTS.OPP_POINTS);
 }
 
 export function setOpponent(opponent: Opponent, container: HTMLElement) {
+  let opponentPicture: HTMLImageElement = selectPicture(
+    container,
+    CLASSES_OF_ELEMENTS.OPP_PICTURE
+  );
+  opponentPicture.src = `${opponent.pictureSrc}`;
+
   let opponentNameLabel = selectElement(
     container,
     CLASSES_OF_ELEMENTS.OPP_NAME_LABEL
@@ -157,30 +224,61 @@ export function setOpponent(opponent: Opponent, container: HTMLElement) {
 export function selectDifficulty(
   findingOpponentDiv: HTMLDivElement
 ): DifficultyLevel {
-  let select = findingOpponentDiv.querySelector("select");
-  let difficultyString = select.options[select.selectedIndex].value;
+  let difficultyString = getOptionValue(findingOpponentDiv, CLASSES_OF_ELEMENTS.DIFFIULTY_SEL);
   return DifficultyLevel[difficultyString as keyof typeof DifficultyLevel];
 }
 
-export function resetGameDiv(container: HTMLElement){
+export function selectWeightClass(container: HTMLDivElement): WeightClass {
+  let weightClassString = getOptionValue(container, CLASSES_OF_ELEMENTS.WEIGHT_CLASS_SEL);
+  return WeightClass[weightClassString as keyof typeof WeightClass];
+}
+
+export function selectElement(placeHolder: HTMLElement, selection: string){
+  let element: HTMLElement = placeHolder.querySelector(`.${selection}`);
+  return element;
+}
+
+export function selectPicture(placeHolder: HTMLElement, selection: string){
+  let picture: HTMLImageElement = placeHolder.querySelector(`.${selection}`);
+  return picture;
+}
+
+export function selectSelectionEl(
+  container: HTMLDivElement,
+  selection: string
+) {
+  let select: HTMLSelectElement = container.querySelector(`.${selection}`)
+  return select
+}
+
+export function getOptionValue(
+  container: HTMLDivElement,
+  selection: string
+) {
+  let select: HTMLSelectElement = selectSelectionEl(container, selection);
+  let value = select.options[select.selectedIndex].value;
+  return value;
+}
+
+export function resetGameDiv(container: HTMLElement) {
   let yourFightCardDiv = selectElement(
     container,
     CLASSES_OF_ELEMENTS.YOUR_FIGHTCARD_DIV
   );
-  resetDiv(yourFightCardDiv);
+  clearChilds(yourFightCardDiv);
   let opponentFightCardDiv = selectElement(
     container,
     CLASSES_OF_ELEMENTS.OPP_FIGHTCARD_DIV
   );
-  resetDiv(opponentFightCardDiv);
+  clearChilds(opponentFightCardDiv);
   let resultFightCardDiv = selectElement(
     container,
     CLASSES_OF_ELEMENTS.RESULT_FIGHTCARD_DIV
   );
-  resetDiv(resultFightCardDiv);
+  clearChilds(resultFightCardDiv);
 }
 
-function resetDiv(container: HTMLElement) {
+export function clearChilds(container: HTMLElement) {
   let childs = container.childNodes;
   childs.forEach((child) => {
     container.removeChild(child);
@@ -188,7 +286,24 @@ function resetDiv(container: HTMLElement) {
   });
 }
 
-function resetTopDiv(opponent: Opponent, container: HTMLElement) {
+function updateTopDiv(opponent: Opponent, container: HTMLElement) {
   setOpponent(opponent, container);
-  setResultForBoth(INITIAL.SCORE, container);
+  setScoreForBoth(INITIAL.SCORE, container);
 }
+
+function resetTopDiv(container: HTMLElement) {
+  setScoreForBoth(INITIAL.SCORE, container);
+}
+
+export function fillSelect(container: HTMLDivElement, selection: string, optionNames: string[], optionValues: string[]) {
+  let select = selectElement(container, selection);
+  
+  optionValues.forEach((optionValue, index) => {
+    let option = document.createElement("option");
+    option.value = optionValue;
+    option.innerHTML = optionNames[index];
+    select.appendChild(option);
+    });
+};
+
+

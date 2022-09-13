@@ -24,8 +24,3 @@ export function setLabel(
 ) {
   label.innerHTML = newText;
 }
-
-export function selectElement(placeHolder: HTMLElement, selection: string){
-  let element: HTMLElement = placeHolder.querySelector(`.${selection}`);
-  return element;
-}

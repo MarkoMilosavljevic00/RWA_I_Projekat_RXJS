@@ -3,52 +3,78 @@
     {
       "id": 1,
       "name": "Marko",
-      "difficulty": "Easy"
+      "difficulty": "Easy",
+      "pictureSrc": "../src/assets/opponent-pictures/default-user.png"
     },
     {
       "id": 2,
       "name": "Milan",
-      "difficulty": "Medium"
+      "difficulty": "Medium",
+      "pictureSrc": "../src/assets/opponent-pictures/default-user.png"
     },
     {
       "id": 3,
       "name": "Aleksa",
-      "difficulty": "Hard"
+      "difficulty": "Hard",
+      "pictureSrc": "../src/assets/opponent-pictures/default-user.png"
     },
     {
       "id": 4,
       "name": "Stevan",
-      "difficulty": "Medium"
+      "difficulty": "Medium",
+      "pictureSrc": "../src/assets/opponent-pictures/default-user.png"
     },
     {
       "id": 5,
       "name": "Stojan",
-      "difficulty": "Easy"
+      "difficulty": "Easy",
+      "pictureSrc": "../src/assets/opponent-pictures/default-user.png"
     },
     {
       "id": 6,
       "name": "Milovan",
-      "difficulty": "Medium"
+      "difficulty": "Medium",
+      "pictureSrc": "../src/assets/opponent-pictures/default-user.png"
     },
     {
       "id": 7,
       "name": "Nenad",
-      "difficulty": "Hard"
+      "difficulty": "Hard",
+      "pictureSrc": "../src/assets/opponent-pictures/default-user.png"
     },
     {
       "id": 8,
       "name": "Senad",
-      "difficulty": "Easy"
+      "difficulty": "Easy",
+      "pictureSrc": "../src/assets/opponent-pictures/default-user.png"
     },
     {
       "id": 9,
       "name": "Ivan",
-      "difficulty": "Medium"
+      "difficulty": "Medium",
+      "pictureSrc": "../src/assets/opponent-pictures/default-user.png"
     },
     {
       "id": 10,
       "name": "Nikola",
-      "difficulty": "Hard"
+      "difficulty": "Hard",
+      "pictureSrc": "../src/assets/opponent-pictures/default-user.png"
+    }
+  ],
+  "fighters": [
+    {
+      "id": 1,
+      "name": "Kamaru Usman",
+      "weightClass": "Welterweight",
+      "standup": 80,
+      "grappling": 92
+    },
+    {
+      "id": 2,
+      "name": "Charles Oliveira",
+      "weightClass": "Lightweight",
+      "standup": 75,
+      "grappling": 95
     }
   ]
 }

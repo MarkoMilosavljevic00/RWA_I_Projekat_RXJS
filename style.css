@@ -79,3 +79,16 @@ html {
   align-items: center;
   border-style: solid;
 }
+
+.newPickDiv {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-style: solid;
+}
+
+.bottomNewPickDiv {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
