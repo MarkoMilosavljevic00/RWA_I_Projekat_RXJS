@@ -7,7 +7,7 @@ html {
   align-self: center;
 }
 
-.initialDiv {
+.initial-div {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -19,75 +19,75 @@ html {
   flex-direction: column;
 }
 
-.topDiv {
+.top-div {
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
 
-.initialDiv {
+.initial-div {
   display: flex;
   flex-direction: column;
   align-items: center;
   border-style: solid;
 }
 
-.yourPointsDiv {
+.your-points-div {
   display: flex;
   flex-direction: column;
   align-items: center;
   border-style: solid;
 }
 
-.opponentPointsDiv {
+.opponent-points-div {
   display: flex;
   flex-direction: column;
   align-items: center;
   border-style: solid;
 }
 
-.opponentStatsDiv {
+.opponent-stats-div {
   display: flex;
   flex-direction: column;
   align-items: center;
   border-style: solid;
 }
 
-.gameDiv {
+.game-div {
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
 
-.resultDiv {
+.result-div {
   display: flex;
   flex-direction: column;
   align-items: center;
   border-style: solid;
 }
 
-.yourPicksDiv {
+.your-picks-div {
   display: flex;
   flex-direction: column;
   align-items: center;
   border-style: solid;
 }
 
-.opponentPicksDiv {
+.opponent-picks-div {
   display: flex;
   flex-direction: column;
   align-items: center;
   border-style: solid;
 }
 
-.newPickDiv {
+.new-pick-div {
   display: flex;
   flex-direction: column;
   align-items: center;
   border-style: solid;
 }
 
-.bottomNewPickDiv {
+.bottom-new-pick-div {
   display: flex;
   flex-direction: row;
   align-items: center;

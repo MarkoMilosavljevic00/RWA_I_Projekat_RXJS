@@ -1,4 +1,4 @@
-import { init } from "./controller/gameLogic";
+import { init } from "./controller/main";
 
 init();
 

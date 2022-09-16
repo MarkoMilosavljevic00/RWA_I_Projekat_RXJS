@@ -75,6 +75,13 @@
       "weightClass": "Lightweight",
       "standup": 75,
       "grappling": 95
+    },
+    {
+      "id": 3,
+      "name": "Islam Makachev",
+      "weightClass": "Lightweight",
+      "standup": 70,
+      "grappling": 97
     }
   ]
 }
