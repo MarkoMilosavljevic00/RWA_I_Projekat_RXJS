@@ -1,12 +1,14 @@
 import { Observable, Subject, take } from "rxjs";
 import { Opponent } from "../../model/opponent";
 import {
+  addNewPickSub,
   changeBlueCornerSub,
   changeRedCornerSub,
   changeWeightClassSub,
   findNewOpponentSub,
   initialNewPickSub,
   restartGameSub,
+  restartViewSub,
   startGameSub,
 } from "./subscriptions";
 import { CLASSES } from "../../constants";
@@ -18,9 +20,11 @@ import {
   createChangeWeightClassObs,
   getFightersByWeightClass,
   createChangeFighterObs,
+  createRestartView,
 } from "./observables";
 import { FightCard } from "../../model/fightCard";
 import { WeightClass } from "../../enums/WeightClassEnum";
+import { createRestartButton } from "../../view/view";
 
 export function initFindingOponnent(findingOpponentDiv: HTMLDivElement): void {
   let controlFindingOpponentOb$ = createControlFlowObs();
@@ -84,4 +88,26 @@ export function initNewPick(container: HTMLDivElement) {
     WeightClass.Lightweight
   ).pipe(take(1));
   initialNewPickSub(initialNewPickOb$, container);
+}
+
+export function initRestartView(
+  container: HTMLDivElement,
+  fightCard: FightCard
+) {
+  let restartViewOb$ = createRestartView(
+    container,
+    CLASSES.PLAY_BTN
+  );
+  restartViewSub(container, fightCard, restartViewOb$);
+}
+
+export function initAddNewPick(
+  container: HTMLDivElement,
+  fightCard: FightCard
+) {
+  let addNewPickOb$ = createButtonObs(
+    container,
+    CLASSES.ADD_PICK_BTN
+  );
+  addNewPickSub(container, fightCard, addNewPickOb$);
 }

@@ -3,7 +3,7 @@ import { CLASSES, INITIAL } from "../../constants";
 import { FightCard } from "../../model/fightCard";
 import { Fighter } from "../../model/fighter";
 import { Opponent } from "../../model/opponent";
-import { fillFightersRating, fillFightersSelect, findNewOpponent, restartGame, startGame } from "../main";
+import { addNewPick, fillFightersRating, fillFightersSelect, findNewOpponent, restartGame, restartView, startGame } from "../main";
 
 export function startGameSub(
   host: HTMLElement,
@@ -109,5 +109,25 @@ export function initialNewPickSub(initialNewPickOb$: Observable<Fighter[]>, cont
     fillFightersSelect(container, fightersArray);
     fillFightersRating(container, fighter, CLASSES.BLUE_CORNER_DIV);
     fillFightersRating(container, fighter, CLASSES.RED_CORNER_DIV);
+  });
+}
+
+export function restartViewSub(
+  container: HTMLElement,
+  fightCard: FightCard,
+  restartGame$: Observable<Event>
+): Subscription {
+  return restartGame$.subscribe(() => {
+    restartView(container, fightCard);
+  });
+}
+
+export function addNewPickSub(
+  container: HTMLDivElement,
+  fightCard: FightCard,
+  restartGame$: Observable<Event>
+): Subscription {
+  return restartGame$.subscribe(() => {
+    addNewPick(container, fightCard);
   });
 }

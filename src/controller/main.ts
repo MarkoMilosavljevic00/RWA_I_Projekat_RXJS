@@ -24,11 +24,13 @@ import {
   initNewPick,
   initChangeWeightClass,
   initFindingOponnent,
+  initRestartView,
 } from "./streams/initalizingObs";
 import {
   initContainer,
   initFindingOpponentDiv,
 } from "../view/initalizingElements";
+import Swal from "sweetalert2";
 
 export function init(): void {
   let findingOpponentDiv = initFindingOpponentDiv();
@@ -43,7 +45,7 @@ export function startGame(
   opponent: Opponent,
   findingOpponent$: Observable<Opponent>,
   controlFindingOpponentOb$: Subject<any>
-) {
+): void {
   let fightCard: FightCard = new FightCard();
   let container: HTMLDivElement;
   container = initContainer(
@@ -66,6 +68,8 @@ export function startGame(
   initChangeFighter(container);
   initNewPick(container);
 
+  initRestartView(container, fightCard);
+
   //let gameOb$ = createGameObs(container, fightCard);
   //gameSub(gameOb$);
 }
@@ -74,16 +78,56 @@ export function findNewOpponent(
   container: HTMLElement,
   fightCard: FightCard,
   opponent: Opponent
-) {
+): void {
   updateTopDiv(opponent, container);
   resetGameDiv(container);
   fightCard = new FightCard();
 }
 
-export function restartGame(container: HTMLElement, fightCard: FightCard) {
+export function restartView(
+  container: HTMLElement,
+  fightCard: FightCard
+): void {
+  resetGameDiv(container);
+  fightCard = new FightCard();
+}
+
+export function restartGame(
+  container: HTMLElement,
+  fightCard: FightCard
+): void {
   resetTopDiv(container);
   resetGameDiv(container);
   fightCard = new FightCard();
+}
+
+export function addNewPick(container: HTMLDivElement, fightCard: FightCard) {
+  if(!checkAddingPick(container,fightCard)){
+
+  }
+}
+
+function checkAddingPick(container: HTMLDivElement, fightCard: FightCard): boolean {
+  if(fightCard.fights.length == 10){
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'You cannot add more than 10 fights on one fight card!',
+    });
+    return false
+  }
+  const blueCornerOption = getOptionValue(container, CLASSES.BLUE_CORNER_SEL);
+  const redCornerOption = getOptionValue(container, CLASSES.RED_CORNER_SEL);
+  if(blueCornerOption === redCornerOption){
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'You selected two same fighters for the same fight!',
+    });
+    return false;
+  }
+  
+  
 }
 
 export function setScore(
@@ -114,6 +158,11 @@ export function setOpponent(opponent: Opponent, container: HTMLElement): void {
     CLASSES.OPP_DIFF_LABEL
   );
   setLabel(opponentDifficultyLabel, `Difficulty: ${opponent.difficulty}`);
+}
+
+export function getRandomOpponent(opponents: Opponent[]): Opponent {
+  const index = Math.trunc(Math.random() * opponents.length);
+  return opponents[index];
 }
 
 export function getDifficulties(
@@ -199,7 +248,7 @@ export function fillFightersRating(
   container: HTMLDivElement,
   fighter: Fighter,
   selection: string
-) {
+): void {
   let fighterDiv: HTMLElement = selectElement(container, selection);
 
   let standupRating: HTMLElement = selectElement(

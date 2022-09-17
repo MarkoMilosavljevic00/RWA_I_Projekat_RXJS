@@ -1,4 +1,6 @@
 import {
+  delay,
+  delayWhen,
   from,
   fromEvent,
   map,
@@ -6,14 +8,16 @@ import {
   Subject,
   switchMap,
   takeUntil,
+  timer,
 } from "rxjs";
 import { API_URL, CLASSES } from "../../constants";
 import { DifficultyLevel } from "../../enums/DifficultyLevelEnum";
 import { WeightClass } from "../../enums/WeightClassEnum";
+import { FightCard } from "../../model/fightCard";
 import { Fighter } from "../../model/fighter";
 import { Opponent } from "../../model/opponent";
 import { selectElement, selectSelectionEl } from "../../view/view";
-import { getDifficulties, getFighterId, getWeightClasses } from "../main";
+import { getDifficulties, getFighterId, getRandomOpponent, getWeightClasses } from "../main";
 
 export function createButtonObs(container: HTMLElement, selection: string) {
   let btn = selectElement(container, selection);
@@ -83,7 +87,7 @@ export function createFindingOpponentObs(
     CLASSES.FINDING_OPP_BTN
   ).pipe(
     switchMap(() => getOpponents(getDifficulties(findingOpponentDiv))),
-    map((opponents) => getRandomIndexOfOpponent(opponents)),
+    map((opponents) => getRandomOpponent(opponents)),
     takeUntil(controlStartGameOb$)
   );
 }
@@ -116,20 +120,24 @@ export function createChangeFighterObs(
   );
 }
 
-// function createAddNewPickObs(
-//   container: HTMLDivElement,
-//   selection: string,
-//   fightCard: FightCard
-// ) {
-//   return createSelectOptionObs(container, selection).pipe();
-// }
+function createAddNewPickObs(
+  container: HTMLDivElement,
+  selection: string,
+  fightCard: FightCard
+) {
+  return createSelectOptionObs(container, selection).pipe();
+}
 
 function createPlayObs(container: HTMLDivElement, selection: string) {
   let playOb$ = createButtonObs(container, selection);
   return playOb$;
 }
 
-function getRandomIndexOfOpponent(opponents: Opponent[]) {
-  const index = Math.trunc(Math.random() * opponents.length);
-  return opponents[index];
+export function createRestartView(
+  container: HTMLDivElement,
+  selection: string
+){
+  return createButtonObs(container,selection).pipe(
+    delayWhen(() => timer(10000))
+  )
 }
