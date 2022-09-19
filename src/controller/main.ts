@@ -4,7 +4,6 @@ import { Opponent } from "../model/opponent";
 import {
   clearChilds,
   setSelectOptions,
-  getOptionValue,
   selectElement,
   selectPicture,
   selectSelectionEl,
@@ -12,8 +11,11 @@ import {
   setPicture,
   clearSelect,
   renderDivs,
+  showError,
+  getCheckedRadioValue,
+  getSelectedValue,
 } from "../view/view";
-import { CLASSES, INITIAL } from "../constants";
+import { CLASSES, INDEXES, INITIAL } from "../constants";
 import { FightCard } from "../model/fightCard";
 import { WeightClass } from "../enums/WeightClassEnum";
 import { Fighter } from "../model/fighter";
@@ -25,12 +27,14 @@ import {
   initChangeWeightClass,
   initFindingOponnent,
   initRestartView,
+  initAddNewPick,
 } from "./streams/initalizingObs";
 import {
   initContainer,
   initFindingOpponentDiv,
 } from "../view/initalizingElements";
-import Swal from "sweetalert2";
+import { Fight } from "../model/fight";
+import { Result } from "../model/result";
 
 export function init(): void {
   let findingOpponentDiv = initFindingOpponentDiv();
@@ -69,6 +73,7 @@ export function startGame(
   initNewPick(container);
 
   initRestartView(container, fightCard);
+  initAddNewPick(container, fightCard);
 
   //let gameOb$ = createGameObs(container, fightCard);
   //gameSub(gameOb$);
@@ -101,33 +106,75 @@ export function restartGame(
   fightCard = new FightCard();
 }
 
-export function addNewPick(container: HTMLDivElement, fightCard: FightCard) {
-  if(!checkAddingPick(container,fightCard)){
+// export function addNewPick(
+//   container: HTMLDivElement,
+//   fightCard: FightCard,
+// ): void {
+//   if (fightersArray.length === 0) {
+//     return;
+//   }
+//   console.log(fightersArray);
+//   let fight = new Fight();
 
-  }
-}
+//   let blueCornerFighter = initFighterFromArray(
+//     fightersArray,
+//     INDEXES.BLUE_CORNER
+//   );
+//   let redCornerFighter = initFighterFromArray(
+//     fightersArray,
+//     INDEXES.RED_CORNER
+//   );
+//   fight.setFighters(blueCornerFighter, redCornerFighter);
 
-function checkAddingPick(container: HTMLDivElement, fightCard: FightCard): boolean {
-  if(fightCard.fights.length == 10){
-    Swal.fire({
-      icon: 'error',
-      title: 'Oops...',
-      text: 'You cannot add more than 10 fights on one fight card!',
-    });
-    return false
+//   let winnerValue = getCheckedRadioValue(container, CLASSES.CORNER_RADIO);
+//   let methodValue = getSelectedValue(container, CLASSES.METHOD_SEL);
+//   let roundValue = getSelectedValue(container, CLASSES.ROUND_SEL);
+//   let yourPick = new Result(winnerValue, methodValue, roundValue);
+//   fight.setYourPick(yourPick);
+
+//   fightCard.fights.push(fight);
+//   console.log(fightCard);
+// }
+
+export function checkAddingPick(
+  container: HTMLDivElement,
+  fightCard: FightCard
+): boolean {
+  if (fightCard.fights.length == 10) {
+    return showError("You cannot add more than 10 fights on fight card!");
   }
-  const blueCornerOption = getOptionValue(container, CLASSES.BLUE_CORNER_SEL);
-  const redCornerOption = getOptionValue(container, CLASSES.RED_CORNER_SEL);
-  if(blueCornerOption === redCornerOption){
-    Swal.fire({
-      icon: 'error',
-      title: 'Oops...',
-      text: 'You selected two same fighters for the same fight!',
-    });
-    return false;
+
+  const blueCornerValue = getSelectedValue(container, CLASSES.BLUE_CORNER_SEL);
+  const redCornerValue = getSelectedValue(container, CLASSES.RED_CORNER_SEL);
+  if (blueCornerValue === redCornerValue) {
+    return showError("Please select two different fighters!");
   }
-  
-  
+  let duplicate: boolean;
+    fightCard.fights.forEach((fight) => {
+    let blueCornerPreviousValue = fight.blueCorner.id.toString();
+    let redCornerPreviousValue = fight.redCorner.id.toString();
+
+    if (
+      (blueCornerPreviousValue === blueCornerValue &&
+        redCornerPreviousValue === redCornerValue) ||
+      (blueCornerPreviousValue === redCornerValue &&
+        redCornerPreviousValue === blueCornerValue)
+    ) {
+      duplicate = true;
+    }
+  });
+  if(duplicate == true){
+    return showError("You already have that fight on your fight card!")
+  }
+
+  let selectedRadio: HTMLInputElement = document.querySelector(
+    `input[name=${CLASSES.CORNER_RADIO}]:checked`
+  );
+  if (!selectedRadio) {
+    return showError("Please select winner! ");
+  }
+
+  return true;
 }
 
 export function setScore(
@@ -168,7 +215,7 @@ export function getRandomOpponent(opponents: Opponent[]): Opponent {
 export function getDifficulties(
   findingOpponentDiv: HTMLDivElement
 ): DifficultyLevel {
-  let difficultyString = getOptionValue(
+  let difficultyString = getSelectedValue(
     findingOpponentDiv,
     CLASSES.DIFFIULTY_SEL
   );
@@ -176,7 +223,7 @@ export function getDifficulties(
 }
 
 export function getWeightClasses(container: HTMLDivElement): WeightClass {
-  let weightClassString = getOptionValue(container, CLASSES.WEIGHT_CLASS_SEL);
+  let weightClassString = getSelectedValue(container, CLASSES.WEIGHT_CLASS_SEL);
   return WeightClass[weightClassString as keyof typeof WeightClass];
 }
 
@@ -184,7 +231,7 @@ export function getFighterId(
   container: HTMLDivElement,
   selection: string
 ): number {
-  let fighterId = parseInt(getOptionValue(container, selection));
+  let fighterId = parseInt(getSelectedValue(container, selection));
   return fighterId;
 }
 
@@ -232,13 +279,7 @@ export function fillFightersSelect(
   setSelectOptions(blueCornerSelect, namesOfFigters, idsOfFighters);
   setSelectOptions(redCornerSelect, namesOfFigters, idsOfFighters);
 
-  let fighter = new Fighter(
-    fightersArray[INITIAL.INDEX_OF_FIGHTER].id,
-    fightersArray[INITIAL.INDEX_OF_FIGHTER].name,
-    fightersArray[INITIAL.INDEX_OF_FIGHTER].weightClass,
-    fightersArray[INITIAL.INDEX_OF_FIGHTER].standup,
-    fightersArray[INITIAL.INDEX_OF_FIGHTER].grappling
-  );
+  let fighter = initFighterFromArray(fightersArray, INDEXES.INITIAL_FIGHTER);
 
   fillFightersRating(container, fighter, CLASSES.BLUE_CORNER_DIV);
   fillFightersRating(container, fighter, CLASSES.RED_CORNER_DIV);
@@ -265,5 +306,18 @@ export function fillFightersRating(
     fighterDiv,
     CLASSES.OVERALL_LAB
   );
-  setLabel(overallRating, fighter.calculateOverall().toString());
+  setLabel(overallRating, fighter.calcOverall().toString());
+}
+
+export function initFighterFromArray(
+  fightersArray: Fighter[],
+  index: number
+): Fighter {
+  return new Fighter(
+    fightersArray[index].id,
+    fightersArray[index].name,
+    fightersArray[index].weightClass,
+    fightersArray[index].standup,
+    fightersArray[index].grappling
+  );
 }

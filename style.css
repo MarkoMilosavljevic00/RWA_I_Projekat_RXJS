@@ -92,3 +92,9 @@ html {
   flex-direction: row;
   align-items: center;
 }
+
+.your-fight-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}

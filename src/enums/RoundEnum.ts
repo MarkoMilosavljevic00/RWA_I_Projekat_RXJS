@@ -1,5 +1,5 @@
 export enum Round {
-  Round_1 = "I Round",
-  Round_2 = "II Round",
-  Round_3 = "III Round"
+  Round_1 = "Round_1",
+  Round_2 = "Round_2",
+  Round_3 = "Round_3"
 }

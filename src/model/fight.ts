@@ -1,3 +1,4 @@
+import { initFightDiv } from "../view/initalizingElements";
 import { Fighter } from "./fighter";
 import { Result } from "./result";
 
@@ -7,8 +8,28 @@ export class Fight {
 
   yourPick: Result;
   opponentPick: Result;
+  finalResult: Result;
 
-  result: Result;
+  fightDiv: HTMLDivElement;
 
-  //fighter$: Observable<Fighter[]>;
+  setFighters(blueCorner: Fighter, redCorner: Fighter) {
+    this.blueCorner = blueCorner;
+    this.redCorner = redCorner;
+  }
+
+  setYourPick(yourPick: Result) {
+    this.yourPick = yourPick;
+  }
+
+  setOpponentPick(opponentPick: Result) {
+    this.opponentPick = opponentPick;
+  }
+
+  setFinalResult(finalResult: Result) {
+    this.finalResult = finalResult;
+  }
+
+  createFightDiv() {
+    this.fightDiv = initFightDiv(this);
+  }
 }

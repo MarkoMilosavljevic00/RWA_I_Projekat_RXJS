@@ -1,8 +1,12 @@
-import { CLASSES, INDEXES, INITIAL } from "../constants";
+import Swal from "sweetalert2";
+import { CLASSES, INDEXES } from "../constants";
+import { fillFightersRating } from "../controller/main";
 import { DifficultyLevel } from "../enums/DifficultyLevelEnum";
 import { Method } from "../enums/MethodEnum";
 import { Round } from "../enums/RoundEnum";
 import { WeightClass } from "../enums/WeightClassEnum";
+import { Winner } from "../enums/WinnerEnum";
+import { Fight } from "../model/fight";
 import { initNewPickDiv } from "./initalizingElements";
 
 export function createFindingOpponentElements(): HTMLElement[] {
@@ -168,11 +172,13 @@ export function createBottomNewPickDiv() {
 
   let blueCornerDiv = createCornerDiv(
     CLASSES.BLUE_CORNER_DIV,
-    CLASSES.BLUE_CORNER_SEL
+    CLASSES.BLUE_CORNER_SEL,
+    Winner.BLUE_CORNER
   );
   let redCornerDiv = createCornerDiv(
     CLASSES.RED_CORNER_DIV,
-    CLASSES.RED_CORNER_SEL
+    CLASSES.RED_CORNER_SEL,
+    Winner.RED_CORNER
   );
 
   let outcomeDiv = createOutcomeDiv();
@@ -184,10 +190,10 @@ export function createBottomNewPickDiv() {
 export function createOutcomeDiv() {
   let outcomeDiv = document.createElement("div");
   outcomeDiv.className = CLASSES.OUTCOME_DIV;
-  const methodes = Object.values(Method);
+  let methodes = Object.values(Method);
   let methodSelect = createSelect(CLASSES.METHOD_SEL);
   setSelectOptions(methodSelect, methodes, methodes);
-  const rounds = Object.values(Round);
+  let rounds = Object.values(Round);
   let roundSelect = createSelect(CLASSES.ROUND_SEL);
   setSelectOptions(roundSelect, rounds, rounds);
   renderElements(outcomeDiv, methodSelect, roundSelect);
@@ -195,17 +201,27 @@ export function createOutcomeDiv() {
   return outcomeDiv;
 }
 
-export function createCornerDiv(selectionDiv: string, selectionSel: string) {
+export function createCornerDiv(
+  selectionDiv: string,
+  selectionSel: string,
+  valueRadio: string
+) {
   let cornerDiv = document.createElement("div");
   cornerDiv.className = selectionDiv;
   let cornerSelect = createSelect(selectionSel);
-  let cornerRadio = document.createElement("input");
-  cornerRadio.type = "radio";
-  cornerRadio.name = CLASSES.CORNER_RADIO;
+  let cornerRadio = createRadio(valueRadio, CLASSES.CORNER_RADIO);
   let fighterStatsDiv = createFighterStats();
 
   renderElements(cornerDiv, cornerSelect, cornerRadio, fighterStatsDiv);
   return cornerDiv;
+}
+
+function createRadio(valueRadio: string, nameRadio: string) {
+  let cornerRadio = document.createElement("input");
+  cornerRadio.type = "radio";
+  cornerRadio.name = nameRadio;
+  cornerRadio.value = valueRadio;
+  return cornerRadio;
 }
 
 function createFighterStats() {
@@ -255,6 +271,48 @@ export function createTopNewPickDiv() {
   return topNewPickDiv;
 }
 
+export function createFightElements(fight: Fight){
+  let blueCornerDiv = document.createElement("div");
+  blueCornerDiv.className = CLASSES.YOUR_FIGHT_BLUE_DIV;
+  let blueCornerText = document.createElement("label");
+  blueCornerText.innerHTML = "Blue corner fighter: ";
+  let blueCornerFighterLabel = document.createElement("label");
+  blueCornerFighterLabel.innerHTML = fight.blueCorner.name;
+  
+  let redCornerDiv = document.createElement("div");
+  blueCornerDiv.className = CLASSES.YOUR_FIGHT_RED_DIV;
+  let redCornerText = document.createElement("label");
+  redCornerText.innerHTML = "Red corner fighter: ";
+  let redCornerFighterLabel = document.createElement("label");
+  redCornerFighterLabel.innerHTML = fight.redCorner.name;
+  
+  let pickDiv = document.createElement("div");
+  pickDiv.className = CLASSES.YOUR_FIGHT_PICK_DIV;
+  let methodText = document.createElement("label");
+  methodText.innerHTML = "Method Of Victory: ";
+  let methodLabel = document.createElement("label");
+  methodLabel.innerHTML = `${fight.yourPick.methodOfVictory}`;
+  let roundText = document.createElement("label");
+  roundText.innerHTML = "Round Of Victory: ";
+  let roundLabel = document.createElement("label");
+  roundLabel.innerHTML = `${fight.yourPick.roundOfVictory}`;
+  
+  if(fight.yourPick.winner === Winner.BLUE_CORNER){
+    blueCornerDiv.style.backgroundColor = "green";
+    redCornerDiv.style.backgroundColor = "red";
+  }
+  else{
+    blueCornerDiv.style.backgroundColor = "red";
+    redCornerDiv.style.backgroundColor = "green";
+  }
+  
+  renderElements(blueCornerDiv, blueCornerText, blueCornerFighterLabel);
+  renderElements(redCornerDiv, redCornerText, redCornerFighterLabel);
+  renderElements(pickDiv, methodText, methodLabel, roundText, roundLabel);
+  
+  return [blueCornerDiv, redCornerDiv, pickDiv]
+}
+
 export function createSelect(classEl: string) {
   let select = document.createElement("select");
   select.className = classEl;
@@ -286,9 +344,9 @@ export function clearChilds(container: HTMLElement): void {
   });
 }
 
-export function clearSelect(select: HTMLSelectElement): void{
+export function clearSelect(select: HTMLSelectElement): void {
   let optionsLength = select.options.length;
-  for (let i = optionsLength; i>= 0; i--){
+  for (let i = optionsLength; i >= 0; i--) {
     select.remove(i);
   }
 }
@@ -314,7 +372,16 @@ export function setSelectOptions(
   });
 }
 
-export function getOptionValue(
+export function getCheckedRadioValue(
+  container: HTMLDivElement,
+  selection: string
+): string {
+  let selectedRadio: HTMLInputElement = document.querySelector(`input[name=${selection}]:checked`);
+  let value = selectedRadio.value;
+  return value;
+}
+
+export function getSelectedValue(
   container: HTMLDivElement,
   selection: string
 ): string {
@@ -323,15 +390,10 @@ export function getOptionValue(
   return value;
 }
 
+
 export function getValuesOfFighterSelect(container: HTMLDivElement): number[] {
-  let blueSelect = selectSelectionEl(
-    container,
-    CLASSES.BLUE_CORNER_SEL
-  );
-  let redSelect = selectSelectionEl(
-    container,
-    CLASSES.RED_CORNER_SEL
-  );
+  let blueSelect = selectSelectionEl(container, CLASSES.BLUE_CORNER_SEL);
+  let redSelect = selectSelectionEl(container, CLASSES.RED_CORNER_SEL);
 
   let blueValue = parseInt(blueSelect.options[blueSelect.selectedIndex].value);
   let redValue = parseInt(redSelect.options[redSelect.selectedIndex].value);
@@ -361,4 +423,13 @@ export function selectSelectionEl(
 ): HTMLSelectElement {
   let select: HTMLSelectElement = container.querySelector(`.${selection}`);
   return select;
+}
+
+export function showError(text: string): boolean {
+  Swal.fire({
+    icon: 'error',
+    title: 'Oops...',
+    text: `${text}`,
+  });
+  return false;
 }

@@ -7,6 +7,7 @@ export class Fighter {
   standup: number;
   grappling: number;
 
+
   constructor(
     id: number,
     name: string,
@@ -21,8 +22,8 @@ export class Fighter {
     this.grappling = grappling;
   }
 
-  calculateOverall(){
-    let overall = Math.round((this.standup + this.grappling) / 2)
-    return overall
+  calcOverall() {
+    let overall = Math.round((this.standup + this.grappling) / 2);
+    return overall;
   }
 }

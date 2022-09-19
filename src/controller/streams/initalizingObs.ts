@@ -1,4 +1,4 @@
-import { Observable, Subject, take } from "rxjs";
+import { Observable, Subject, switchMap, take } from "rxjs";
 import { Opponent } from "../../model/opponent";
 import {
   addNewPickSub,
@@ -20,11 +20,11 @@ import {
   createChangeWeightClassObs,
   getFightersByWeightClass,
   createChangeFighterObs,
-  createRestartView,
+  createRestartViewObs,
+  createAddNewPickObs,
 } from "./observables";
 import { FightCard } from "../../model/fightCard";
 import { WeightClass } from "../../enums/WeightClassEnum";
-import { createRestartButton } from "../../view/view";
 
 export function initFindingOponnent(findingOpponentDiv: HTMLDivElement): void {
   let controlFindingOpponentOb$ = createControlFlowObs();
@@ -54,10 +54,7 @@ export function initRestartingGame(
   container: HTMLDivElement,
   fightCard: FightCard
 ) {
-  let restartGameOb$ = createButtonObs(
-    container,
-    CLASSES.RESTART_BTN
-  );
+  let restartGameOb$ = createButtonObs(container, CLASSES.RESTART_BTN);
   restartGameSub(container, fightCard, restartGameOb$);
 }
 
@@ -94,10 +91,7 @@ export function initRestartView(
   container: HTMLDivElement,
   fightCard: FightCard
 ) {
-  let restartViewOb$ = createRestartView(
-    container,
-    CLASSES.PLAY_BTN
-  );
+  let restartViewOb$ = createRestartViewObs(container, CLASSES.PLAY_BTN);
   restartViewSub(container, fightCard, restartViewOb$);
 }
 
@@ -105,9 +99,10 @@ export function initAddNewPick(
   container: HTMLDivElement,
   fightCard: FightCard
 ) {
-  let addNewPickOb$ = createButtonObs(
+  let addNewPickOb$ = createAddNewPickObs(
     container,
-    CLASSES.ADD_PICK_BTN
+    CLASSES.ADD_PICK_BTN,
+    fightCard
   );
-  addNewPickSub(container, fightCard, addNewPickOb$);
+  addNewPickSub(container, addNewPickOb$);
 }
