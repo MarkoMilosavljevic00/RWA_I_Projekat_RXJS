@@ -1,5 +1,5 @@
-export enum Method{
+export enum Method {
   Decision = "Decision",
-  KO_TKO = "KO/TKO",
-  Submission = "Submission"
+  KO_TKO = "KO_TKO",
+  Submission = "Submission",
 }

@@ -1,15 +1,22 @@
-import { Observable, Subject, switchMap, take } from "rxjs";
+import {
+  Observable,
+  Subject,
+  switchMap,
+  take,
+  withLatestFrom,
+  zip,
+} from "rxjs";
 import { Opponent } from "../../model/opponent";
 import {
-  addNewPickSub,
   changeBlueCornerSub,
   changeRedCornerSub,
   changeWeightClassSub,
   findNewOpponentSub,
   initialNewPickSub,
   restartGameSub,
-  restartViewSub,
+  playAgainSub as playAgainSub,
   startGameSub,
+  playSub,
 } from "./subscriptions";
 import { CLASSES } from "../../constants";
 import {
@@ -20,8 +27,9 @@ import {
   createChangeWeightClassObs,
   getFightersByWeightClass,
   createChangeFighterObs,
-  createRestartViewObs,
+  createPlayAgainObs as createPlayAgainObs,
   createAddNewPickObs,
+  createPlayObs,
 } from "./observables";
 import { FightCard } from "../../model/fightCard";
 import { WeightClass } from "../../enums/WeightClassEnum";
@@ -53,12 +61,12 @@ export function initFindingNewOpponent(
 export function initRestartingGame(
   container: HTMLDivElement,
   fightCard: FightCard
-) {
+): void {
   let restartGameOb$ = createButtonObs(container, CLASSES.RESTART_BTN);
   restartGameSub(container, fightCard, restartGameOb$);
 }
 
-export function initChangeFighter(container: HTMLDivElement) {
+export function initChangeFighter(container: HTMLDivElement): void {
   let changeBlueCornerOb$ = createChangeFighterObs(
     container,
     CLASSES.BLUE_CORNER_SEL
@@ -72,7 +80,7 @@ export function initChangeFighter(container: HTMLDivElement) {
   changeRedCornerSub(container, changeRedCornerOb$);
 }
 
-export function initChangeWeightClass(container: HTMLDivElement) {
+export function initChangeWeightClass(container: HTMLDivElement): void {
   let changeWeightClassOb$ = createChangeWeightClassObs(
     container,
     CLASSES.WEIGHT_CLASS_SEL
@@ -80,29 +88,37 @@ export function initChangeWeightClass(container: HTMLDivElement) {
   changeWeightClassSub(container, changeWeightClassOb$);
 }
 
-export function initNewPick(container: HTMLDivElement) {
+export function initNewPick(container: HTMLDivElement): void {
   let initialNewPickOb$ = getFightersByWeightClass(
     WeightClass.Lightweight
   ).pipe(take(1));
   initialNewPickSub(initialNewPickOb$, container);
 }
 
-export function initRestartView(
+export function initGame(
   container: HTMLDivElement,
   fightCard: FightCard
-) {
-  let restartViewOb$ = createRestartViewObs(container, CLASSES.PLAY_BTN);
-  restartViewSub(container, fightCard, restartViewOb$);
-}
-
-export function initAddNewPick(
-  container: HTMLDivElement,
-  fightCard: FightCard
-) {
+): void {
   let addNewPickOb$ = createAddNewPickObs(
     container,
     CLASSES.ADD_PICK_BTN,
     fightCard
   );
-  addNewPickSub(container, addNewPickOb$);
+
+  let playOb$ = createPlayObs(
+    container,
+    CLASSES.PLAY_BTN,
+    fightCard,
+    addNewPickOb$
+  );
+
+  playSub(container, fightCard, playOb$);
+}
+
+export function initPlayAgain(
+  container: HTMLDivElement,
+  fightCard: FightCard
+): void {
+  let playAgainOb$ = createPlayAgainObs(container, CLASSES.PLAY_BTN);
+  playAgainSub(container, fightCard, playAgainOb$);
 }

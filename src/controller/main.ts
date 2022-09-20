@@ -12,10 +12,12 @@ import {
   clearSelect,
   renderDivs,
   showError,
-  getCheckedRadioValue,
   getSelectedValue,
+  selectButton,
+  enableElement,
+  disableElement,
 } from "../view/view";
-import { CLASSES, INDEXES, INITIAL } from "../constants";
+import { CLASSES, INDEXES, INITIAL, ROUND_PERCENT } from "../constants";
 import { FightCard } from "../model/fightCard";
 import { WeightClass } from "../enums/WeightClassEnum";
 import { Fighter } from "../model/fighter";
@@ -26,15 +28,13 @@ import {
   initNewPick,
   initChangeWeightClass,
   initFindingOponnent,
-  initRestartView,
-  initAddNewPick,
+  initGame,
+  initPlayAgain,
 } from "./streams/initalizingObs";
 import {
   initContainer,
   initFindingOpponentDiv,
 } from "../view/initalizingElements";
-import { Fight } from "../model/fight";
-import { Result } from "../model/result";
 
 export function init(): void {
   let findingOpponentDiv = initFindingOpponentDiv();
@@ -52,13 +52,11 @@ export function startGame(
 ): void {
   let fightCard: FightCard = new FightCard();
   let container: HTMLDivElement;
+
   container = initContainer(
     host,
     findingOpponentDiv,
     opponent
-    // fightCard,
-    // findingOpponent$,
-    // controlFindingOpponentOb$
   );
   initRestartingGame(container, fightCard);
   initFindingNewOpponent(
@@ -72,11 +70,11 @@ export function startGame(
   initChangeFighter(container);
   initNewPick(container);
 
-  initRestartView(container, fightCard);
-  initAddNewPick(container, fightCard);
+  initGame(container,fightCard);
+  initPlayAgain(container, fightCard);
 
-  //let gameOb$ = createGameObs(container, fightCard);
-  //gameSub(gameOb$);
+  disableElement(container, CLASSES.PLAY_BTN)
+  enableElement(container, CLASSES.ADD_PICK_BTN);
 }
 
 export function findNewOpponent(
@@ -84,57 +82,65 @@ export function findNewOpponent(
   fightCard: FightCard,
   opponent: Opponent
 ): void {
+  
   updateTopDiv(opponent, container);
   resetGameDiv(container);
-  fightCard = new FightCard();
+  
+  fightCard.reset();
+  fightCard.resetScore();
+
+  disableElement(container, CLASSES.PLAY_BTN)
+  enableElement(container,CLASSES.ADD_PICK_BTN);
 }
 
-export function restartView(
-  container: HTMLElement,
-  fightCard: FightCard
-): void {
+export function playAgain(container: HTMLElement, fightCard: FightCard): void {
   resetGameDiv(container);
-  fightCard = new FightCard();
+  
+  fightCard.reset();
+
+
+  enableElement(container, CLASSES.FINDING_OPP_BTN);
+  enableElement(container, CLASSES.RESTART_BTN);
+  disableElement(container, CLASSES.PLAY_BTN)
+  enableElement(container, CLASSES.ADD_PICK_BTN);
 }
 
 export function restartGame(
   container: HTMLElement,
   fightCard: FightCard
 ): void {
+  
   resetTopDiv(container);
   resetGameDiv(container);
-  fightCard = new FightCard();
+  
+  fightCard.reset();
+  fightCard.resetScore();
+
+  disableElement(container, CLASSES.PLAY_BTN)
+  enableElement(container,CLASSES.ADD_PICK_BTN);
 }
 
-// export function addNewPick(
-//   container: HTMLDivElement,
-//   fightCard: FightCard,
-// ): void {
-//   if (fightersArray.length === 0) {
-//     return;
-//   }
-//   console.log(fightersArray);
-//   let fight = new Fight();
+export function playGame(container: HTMLElement, fightCard: FightCard) {
+  disableElement(container, CLASSES.PLAY_BTN)
+  disableElement(container, CLASSES.ADD_PICK_BTN)
+  disableElement(container, CLASSES.FINDING_OPP_BTN);
+  disableElement(container, CLASSES.RESTART_BTN);
 
-//   let blueCornerFighter = initFighterFromArray(
-//     fightersArray,
-//     INDEXES.BLUE_CORNER
-//   );
-//   let redCornerFighter = initFighterFromArray(
-//     fightersArray,
-//     INDEXES.RED_CORNER
-//   );
-//   fight.setFighters(blueCornerFighter, redCornerFighter);
+  fightCard.getResults();
+  fightCard.getOpponentPicks(container);
 
-//   let winnerValue = getCheckedRadioValue(container, CLASSES.CORNER_RADIO);
-//   let methodValue = getSelectedValue(container, CLASSES.METHOD_SEL);
-//   let roundValue = getSelectedValue(container, CLASSES.ROUND_SEL);
-//   let yourPick = new Result(winnerValue, methodValue, roundValue);
-//   fight.setYourPick(yourPick);
+  
+  let resultFightCardDiv = selectElement(container, CLASSES.RESULT_FIGHTCARD_DIV);
+  fightCard.createResultDivs(resultFightCardDiv);
+  fightCard.renderResults(resultFightCardDiv);
+  
+  let opponentFightCardDiv = selectElement(container, CLASSES.OPP_FIGHTCARD_DIV);
+  fightCard.createOpponentPickDivs(opponentFightCardDiv);
+  fightCard.renderOpponentPicks(opponentFightCardDiv);
 
-//   fightCard.fights.push(fight);
-//   console.log(fightCard);
-// }
+  fightCard.calculateScores(container);
+  fightCard.setScores(container);
+}
 
 export function checkAddingPick(
   container: HTMLDivElement,
@@ -150,7 +156,7 @@ export function checkAddingPick(
     return showError("Please select two different fighters!");
   }
   let duplicate: boolean;
-    fightCard.fights.forEach((fight) => {
+  fightCard.fights.forEach((fight) => {
     let blueCornerPreviousValue = fight.blueCorner.id.toString();
     let redCornerPreviousValue = fight.redCorner.id.toString();
 
@@ -163,8 +169,8 @@ export function checkAddingPick(
       duplicate = true;
     }
   });
-  if(duplicate == true){
-    return showError("You already have that fight on your fight card!")
+  if (duplicate == true) {
+    return showError("You already have that fight on your fight card!");
   }
 
   let selectedRadio: HTMLInputElement = document.querySelector(
@@ -199,12 +205,12 @@ export function setOpponent(opponent: Opponent, container: HTMLElement): void {
   setPicture(opponentPicture, opponent.pictureSrc);
 
   let opponentNameLabel = selectElement(container, CLASSES.OPP_NAME_LABEL);
-  setLabel(opponentNameLabel, `Difficulty: ${opponent.name}`);
+  setLabel(opponentNameLabel, `${opponent.name}`);
   let opponentDifficultyLabel = selectElement(
     container,
     CLASSES.OPP_DIFF_LABEL
   );
-  setLabel(opponentDifficultyLabel, `Difficulty: ${opponent.difficulty}`);
+  setLabel(opponentDifficultyLabel, `${opponent.difficulty}`);
 }
 
 export function getRandomOpponent(opponents: Opponent[]): Opponent {

@@ -23,12 +23,15 @@ export const CLASSES = {
   RESULT_FIGHTCARD_DIV: "result-fightcard-div",
   YOUR_FIGHTCARD_DIV: "your-fightcard-div",
   YOUR_FIGHT_DIV:"your-fight-div",
-  YOUR_FIGHT_BLUE_DIV:"your-fight-blue-div",
-  YOUR_FIGHT_RED_DIV:"your-fight-red-div",
-  YOUR_FIGHT_PICK_DIV:"your-fight-pick-div",
+  OPP_FIGHT_DIV:"opponent-fight-div",
+  RESULT_FIGHT_DIV:"result-fight-div",
+  FIGHT_BLUE_DIV:"fight-blue-div",
+  FIGHT_RED_DIV:"fight-red-div",
+  FIGHT_PICK_DIV:"fight-pick-div",
   OPP_FIGHTCARD_DIV: "opponent-fightcard-div",
   ADD_PICK_BTN: "add-pick-button",
   PLAY_BTN: "play-button",
+  PLAY_AGAIN_BTN: "play-again-button",
   NEW_PICK_DIV: "new-pick-div",
   WEIGHT_CLASS_SEL: "weightclass-select",
   BLUE_CORNER_SEL: "blue-corner-select",
@@ -46,6 +49,7 @@ export const CLASSES = {
   STANDUP_LAB: "standup-label",
   GRAPPLING_LAB: "grappling-label",
   OVERALL_LAB: "overall-label",
+  BOLD_LABELS:"bold-labels"
 };
 
 export const INDEXES = {
@@ -59,3 +63,24 @@ export const INDEXES = {
 export const INITIAL = {
   SCORE: 0,
 };
+
+export const OPP_IMAGE_DIMENSIONS = {
+  WIDTH: 100,
+  HEIGHT: 80
+}
+
+export const ROUND_PERCENT = {
+  MAX: 100,
+  FIRST: 30,
+  SECOND: 30,
+  THIRD: 30,
+}
+
+export const OPPONENT_PERCENT = {
+  MAX: 100,
+  EASY: 30,
+  MEDIUM: 50,
+  HARD: 70,
+}
+
+export const PLAY_AGAIN_TIMER = 20000;

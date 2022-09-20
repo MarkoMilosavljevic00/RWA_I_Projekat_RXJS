@@ -1,19 +1,23 @@
 import {
-  delay,
+  combineLatest,
   delayWhen,
   from,
   fromEvent,
   map,
   Observable,
   of,
+  scan,
   Subject,
   switchMap,
-  take,
   takeUntil,
   timer,
+  withLatestFrom,
+  zip,
 } from "rxjs";
-import { API_URL, CLASSES, INDEXES } from "../../constants";
+import { API_URL, CLASSES, INDEXES, PLAY_AGAIN_TIMER } from "../../constants";
 import { DifficultyLevel } from "../../enums/DifficultyLevelEnum";
+import { Method } from "../../enums/MethodEnum";
+import { Round } from "../../enums/RoundEnum";
 import { WeightClass } from "../../enums/WeightClassEnum";
 import { Fight } from "../../model/fight";
 import { FightCard } from "../../model/fightCard";
@@ -21,6 +25,7 @@ import { Fighter } from "../../model/fighter";
 import { Opponent } from "../../model/opponent";
 import { Result } from "../../model/result";
 import {
+  enableElement,
   getCheckedRadioValue,
   getSelectedValue,
   selectElement,
@@ -103,6 +108,8 @@ export function getFightersFromForm(
     let emptyArray: Fighter[] = [];
     return of(emptyArray);
   }
+  enableElement(container, CLASSES.PLAY_BTN);
+
   const blueCornerId = getSelectedValue(container, CLASSES.BLUE_CORNER_SEL);
   const redCornerId = getSelectedValue(container, CLASSES.RED_CORNER_SEL);
 
@@ -117,15 +124,49 @@ export function getFightersFromForm(
   );
 }
 
-export function createFindingOpponentObs(
-  findingOpponentDiv: HTMLDivElement,
-  controlStartGameOb$: Subject<any>
-): Observable<Opponent> {
-  return createButtonObs(findingOpponentDiv, CLASSES.FINDING_OPP_BTN).pipe(
-    switchMap(() => getOpponents(getDifficulties(findingOpponentDiv))),
-    map((opponents) => getRandomOpponent(opponents)),
-    takeUntil(controlStartGameOb$)
-  );
+export function addFightToFightCardObs(
+  container: HTMLDivElement,
+  fightCard: FightCard,
+  fightersArray: Fighter[]
+): Observable<FightCard> {
+  return new Observable<FightCard>((generator) => {
+    if (fightersArray.length === 0) {
+      generator.next(fightCard);
+      return;
+    }
+    let fight = new Fight();
+
+    let blueCornerFighter = initFighterFromArray(
+      fightersArray,
+      INDEXES.BLUE_CORNER
+    );
+    let redCornerFighter = initFighterFromArray(
+      fightersArray,
+      INDEXES.RED_CORNER
+    );
+    fight.setFighters(blueCornerFighter, redCornerFighter, container);
+
+    let winnerValue = getCheckedRadioValue(container, CLASSES.CORNER_RADIO);
+    let methodValue = getSelectedValue(container, CLASSES.METHOD_SEL);
+    let roundValue: string;
+    if(methodValue === Method.Decision){
+      roundValue = Round.Round_3.toString();
+    }else{
+      roundValue = getSelectedValue(container, CLASSES.ROUND_SEL);
+    }
+
+    let yourPick = new Result(winnerValue, methodValue, roundValue);
+    fight.setYourPick(yourPick);
+
+    let yourFightCardDiv = selectElement(container, CLASSES.YOUR_FIGHTCARD_DIV);
+    fight.createYourFightDiv();
+    fightCard.fights.push(fight);
+
+    fightCard.renderYourPicksDivs(yourFightCardDiv);
+
+    //console.log("niz", fightCard);
+    generator.next(fightCard);
+  });
 }
 
 export function createAddNewPickObs(
@@ -141,50 +182,16 @@ export function createAddNewPickObs(
   );
 }
 
-export function addFightToFightCardObs(
-  container: HTMLDivElement,
-  fightCard: FightCard,
-  fightersArray: Fighter[]
-): Observable<FightCard> {
-  return new Observable<FightCard>((generator) => {
-    if (fightersArray.length === 0) {
-      generator.next(fightCard);
-      return;
-    }
-    let fight = new Fight();
-  
-    let blueCornerFighter = initFighterFromArray(
-      fightersArray,
-      INDEXES.BLUE_CORNER
-    );
-    let redCornerFighter = initFighterFromArray(
-      fightersArray,
-      INDEXES.RED_CORNER
-    );
-    fight.setFighters(blueCornerFighter, redCornerFighter);
-  
-    let winnerValue = getCheckedRadioValue(container, CLASSES.CORNER_RADIO);
-    let methodValue = getSelectedValue(container, CLASSES.METHOD_SEL);
-    let roundValue = getSelectedValue(container, CLASSES.ROUND_SEL);
-    let yourPick = new Result(winnerValue, methodValue, roundValue);
-    fight.setYourPick(yourPick);
-  
-    fight.createFightDiv();
-    fightCard.fights.push(fight);
-
-    generator.next(fightCard);
-    });
+export function createFindingOpponentObs(
+  findingOpponentDiv: HTMLDivElement,
+  controlStartGameOb$: Subject<any>
+): Observable<Opponent> {
+  return createButtonObs(findingOpponentDiv, CLASSES.FINDING_OPP_BTN).pipe(
+    switchMap(() => getOpponents(getDifficulties(findingOpponentDiv))),
+    map((opponents) => getRandomOpponent(opponents)),
+    takeUntil(controlStartGameOb$)
+  );
 }
-
-// export function createGameObs(container: HTMLDivElement, fightCard: FightCard) {
-//   let addNewPickOb$ = createAddNewPickObs(
-//     container,
-//     CLASSES_OF_ELEMENTS.ADD_PICK_BTN,
-//     fightCard
-//   );
-//   let playOb$ = createPlayObs(container, CLASSES_OF_ELEMENTS.PLAY_BTN);
-//   return playOb$.pipe(withLatestFrom(addNewPickOb$));
-// }
 
 export function createChangeWeightClassObs(
   container: HTMLDivElement,
@@ -207,16 +214,29 @@ export function createChangeFighterObs(
   );
 }
 
-function createPlayObs(container: HTMLDivElement, selection: string) {
-  let playOb$ = createButtonObs(container, selection);
+export function createPlayObs(
+  container: HTMLDivElement,
+  selection: string,
+  fightCard: FightCard,
+  addNewPickOb$: Observable<FightCard>
+) {
+  let playOb$ = createButtonObs(container, selection).pipe(
+    withLatestFrom(addNewPickOb$),
+    map((obsArray) => obsArray[1])
+  );
   return playOb$;
 }
 
-export function createRestartViewObs(
+export function createPlayAgainObs(
   container: HTMLDivElement,
   selection: string
 ) {
+  // let buttonOb$ = createButtonObs(container, selection);
+  // let playAgainOb$ = combineLatest([playOb$, buttonOb$])
+  // .pipe(map((fightCard) => playAgain(container, fightCard[0]))
+  // );
+  // return playAgainOb$;
   return createButtonObs(container, selection).pipe(
-    delayWhen(() => timer(10000))
+    delayWhen(() => timer(PLAY_AGAIN_TIMER))
   );
 }

@@ -1,17 +1,14 @@
 import { CLASSES, INITIAL } from "../constants";
 import { setOpponent, setScoreForBoth } from "../controller/main";
-import { initFindingOponnent } from "../controller/streams/initalizingObs";
 import { Fight } from "../model/fight";
 import { Opponent } from "../model/opponent";
+import { Result } from "../model/result";
 import { createFightElements, createFindingOpponentElements, createNewPickElements, createOpponentPicksElements, createResultsElements, createTopElements, createYourPicksElements, renderDivs, renderElements, replaceContainer } from "./view";
 
 export function initContainer(
   host: HTMLElement,
   findingOpponentDiv: HTMLDivElement,
   opponent: Opponent,
-  // fightCard: FightCard,
-  // findingOpponent$: Observable<Opponent>,
-  // controlFindingOpponentOb$: Subject<any>
 ): HTMLDivElement {
   let container: HTMLDivElement = document.createElement("div");
   container.className = container.className = CLASSES.CONTAINER;
@@ -97,11 +94,11 @@ export function initResultsDiv(): HTMLDivElement {
   return resultDiv;
 }
 
-export function initFightDiv(fight: Fight): HTMLDivElement {
+export function initFightDiv(fight: Fight, selection: string, result: Result): HTMLDivElement {
   let fightDiv: HTMLDivElement = document.createElement("div");
-  fightDiv.className = CLASSES.YOUR_FIGHT_DIV;
+  fightDiv.className = selection;
 
-  let fightElements = createFightElements(fight);
+  let fightElements = createFightElements(fight, result);
   renderElements(fightDiv, ...fightElements);
   return fightDiv;
 }

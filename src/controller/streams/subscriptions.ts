@@ -1,19 +1,17 @@
 import { Observable, Subject, Subscription } from "rxjs";
 import { CLASSES, INDEXES, INITIAL } from "../../constants";
-import { Fight } from "../../model/fight";
 import { FightCard } from "../../model/fightCard";
 import { Fighter } from "../../model/fighter";
 import { Opponent } from "../../model/opponent";
-import { Result } from "../../model/result";
-import { selectElement } from "../../view/view";
 import {
   fillFightersRating,
   fillFightersSelect,
   findNewOpponent,
   initFighterFromArray,
   restartGame,
-  restartView,
+  playAgain,
   startGame,
+  playGame,
 } from "../main";
 
 export function startGameSub(
@@ -32,12 +30,6 @@ export function startGameSub(
     );
   });
 }
-
-// export function gameSub(ob$: Observable<[Event, number[]]>): Subscription {
-//   return ob$.subscribe((data2) => {
-//     console.log(data2);
-//   });
-// }
 
 export function findNewOpponentSub(
   container: HTMLElement,
@@ -98,41 +90,24 @@ export function initialNewPickSub(
   });
 }
 
-export function restartViewSub(
+export function playAgainSub(
   container: HTMLElement,
   fightCard: FightCard,
-  restartGame$: Observable<Event>
+  playAgain$: Observable<Event>
 ): Subscription {
-  return restartGame$.subscribe(() => {
-    restartView(container, fightCard);
+  return playAgain$.subscribe(() => {
+    console.log("playagain");
+    playAgain(container, fightCard);
   });
 }
 
-export function addNewPickSub(
+export function playSub(
   container: HTMLDivElement,
-  // fightCard: FightCard,
-  restartGame$: Observable<FightCard>
+  fightCard: FightCard,
+  playOb$: Observable<FightCard>
 ): Subscription {
-  return restartGame$.subscribe((fightCard) => {
-    let yourFightCardDiv = selectElement(container, CLASSES.YOUR_FIGHTCARD_DIV);
-    fightCard.renderFightDivs(yourFightCardDiv);
+  return playOb$.subscribe(() => {
+    console.log("sad sam");
+    playGame(container, fightCard);
   });
 }
-
-// export function pushFightInFightCardSub(
-//   fight: Fight,
-//   fightCard: FightCard,
-//   yourPick: Result,
-//   getFightersOb$: Observable<Fighter[]>
-// ): Subscription {
-//   return getFightersOb$.subscribe((fightersArray) => {
-//     let blueCornerFighter = initFighterFromArray(fightersArray, INDEXES.BLUE_CORNER);
-//     let redCornerFighter = initFighterFromArray(fightersArray, INDEXES.RED_CORNER);
-
-//     fight.setFighters(blueCornerFighter, redCornerFighter);
-//     fight.setYourPick(yourPick);
-
-//     fightCard.fights.push(fight);
-//     console.log(fightCard.fights)
-//   });
-// }

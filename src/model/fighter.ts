@@ -7,7 +7,6 @@ export class Fighter {
   standup: number;
   grappling: number;
 
-
   constructor(
     id: number,
     name: string,
