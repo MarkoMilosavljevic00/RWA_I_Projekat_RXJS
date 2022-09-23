@@ -51,19 +51,19 @@ export class FightCard {
     this.fights = [];
   }
 
-  createResultDivs(container: HTMLElement) {
+  createResultDivs() {
     this.fights.forEach((fight) => fight.createResultFightDiv());
   }
 
-  createOpponentPickDivs(container: HTMLElement) {
+  createOpponentPickDivs() {
     this.fights.forEach((fight) => fight.createOpponentFightDiv());
   }
 
-  calculateScores(container: HTMLElement) {
+  calculateScores() {
     let yourNewScore: number = INITIAL.SCORE;
     let opponentNewScore: number = INITIAL.SCORE;
     this.fights.forEach((fight) => {
-      fight.calculateScore();
+      fight.calculateScores();
       yourNewScore += fight.yourScore;
       opponentNewScore += fight.opponentScore;
     });
@@ -71,6 +71,12 @@ export class FightCard {
     this.yourTotalScore += yourNewScore;
     this.opponentTotalScore += opponentNewScore;
     this.showScores(yourNewScore, opponentNewScore);
+  }
+
+  renderScoresForEach() {
+    this.fights.forEach((fight) => {
+      fight.renderScores();
+    });
   }
 
   setScores(container: HTMLElement) {

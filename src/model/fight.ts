@@ -8,7 +8,10 @@ import { DifficultyLevel } from "../enums/DifficultyLevelEnum";
 import { Method } from "../enums/MethodEnum";
 import { Round } from "../enums/RoundEnum";
 import { Winner } from "../enums/WinnerEnum";
-import { initFightDiv } from "../view/initalizingElements";
+import {
+  initFightDiv,
+  initPointsForEachDiv,
+} from "../view/initalizingElements";
 import { getSelectedValue, selectElement } from "../view/view";
 import { Fighter } from "./fighter";
 import { Result } from "./result";
@@ -33,10 +36,9 @@ export class Fight {
     redCorner: Fighter,
     container: HTMLDivElement
   ) {
-    if (this.checkIdsOfFighters(blueCorner, redCorner, container)) {
+    if (this.checkIdsOfFighters(blueCorner, redCorner, container) == false) {
       this.blueCorner = redCorner;
       this.redCorner = blueCorner;
-      console.log("greska");
     } else {
       this.blueCorner = blueCorner;
       this.redCorner = redCorner;
@@ -54,8 +56,8 @@ export class Fight {
       blueCorner.id === parseInt(redCornerId) &&
       redCorner.id === parseInt(blueCornerId)
     ) {
-      return true;
-    }
+      return false;
+    } else return true;
   }
 
   setYourPick(yourPick: Result) {
@@ -94,6 +96,11 @@ export class Fight {
     );
   }
 
+  renderScores() {
+    initPointsForEachDiv(this.yourFightDiv, this.yourScore);
+    initPointsForEachDiv(this.opponentFightDiv, this.opponentScore);
+  }
+
   getResult() {
     let winner: Winner = this.determineWinner();
 
@@ -106,7 +113,11 @@ export class Fight {
       round = this.determineRound();
     }
 
-    let result = new Result(winner.toString(), method.toString(), round.toString());
+    let result = new Result(
+      winner.toString(),
+      method.toString(),
+      round.toString()
+    );
     this.setResult(result);
   }
 
@@ -129,7 +140,11 @@ export class Fight {
       round = this.determineOpponentRound(difficulty);
     }
 
-    let opponentPick = new Result(winner.toString(), method.toString(), round.toString());
+    let opponentPick = new Result(
+      winner.toString(),
+      method.toString(),
+      round.toString()
+    );
     this.setOpponentPick(opponentPick);
   }
 
@@ -159,11 +174,20 @@ export class Fight {
     let correctRound = this.result.roundOfVictory;
     let faultyRound;
     if (correctRound === Round.Round_1) {
-      faultyRound = Math.random() < 0.5 ? Round.Round_2 : Round.Round_3;
+      faultyRound =
+        Math.random() < OPPONENT_PERCENT.WRONG_CHOICE
+          ? Round.Round_2
+          : Round.Round_3;
     } else if (correctRound === Round.Round_2) {
-      faultyRound = Math.random() < 0.5 ? Round.Round_1 : Round.Round_3;
+      faultyRound =
+        Math.random() < OPPONENT_PERCENT.WRONG_CHOICE
+          ? Round.Round_1
+          : Round.Round_3;
     } else {
-      faultyRound = Math.random() < 0.5 ? Round.Round_1 : Round.Round_2;
+      faultyRound =
+        Math.random() < OPPONENT_PERCENT.WRONG_CHOICE
+          ? Round.Round_1
+          : Round.Round_2;
     }
 
     let percentage: number = this.getPercentage(difficulty);
@@ -183,11 +207,20 @@ export class Fight {
     let correctMethod = this.result.methodOfVictory;
     let faultyMethod;
     if (correctMethod === Method.Decision) {
-      faultyMethod = Math.random() < 0.5 ? Method.KO_TKO : Method.Submission;
+      faultyMethod =
+        Math.random() < OPPONENT_PERCENT.WRONG_CHOICE
+          ? Method.KO_TKO
+          : Method.Submission;
     } else if (correctMethod === Method.KO_TKO) {
-      faultyMethod = Math.random() < 0.5 ? Method.Decision : Method.Submission;
+      faultyMethod =
+        Math.random() < OPPONENT_PERCENT.WRONG_CHOICE
+          ? Method.Decision
+          : Method.Submission;
     } else {
-      faultyMethod = Math.random() < 0.5 ? Method.Decision : Method.KO_TKO;
+      faultyMethod =
+        Math.random() < OPPONENT_PERCENT.WRONG_CHOICE
+          ? Method.Decision
+          : Method.KO_TKO;
     }
 
     let percentage: number = this.getPercentage(difficulty);
@@ -238,11 +271,11 @@ export class Fight {
   determineRound(): Round {
     let max = ROUND_PERCENT.MAX;
     let drawnNumber = Math.floor(Math.random() * max);
-    if (drawnNumber < ROUND_PERCENT.FIRST) {
+    if (drawnNumber <= ROUND_PERCENT.FIRST) {
       return Round.Round_1;
     } else if (
-      drawnNumber >= ROUND_PERCENT.SECOND &&
-      drawnNumber < ROUND_PERCENT.THIRD
+      drawnNumber > ROUND_PERCENT.FIRST &&
+      drawnNumber <= ROUND_PERCENT.SECOND
     ) {
       return Round.Round_2;
     } else {
@@ -268,13 +301,19 @@ export class Fight {
     return percentage;
   }
 
-  calculateScore(): void {
+  calculateScores(): void {
+    this.calculateYourScore();
+    this.calculateOpponentScore();
+  }
+
+  calculateYourScore(): void {
     this.yourScore = INITIAL.SCORE;
     if (this.yourPick.winner === this.result.winner) {
       this.yourScore += 10;
       if (this.yourPick.methodOfVictory === this.result.methodOfVictory) {
         if (this.yourPick.methodOfVictory === Method.Decision) {
           this.yourScore += 10;
+          return;
         } else {
           this.yourScore += 5;
         }
@@ -283,13 +322,16 @@ export class Fight {
         }
       }
     }
+  }
 
+  calculateOpponentScore(): void {
     this.opponentScore = INITIAL.SCORE;
     if (this.opponentPick.winner === this.result.winner) {
       this.opponentScore += 10;
       if (this.opponentPick.methodOfVictory === this.result.methodOfVictory) {
         if (this.opponentPick.methodOfVictory === Method.Decision) {
           this.opponentScore += 10;
+          return;
         } else {
           this.opponentScore += 5;
         }

@@ -3,12 +3,24 @@ import { setOpponent, setScoreForBoth } from "../controller/main";
 import { Fight } from "../model/fight";
 import { Opponent } from "../model/opponent";
 import { Result } from "../model/result";
-import { createFightElements, createFindingOpponentElements, createNewPickElements, createOpponentPicksElements, createResultsElements, createTopElements, createYourPicksElements, renderDivs, renderElements, replaceContainer } from "./view";
+import {
+  createFightElements,
+  createFindingOpponentElements,
+  createNewPickElements,
+  createOpponentPicksElements,
+  createPointsForEachDiv,
+  createResultsElements,
+  createTopElements,
+  createYourPicksElements,
+  renderDivs,
+  renderElements,
+  replaceContainer,
+} from "./view";
 
 export function initContainer(
   host: HTMLElement,
   findingOpponentDiv: HTMLDivElement,
-  opponent: Opponent,
+  opponent: Opponent
 ): HTMLDivElement {
   let container: HTMLDivElement = document.createElement("div");
   container.className = container.className = CLASSES.CONTAINER;
@@ -94,11 +106,25 @@ export function initResultsDiv(): HTMLDivElement {
   return resultDiv;
 }
 
-export function initFightDiv(fight: Fight, selection: string, result: Result): HTMLDivElement {
+export function initFightDiv(
+  fight: Fight,
+  selection: string,
+  result: Result
+): HTMLDivElement {
   let fightDiv: HTMLDivElement = document.createElement("div");
   fightDiv.className = selection;
 
   let fightElements = createFightElements(fight, result);
   renderElements(fightDiv, ...fightElements);
   return fightDiv;
+}
+
+export function initPointsForEachDiv(
+  fightDiv: HTMLDivElement,
+  score: number
+): void {
+  let pointsForEachDiv: HTMLDivElement = createPointsForEachDiv(score);
+  pointsForEachDiv.className = CLASSES.POINTS_FOR_EACH_DIV;
+
+  renderElements(fightDiv, pointsForEachDiv);
 }

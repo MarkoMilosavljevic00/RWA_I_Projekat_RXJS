@@ -96,7 +96,7 @@ export function playAgainSub(
   playAgain$: Observable<Event>
 ): Subscription {
   return playAgain$.subscribe(() => {
-    console.log("playagain");
+    //console.log("playagain");
     playAgain(container, fightCard);
   });
 }
@@ -107,7 +107,7 @@ export function playSub(
   playOb$: Observable<FightCard>
 ): Subscription {
   return playOb$.subscribe(() => {
-    console.log("sad sam");
+    //console.log(fightCard);
     playGame(container, fightCard);
   });
 }

@@ -119,6 +119,10 @@ export function initPlayAgain(
   container: HTMLDivElement,
   fightCard: FightCard
 ): void {
-  let playAgainOb$ = createPlayAgainObs(container, CLASSES.PLAY_BTN);
+  let playAgainOb$ = createPlayAgainObs(
+    container,
+    CLASSES.PLAY_BTN,
+    CLASSES.PLAY_AGAIN_BTN
+  );
   playAgainSub(container, fightCard, playAgainOb$);
 }

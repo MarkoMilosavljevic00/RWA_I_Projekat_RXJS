@@ -73,7 +73,7 @@
       "id": 2,
       "name": "Charles Oliveira",
       "weightClass": "Lightweight",
-      "standup": 75,
+      "standup": 1,
       "grappling": 95
     },
     {
@@ -81,7 +81,7 @@
       "name": "Islam Makachev",
       "weightClass": "Lightweight",
       "standup": 70,
-      "grappling": 97
+      "grappling": 99
     },
     {
       "id": 4,
@@ -101,8 +101,8 @@
       "id": 6,
       "name": "Michael Chandler",
       "weightClass": "Lightweight",
-      "standup": 70,
-      "grappling": 97
+      "standup": 1,
+      "grappling": 1
     },
     {
       "id": 7,

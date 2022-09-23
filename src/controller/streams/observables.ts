@@ -4,6 +4,7 @@ import {
   from,
   fromEvent,
   map,
+  merge,
   Observable,
   of,
   scan,
@@ -108,7 +109,6 @@ export function getFightersFromForm(
     let emptyArray: Fighter[] = [];
     return of(emptyArray);
   }
-  enableElement(container, CLASSES.PLAY_BTN);
 
   const blueCornerId = getSelectedValue(container, CLASSES.BLUE_CORNER_SEL);
   const redCornerId = getSelectedValue(container, CLASSES.RED_CORNER_SEL);
@@ -149,9 +149,9 @@ export function addFightToFightCardObs(
     let winnerValue = getCheckedRadioValue(container, CLASSES.CORNER_RADIO);
     let methodValue = getSelectedValue(container, CLASSES.METHOD_SEL);
     let roundValue: string;
-    if(methodValue === Method.Decision){
+    if (methodValue === Method.Decision) {
       roundValue = Round.Round_3.toString();
-    }else{
+    } else {
       roundValue = getSelectedValue(container, CLASSES.ROUND_SEL);
     }
 
@@ -219,7 +219,7 @@ export function createPlayObs(
   selection: string,
   fightCard: FightCard,
   addNewPickOb$: Observable<FightCard>
-) {
+): Observable<FightCard> {
   let playOb$ = createButtonObs(container, selection).pipe(
     withLatestFrom(addNewPickOb$),
     map((obsArray) => obsArray[1])
@@ -229,14 +229,18 @@ export function createPlayObs(
 
 export function createPlayAgainObs(
   container: HTMLDivElement,
-  selection: string
+  selectionPlay: string,
+  selectionPlayAgain: string
 ) {
   // let buttonOb$ = createButtonObs(container, selection);
   // let playAgainOb$ = combineLatest([playOb$, buttonOb$])
   // .pipe(map((fightCard) => playAgain(container, fightCard[0]))
   // );
   // return playAgainOb$;
-  return createButtonObs(container, selection).pipe(
+  let buttonOb$ = createButtonObs(container, selectionPlayAgain);
+  let waitOb$ = createButtonObs(container, selectionPlay).pipe(
     delayWhen(() => timer(PLAY_AGAIN_TIMER))
   );
+
+  return merge(buttonOb$, waitOb$);
 }

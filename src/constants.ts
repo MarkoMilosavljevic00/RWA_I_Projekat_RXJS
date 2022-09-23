@@ -49,7 +49,8 @@ export const CLASSES = {
   STANDUP_LAB: "standup-label",
   GRAPPLING_LAB: "grappling-label",
   OVERALL_LAB: "overall-label",
-  BOLD_LABELS:"bold-labels"
+  FIGHTER_LABEL:"bold-labels",
+  POINTS_FOR_EACH_DIV:"points-for-each-div",
 };
 
 export const INDEXES = {
@@ -70,10 +71,10 @@ export const OPP_IMAGE_DIMENSIONS = {
 }
 
 export const ROUND_PERCENT = {
-  MAX: 100,
+  MAX: 90,
   FIRST: 30,
-  SECOND: 30,
-  THIRD: 30,
+  SECOND: 60,
+  THIRD: 90,
 }
 
 export const OPPONENT_PERCENT = {
@@ -81,6 +82,7 @@ export const OPPONENT_PERCENT = {
   EASY: 30,
   MEDIUM: 50,
   HARD: 70,
+  WRONG_CHOICE: 0.5,
 }
 
-export const PLAY_AGAIN_TIMER = 20000;
+export const PLAY_AGAIN_TIMER = 200000000;

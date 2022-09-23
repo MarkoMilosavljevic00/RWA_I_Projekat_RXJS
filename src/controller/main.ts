@@ -16,6 +16,8 @@ import {
   selectButton,
   enableElement,
   disableElement,
+  disableMultipleElements,
+  enableMultipleElements,
 } from "../view/view";
 import { CLASSES, INDEXES, INITIAL, ROUND_PERCENT } from "../constants";
 import { FightCard } from "../model/fightCard";
@@ -53,11 +55,7 @@ export function startGame(
   let fightCard: FightCard = new FightCard();
   let container: HTMLDivElement;
 
-  container = initContainer(
-    host,
-    findingOpponentDiv,
-    opponent
-  );
+  container = initContainer(host, findingOpponentDiv, opponent);
   initRestartingGame(container, fightCard);
   initFindingNewOpponent(
     controlFindingOpponentOb$,
@@ -70,10 +68,10 @@ export function startGame(
   initChangeFighter(container);
   initNewPick(container);
 
-  initGame(container,fightCard);
+  initGame(container, fightCard);
   initPlayAgain(container, fightCard);
 
-  disableElement(container, CLASSES.PLAY_BTN)
+  disableElement(container, CLASSES.PLAY_BTN);
   enableElement(container, CLASSES.ADD_PICK_BTN);
 }
 
@@ -82,64 +80,75 @@ export function findNewOpponent(
   fightCard: FightCard,
   opponent: Opponent
 ): void {
-  
   updateTopDiv(opponent, container);
   resetGameDiv(container);
-  
+
   fightCard.reset();
   fightCard.resetScore();
 
-  disableElement(container, CLASSES.PLAY_BTN)
-  enableElement(container,CLASSES.ADD_PICK_BTN);
+  disableMultipleElements(container, CLASSES.PLAY_BTN, CLASSES.PLAY_AGAIN_BTN);
+  enableElement(container, CLASSES.ADD_PICK_BTN);
 }
 
 export function playAgain(container: HTMLElement, fightCard: FightCard): void {
   resetGameDiv(container);
-  
+
   fightCard.reset();
 
-
-  enableElement(container, CLASSES.FINDING_OPP_BTN);
-  enableElement(container, CLASSES.RESTART_BTN);
-  disableElement(container, CLASSES.PLAY_BTN)
-  enableElement(container, CLASSES.ADD_PICK_BTN);
+  enableMultipleElements(
+    container,
+    CLASSES.FINDING_OPP_BTN,
+    CLASSES.RESTART_BTN,
+    CLASSES.ADD_PICK_BTN
+  );
+  disableMultipleElements(container, CLASSES.PLAY_BTN, CLASSES.PLAY_AGAIN_BTN);
 }
 
 export function restartGame(
   container: HTMLElement,
   fightCard: FightCard
 ): void {
-  
   resetTopDiv(container);
   resetGameDiv(container);
-  
+
   fightCard.reset();
   fightCard.resetScore();
 
-  disableElement(container, CLASSES.PLAY_BTN)
-  enableElement(container,CLASSES.ADD_PICK_BTN);
+  disableMultipleElements(container, CLASSES.PLAY_BTN, CLASSES.PLAY_AGAIN_BTN);
+  enableElement(container, CLASSES.ADD_PICK_BTN);
 }
 
 export function playGame(container: HTMLElement, fightCard: FightCard) {
-  disableElement(container, CLASSES.PLAY_BTN)
-  disableElement(container, CLASSES.ADD_PICK_BTN)
-  disableElement(container, CLASSES.FINDING_OPP_BTN);
-  disableElement(container, CLASSES.RESTART_BTN);
-
   fightCard.getResults();
   fightCard.getOpponentPicks(container);
 
-  
-  let resultFightCardDiv = selectElement(container, CLASSES.RESULT_FIGHTCARD_DIV);
-  fightCard.createResultDivs(resultFightCardDiv);
+  fightCard.calculateScores();
+  fightCard.setScores(container);
+
+  let resultFightCardDiv = selectElement(
+    container,
+    CLASSES.RESULT_FIGHTCARD_DIV
+  );
+  fightCard.createResultDivs();
   fightCard.renderResults(resultFightCardDiv);
-  
-  let opponentFightCardDiv = selectElement(container, CLASSES.OPP_FIGHTCARD_DIV);
-  fightCard.createOpponentPickDivs(opponentFightCardDiv);
+
+  let opponentFightCardDiv = selectElement(
+    container,
+    CLASSES.OPP_FIGHTCARD_DIV
+  );
+  fightCard.createOpponentPickDivs();
   fightCard.renderOpponentPicks(opponentFightCardDiv);
 
-  fightCard.calculateScores(container);
-  fightCard.setScores(container);
+  fightCard.renderScoresForEach();
+
+  disableMultipleElements(
+    container,
+    CLASSES.PLAY_BTN,
+    CLASSES.ADD_PICK_BTN,
+    CLASSES.FINDING_OPP_BTN,
+    CLASSES.RESTART_BTN
+  );
+  enableElement(container, CLASSES.PLAY_AGAIN_BTN);
 }
 
 export function checkAddingPick(
@@ -180,6 +189,7 @@ export function checkAddingPick(
     return showError("Please select winner! ");
   }
 
+  enableElement(container, CLASSES.PLAY_BTN);
   return true;
 }
 

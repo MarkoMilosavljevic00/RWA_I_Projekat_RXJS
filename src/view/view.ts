@@ -1,5 +1,10 @@
 import Swal from "sweetalert2";
-import { CLASSES, INDEXES, OPP_IMAGE_DIMENSIONS } from "../constants";
+import {
+  CLASSES,
+  INDEXES,
+  OPP_IMAGE_DIMENSIONS,
+  PLAY_AGAIN_TIMER,
+} from "../constants";
 import { DifficultyLevel } from "../enums/DifficultyLevelEnum";
 import { Method } from "../enums/MethodEnum";
 import { Round } from "../enums/RoundEnum";
@@ -52,7 +57,10 @@ export function createOpponentStatsDiv() {
   let opponentStatsDiv = document.createElement("div");
   opponentStatsDiv.className = CLASSES.OPP_STATS_DIV;
 
-  let opponentPicture = new Image(OPP_IMAGE_DIMENSIONS.WIDTH, OPP_IMAGE_DIMENSIONS.HEIGHT);
+  let opponentPicture = new Image(
+    OPP_IMAGE_DIMENSIONS.WIDTH,
+    OPP_IMAGE_DIMENSIONS.HEIGHT
+  );
   opponentPicture.className = CLASSES.OPP_PICTURE;
 
   let opponentNameDiv = document.createElement("div");
@@ -71,14 +79,17 @@ export function createOpponentStatsDiv() {
   opponentDifficultyLabel.classList.add(CLASSES.OPP_DIFF_LABEL);
 
   renderElements(opponentNameDiv, opponentNameText, opponentNameLabel);
-  renderElements(opponentDifficultyDiv, opponentDifficultyText, opponentDifficultyLabel);
-
+  renderElements(
+    opponentDifficultyDiv,
+    opponentDifficultyText,
+    opponentDifficultyLabel
+  );
 
   renderElements(
     opponentStatsDiv,
     opponentPicture,
     opponentNameDiv,
-    opponentDifficultyDiv,
+    opponentDifficultyDiv
   );
 
   return opponentStatsDiv;
@@ -118,9 +129,14 @@ export function createYourPicksElements(): HTMLElement[] {
   playBtn.innerHTML = "PLAY";
   playBtn.className = CLASSES.PLAY_BTN;
 
+  let playAgainBtn = document.createElement("button");
+  playAgainBtn.innerHTML = "Play Again";
+  playAgainBtn.className = CLASSES.PLAY_AGAIN_BTN;
+  playAgainBtn.style.visibility = "hidden";
+
   let newPickDiv = initNewPickDiv();
 
-  return [yourPicksLabel, yourFightCardDiv, newPickDiv, playBtn];
+  return [yourPicksLabel, yourFightCardDiv, newPickDiv, playBtn, playAgainBtn];
 }
 
 export function createOpponentPicksElements() {
@@ -177,15 +193,61 @@ export function createBottomNewPickDiv() {
 export function createOutcomeDiv() {
   let outcomeDiv = document.createElement("div");
   outcomeDiv.className = CLASSES.OUTCOME_DIV;
-  let methodes = Object.values(Method);
+  let methodesEnum = Object.values(Method);
+  let methodes: string[] = getStringsOfMethods(methodesEnum);
   let methodSelect = createSelect(CLASSES.METHOD_SEL);
-  setSelectOptions(methodSelect, methodes, methodes);
-  let rounds = Object.values(Round);
+  setSelectOptions(methodSelect, methodes, methodesEnum);
+
+  let roundsEnum = Object.values(Round);
+  let rounds: string[] = getStringsOfRounds(roundsEnum)
   let roundSelect = createSelect(CLASSES.ROUND_SEL);
-  setSelectOptions(roundSelect, rounds, rounds);
+  setSelectOptions(roundSelect, rounds, roundsEnum);
+
   renderElements(outcomeDiv, methodSelect, roundSelect);
 
   return outcomeDiv;
+}
+
+function getStringsOfMethods(methodesEnum: Method[]) {
+  let methodes: string[] = [];
+  methodesEnum.forEach((methodEnum) => {
+    switch (methodEnum) {
+      case Method.Decision:
+        methodes.push("Decision");
+        break;
+      case Method.KO_TKO:
+        methodes.push("KO/TKO");
+        break;
+      case Method.Submission:
+        methodes.push("Submission");
+        break;
+
+      default:
+        break;
+    }
+  });
+  return methodes;
+}
+
+function getStringsOfRounds(roundsEnum: Round[]) {
+  let rounds: string[] = [];
+  roundsEnum.forEach((methodEnum) => {
+    switch (methodEnum) {
+      case Round.Round_1:
+        rounds.push("I Round");
+        break;
+      case Round.Round_2:
+        rounds.push("II Round");
+        break;
+      case Round.Round_3:
+        rounds.push("III Round");
+        break;
+
+      default:
+        break;
+    }
+  });
+  return rounds;
 }
 
 export function createCornerDiv(
@@ -228,22 +290,21 @@ function createFighterStats() {
   overallRatingText.innerHTML = "Overall: ";
 
   let standupRating = document.createElement("label");
-  standupRating.classList.add(CLASSES.STANDUP_LAB)
+  standupRating.classList.add(CLASSES.STANDUP_LAB);
   let grapplingRating = document.createElement("label");
-  grapplingRating.classList.add(CLASSES.GRAPPLING_LAB)
+  grapplingRating.classList.add(CLASSES.GRAPPLING_LAB);
   let overallRating = document.createElement("label");
-  overallRating.classList.add(CLASSES.OVERALL_LAB)
+  overallRating.classList.add(CLASSES.OVERALL_LAB);
 
   renderElements(standupRatingDiv, standupRatingText, standupRating);
   renderElements(grapplingRatingDiv, grapplingRatingText, grapplingRating);
   renderElements(overallRatingDiv, overallRatingText, overallRating);
 
-
   renderElements(
     fighterStatsDiv,
     standupRatingDiv,
     grapplingRatingDiv,
-    overallRatingDiv,
+    overallRatingDiv
   );
 
   return fighterStatsDiv;
@@ -263,27 +324,50 @@ export function createTopNewPickDiv() {
   return topNewPickDiv;
 }
 
-export function createFightElements(fight: Fight, pick: Result){
-  let blueCornerDiv = document.createElement("div");
-  blueCornerDiv.className = CLASSES.FIGHT_BLUE_DIV;
+export function createFightElements(fight: Fight, pick: Result) {
+  let blueCornerDiv = createFightCornerDiv(fight, CLASSES.FIGHT_BLUE_DIV);
+  let redCornerDiv = createFightCornerDiv(fight, CLASSES.FIGHT_RED_DIV);
+  let pickDiv = createPickDiv(pick);
 
-  let blueCornerText = document.createElement("label");
-  blueCornerText.innerHTML = "Blue corner fighter: ";
+  roundWinner(pick, blueCornerDiv, redCornerDiv);
 
-  let blueCornerFighterLabel = document.createElement("label");
-  blueCornerFighterLabel.innerHTML = fight.blueCorner.name;
-  blueCornerFighterLabel.className = CLASSES.BOLD_LABELS;
-  
-  let redCornerDiv = document.createElement("div");
-  redCornerDiv.className = CLASSES.FIGHT_RED_DIV;
+  return [blueCornerDiv, redCornerDiv, pickDiv];
+}
 
-  let redCornerText = document.createElement("label");
-  redCornerText.innerHTML = "Red corner fighter: ";
+export function createPointsForEachDiv(score: number) {
+  let pointsForEachDiv = document.createElement("div");
 
-  let redCornerFighterLabel = document.createElement("label");
-  redCornerFighterLabel.innerHTML = fight.redCorner.name;
-  redCornerFighterLabel.className = CLASSES.BOLD_LABELS;
-  
+  let pointsForEachText = document.createElement("label");
+  pointsForEachText.innerHTML = "Points: ";
+
+  let pointsForEachLabel = document.createElement("label");
+
+  pointsForEachLabel.innerHTML = `+ ${score.toString()}`;
+  if(score > 0){
+    pointsForEachLabel.style.color = "green";
+  }else{
+    pointsForEachLabel.style.color = "red";
+  }
+
+  renderElements(pointsForEachDiv, pointsForEachText, pointsForEachLabel);
+  return pointsForEachDiv;
+}
+
+function roundWinner(
+  pick: Result,
+  blueCornerDiv: HTMLDivElement,
+  redCornerDiv: HTMLDivElement
+) {
+  if (pick.winner === Winner.BLUE_CORNER) {
+    blueCornerDiv.style.border = "solid";
+    blueCornerDiv.style.borderColor = "green";
+  } else {
+    redCornerDiv.style.border = "solid";
+    redCornerDiv.style.borderColor = "green";
+  }
+}
+
+function createPickDiv(pick: Result) {
   let pickDiv = document.createElement("div");
   pickDiv.className = CLASSES.FIGHT_PICK_DIV;
 
@@ -292,8 +376,9 @@ export function createFightElements(fight: Fight, pick: Result){
   methodText.innerHTML = "Method: ";
 
   let methodLabel = document.createElement("label");
-  methodLabel.className = CLASSES.BOLD_LABELS;
+  methodLabel.className = CLASSES.FIGHTER_LABEL;
   methodLabel.innerHTML = `${pick.methodOfVictory}`;
+  renderElements(methodDiv, methodText, methodLabel);
 
   let roundDiv = document.createElement("div");
   let roundText = document.createElement("label");
@@ -301,26 +386,34 @@ export function createFightElements(fight: Fight, pick: Result){
 
   let roundLabel = document.createElement("label");
   roundLabel.innerHTML = `${pick.roundOfVictory}`;
-  roundLabel.className = CLASSES.BOLD_LABELS;
-
-  
-  if(pick.winner === Winner.BLUE_CORNER){
-    blueCornerDiv.style.border = "solid";
-    blueCornerDiv.style.borderColor = "green";
-  }
-  else{
-    redCornerDiv.style.border = "solid";
-    redCornerDiv.style.borderColor = "green";
-  }
-  
-  renderElements(blueCornerDiv, blueCornerText, blueCornerFighterLabel);
-  renderElements(redCornerDiv, redCornerText, redCornerFighterLabel);
-  renderElements(methodDiv, methodText, methodLabel);
+  roundLabel.className = CLASSES.FIGHTER_LABEL;
   renderElements(roundDiv, roundText, roundLabel);
-  renderElements(pickDiv, methodDiv, roundDiv);
 
-  
-  return [blueCornerDiv, redCornerDiv, pickDiv]
+  renderElements(pickDiv, methodDiv, roundDiv);
+  return pickDiv;
+}
+
+function createFightCornerDiv(fight: Fight, selection: string) {
+  let cornerDiv = document.createElement("div");
+  cornerDiv.className = selection;
+
+  let cornerText = document.createElement("label");
+  if (selection === CLASSES.FIGHT_BLUE_DIV) {
+    cornerText.innerHTML = "Blue corner fighter: ";
+  } else {
+    cornerText.innerHTML = "Red corner fighter: ";
+  }
+
+  let cornerFighterLabel = document.createElement("label");
+  if (selection === CLASSES.FIGHT_BLUE_DIV) {
+    cornerFighterLabel.innerHTML = fight.blueCorner.name;
+  } else {
+    cornerFighterLabel.innerHTML = fight.redCorner.name;
+  }
+  cornerFighterLabel.className = CLASSES.FIGHTER_LABEL;
+  renderElements(cornerDiv, cornerText, cornerFighterLabel);
+
+  return cornerDiv;
 }
 
 export function createSelect(classEl: string) {
@@ -347,8 +440,8 @@ export function replaceContainer(
 }
 
 export function clearChilds(container: HTMLElement): void {
-  while(container.firstChild){
-    container.removeChild(container.firstChild)
+  while (container.firstChild) {
+    container.removeChild(container.firstChild);
   }
 }
 
@@ -384,7 +477,9 @@ export function getCheckedRadioValue(
   container: HTMLDivElement,
   selection: string
 ): string {
-  let selectedRadio: HTMLInputElement = document.querySelector(`input[name=${selection}]:checked`);
+  let selectedRadio: HTMLInputElement = document.querySelector(
+    `input[name=${selection}]:checked`
+  );
   let value = selectedRadio.value;
   return value;
 }
@@ -397,7 +492,6 @@ export function getSelectedValue(
   let value = select.options[select.selectedIndex].value;
   return value;
 }
-
 
 export function getValuesOfFighterSelect(container: HTMLDivElement): number[] {
   let blueSelect = selectSelectionEl(container, CLASSES.BLUE_CORNER_SEL);
@@ -441,6 +535,19 @@ export function selectSelectionEl(
   return select;
 }
 
+export function disableMultipleElements(container: HTMLElement, ...selections: string[]){
+  selections.forEach(selection => {
+    disableElement(container, selection);
+  });
+}
+
+export function enableMultipleElements(container: HTMLElement, ...selections: string[]){
+  selections.forEach(selection => {
+    enableElement(container, selection);
+  });
+}
+
+
 export function disableElement(container: HTMLElement, selection: string) {
   let element = selectElement(container, selection);
   element.style.visibility = `hidden`;
@@ -453,33 +560,39 @@ export function enableElement(container: HTMLElement, selection: string) {
 
 export function showError(text: string): boolean {
   Swal.fire({
-    icon: 'warning',
-    title: 'Oops...',
+    icon: "warning",
+    title: "Oops...",
     text: `${text}`,
   });
   return false;
 }
 
-export function showVictory(yourScore: number, opponentScore: number): void{
+export function showVictory(yourScore: number, opponentScore: number): void {
   Swal.fire({
-    icon: 'success',
-    title: 'Congratulations, you won!',
-    text: `It's ${yourScore} : ${opponentScore}. You can play again in 20 seconds!`,
+    icon: "success",
+    title: "Congratulations, you won!",
+    text: `It's ${yourScore} : ${opponentScore}. You can play again in ${
+      PLAY_AGAIN_TIMER / 1000
+    } seconds or click on button Play Again!`,
   });
 }
 
-export function showDefeat(yourScore: number, opponentScore: number): void{
+export function showDefeat(yourScore: number, opponentScore: number): void {
   Swal.fire({
-    icon: 'error',
-    title: 'You lost!',
-    text: `It's ${yourScore} : ${opponentScore}. You can play again in 20 seconds!`,
+    icon: "error",
+    title: "You lost!",
+    text: `It's ${yourScore} : ${opponentScore}. You can play again in ${
+      PLAY_AGAIN_TIMER / 1000
+    } seconds or click on button Play Again!`,
   });
 }
 
-export function showDraw(yourScore: number, opponentScore: number): void{
+export function showDraw(yourScore: number, opponentScore: number): void {
   Swal.fire({
-    icon: 'question',
+    icon: "question",
     title: `It's draw!`,
-    text: `It's ${yourScore} : ${opponentScore}. You can play again in 20 seconds!`,
+    text: `It's ${yourScore} : ${opponentScore}. You can play again in ${
+      PLAY_AGAIN_TIMER / 1000
+    } seconds or click on button Play Again!`,
   });
 }
