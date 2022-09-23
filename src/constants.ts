@@ -86,3 +86,5 @@ export const OPPONENT_PERCENT = {
 }
 
 export const PLAY_AGAIN_TIMER = 200000000;
+
+export const NUMBER_OF_RATINGS = 2;

@@ -1,3 +1,4 @@
+import { NUMBER_OF_RATINGS } from "../constants";
 import { WeightClass } from "../enums/WeightClassEnum";
 
 export class Fighter {
@@ -22,7 +23,7 @@ export class Fighter {
   }
 
   calcOverall() {
-    let overall = Math.round((this.standup + this.grappling) / 2);
+    let overall = Math.round((this.standup + this.grappling) / NUMBER_OF_RATINGS);
     return overall;
   }
 }
