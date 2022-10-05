@@ -85,6 +85,6 @@ export const OPPONENT_PERCENT = {
   WRONG_CHOICE: 0.5,
 }
 
-export const PLAY_AGAIN_TIMER = 200000000;
+export const PLAY_AGAIN_TIMER = 200;
 
 export const NUMBER_OF_RATINGS = 2;
