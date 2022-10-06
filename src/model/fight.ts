@@ -3,7 +3,7 @@ import {
   INITIAL,
   OPPONENT_PERCENT,
   ROUND_PERCENT,
-} from "../constants";
+} from "../../environment";
 import { DifficultyLevel } from "../enums/DifficultyLevelEnum";
 import { Method } from "../enums/MethodEnum";
 import { Round } from "../enums/RoundEnum";
@@ -11,7 +11,7 @@ import { Winner } from "../enums/WinnerEnum";
 import {
   initFightDiv,
   initPointsForEachDiv,
-} from "../view/initalizingElements";
+} from "../view/initalizing.elements";
 import { getSelectedValue, selectElement } from "../view/view";
 import { Fighter } from "./fighter";
 import { Result } from "./result";

@@ -13,13 +13,12 @@ import {
   renderDivs,
   showError,
   getSelectedValue,
-  selectButton,
   enableElement,
   disableElement,
   disableMultipleElements,
   enableMultipleElements,
 } from "../view/view";
-import { CLASSES, INDEXES, INITIAL, ROUND_PERCENT } from "../constants";
+import { CLASSES, INDEXES, INITIAL, ROUND_PERCENT } from "../../environment";
 import { FightCard } from "../model/fightCard";
 import { WeightClass } from "../enums/WeightClassEnum";
 import { Fighter } from "../model/fighter";
@@ -32,11 +31,11 @@ import {
   initFindingOponnent,
   initGame,
   initPlayAgain,
-} from "./streams/initalizingObs";
+} from "./streams/initalizing.observables";
 import {
   initContainer,
   initFindingOpponentDiv,
-} from "../view/initalizingElements";
+} from "../view/initalizing.elements";
 
 export function init(): void {
   let findingOpponentDiv = initFindingOpponentDiv();
@@ -71,7 +70,7 @@ export function startGame(
   initGame(container, fightCard);
   initPlayAgain(container, fightCard);
 
-  disableElement(container, CLASSES.PLAY_BTN);
+  disableMultipleElements(container, CLASSES.PLAY_BTN, CLASSES.LIVE_DIV);
   enableElement(container, CLASSES.ADD_PICK_BTN);
 }
 

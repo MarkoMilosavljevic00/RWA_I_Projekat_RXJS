@@ -1,4 +1,4 @@
-import { CLASSES, INITIAL } from "../constants";
+import { CLASSES, INITIAL } from "../../environment";
 import { setScore } from "../controller/main";
 import {
   renderDivs,

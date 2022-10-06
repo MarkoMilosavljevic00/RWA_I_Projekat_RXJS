@@ -1,21 +1,24 @@
-import { CLASSES, INITIAL } from "../constants";
+import { CLASSES, INITIAL } from "../../environment";
 import { setOpponent, setScoreForBoth } from "../controller/main";
 import { Fight } from "../model/fight";
 import { Opponent } from "../model/opponent";
 import { Result } from "../model/result";
 import {
+  renderDivs,
+  renderElements,
+  replaceContainer,
+} from "./view";
+import {
   createFightElements,
   createFindingOpponentElements,
+  createLiveElements,
   createNewPickElements,
   createOpponentPicksElements,
   createPointsForEachDiv,
   createResultsElements,
   createTopElements,
-  createYourPicksElements,
-  renderDivs,
-  renderElements,
-  replaceContainer,
-} from "./view";
+  createYourPicksElements
+} from "./creating.elements";
 
 export function initContainer(
   host: HTMLElement,
@@ -27,6 +30,7 @@ export function initContainer(
 
   replaceContainer(host, container, findingOpponentDiv);
   let topDiv = initTopDiv(findingOpponentDiv, opponent);
+  let liveDiv = initLiveDiv();
   let gameDiv = initGameDiv();
   renderDivs(container, topDiv, gameDiv);
 
@@ -128,3 +132,12 @@ export function initPointsForEachDiv(
 
   renderElements(fightDiv, pointsForEachDiv);
 }
+
+function initLiveDiv() {
+  let liveDiv = document.createElement("div");
+  liveDiv.className = CLASSES.LIVE_DIV;
+
+  let liveElements = createLiveElements();
+  renderElements(liveDiv, ...liveElements);
+}
+

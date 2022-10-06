@@ -1,5 +1,5 @@
 import { Observable, Subject, Subscription } from "rxjs";
-import { CLASSES, INDEXES, INITIAL } from "../../constants";
+import { CLASSES, INDEXES, INITIAL } from "../../../environment";
 import { FightCard } from "../../model/fightCard";
 import { Fighter } from "../../model/fighter";
 import { Opponent } from "../../model/opponent";

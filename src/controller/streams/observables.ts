@@ -15,7 +15,7 @@ import {
   withLatestFrom,
   zip,
 } from "rxjs";
-import { API_URL, CLASSES, INDEXES, PLAY_AGAIN_TIMER } from "../../constants";
+import { API_URL, CLASSES, INDEXES, PLAY_AGAIN_TIMER } from "../../../environment";
 import { DifficultyLevel } from "../../enums/DifficultyLevelEnum";
 import { Method } from "../../enums/MethodEnum";
 import { Round } from "../../enums/RoundEnum";

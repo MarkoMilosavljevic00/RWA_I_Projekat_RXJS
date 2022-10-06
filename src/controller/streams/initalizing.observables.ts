@@ -18,7 +18,7 @@ import {
   startGameSub,
   playSub,
 } from "./subscriptions";
-import { CLASSES } from "../../constants";
+import { CLASSES } from "../../../environment";
 import {
   completeControlFlowObs,
   createControlFlowObs,
@@ -105,14 +105,17 @@ export function initGame(
     fightCard
   );
 
-  let playOb$ = createPlayObs(
-    container,
-    CLASSES.PLAY_BTN,
-    fightCard,
-    addNewPickOb$
-  );
+  // V1 OBS
+  // let playOb$ = createPlayObs(
+  //   container,
+  //   CLASSES.PLAY_BTN,
+  //   fightCard,
+  //   addNewPickOb$
+  // );
+  // playSub(container, fightCard, playOb$);
 
-  playSub(container, fightCard, playOb$);
+  //let timerOb$ = createTimerOb$()
+
 }
 
 export function initPlayAgain(

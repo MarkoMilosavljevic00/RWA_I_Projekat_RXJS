@@ -22,12 +22,12 @@ export const CLASSES = {
   RESULT_DIV: "result-div",
   RESULT_FIGHTCARD_DIV: "result-fightcard-div",
   YOUR_FIGHTCARD_DIV: "your-fightcard-div",
-  YOUR_FIGHT_DIV:"your-fight-div",
-  OPP_FIGHT_DIV:"opponent-fight-div",
-  RESULT_FIGHT_DIV:"result-fight-div",
-  FIGHT_BLUE_DIV:"fight-blue-div",
-  FIGHT_RED_DIV:"fight-red-div",
-  FIGHT_PICK_DIV:"fight-pick-div",
+  YOUR_FIGHT_DIV: "your-fight-div",
+  OPP_FIGHT_DIV: "opponent-fight-div",
+  RESULT_FIGHT_DIV: "result-fight-div",
+  FIGHT_BLUE_DIV: "fight-blue-div",
+  FIGHT_RED_DIV: "fight-red-div",
+  FIGHT_PICK_DIV: "fight-pick-div",
   OPP_FIGHTCARD_DIV: "opponent-fightcard-div",
   ADD_PICK_BTN: "add-pick-button",
   PLAY_BTN: "play-button",
@@ -49,8 +49,26 @@ export const CLASSES = {
   STANDUP_LAB: "standup-label",
   GRAPPLING_LAB: "grappling-label",
   OVERALL_LAB: "overall-label",
-  FIGHTER_LABEL:"bold-labels",
-  POINTS_FOR_EACH_DIV:"points-for-each-div",
+  FIGHTER_LABEL: "bold-labels",
+  POINTS_FOR_EACH_DIV: "points-for-each-div",
+  LIVE_DIV: "live-div",
+  LIVE_FIGHT_NUM_LAB: "live-fight-number-lab",
+  LIVE_FIGHT_NUM_DIV: "live-fight-number-div",
+  LIVE_ROUND_LAB: "live-round-label",
+  LIVE_TIMER_DIV: "live-timer-div",
+  LIVE_CNTR_LAB: "live-counter-lab",
+  BLUE_STREAM_DIV: "blue-stream-div",
+  RED_STREAM_DIV: "red-stream-div",
+  STREAM_DIV: "stream-div",
+  BLUE_STREAM_NAME_DIV: "blue-stream-name-div",
+  BLUE_STREAM_NAME_LAB: "blue-stream-name-label",
+  BLUE_STREAM_ODDS_LAB: "blue-stream-odds-label",
+  BLUE_STREAM_EVENTS_DIV: "blue-stream-events-div",
+  RED_STREAM_NAME_DIV: "red-stream-name-div",
+  RED_STREAM_NAME_LAB: "red-stream-name-label",
+  RED_STREAM_ODDS_LAB: "red-stream-name-label",
+  RED_STREAM_EVENTS_DIV: "red-stream-events-div",
+
 };
 
 export const INDEXES = {
@@ -67,15 +85,15 @@ export const INITIAL = {
 
 export const OPP_IMAGE_DIMENSIONS = {
   WIDTH: 100,
-  HEIGHT: 80
-}
+  HEIGHT: 80,
+};
 
 export const ROUND_PERCENT = {
   MAX: 90,
   FIRST: 30,
   SECOND: 60,
   THIRD: 90,
-}
+};
 
 export const OPPONENT_PERCENT = {
   MAX: 100,
@@ -83,7 +101,7 @@ export const OPPONENT_PERCENT = {
   MEDIUM: 50,
   HARD: 70,
   WRONG_CHOICE: 0.5,
-}
+};
 
 export const PLAY_AGAIN_TIMER = 200;
 

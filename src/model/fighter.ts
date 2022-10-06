@@ -1,4 +1,4 @@
-import { NUMBER_OF_RATINGS } from "../constants";
+import { NUMBER_OF_RATINGS } from "../../environment";
 import { WeightClass } from "../enums/WeightClassEnum";
 
 export class Fighter {
