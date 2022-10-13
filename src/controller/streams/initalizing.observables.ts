@@ -1,24 +1,18 @@
-import {
-  Observable,
-  Subject,
-  switchMap,
-  take,
-  withLatestFrom,
-  zip,
-} from "rxjs";
+import { combineLatest, interval, Observable, Subject, take } from "rxjs";
 import { Opponent } from "../../model/opponent";
 import {
   changeBlueCornerSub,
   changeRedCornerSub,
   changeWeightClassSub,
   findNewOpponentSub,
-  initialNewPickSub,
+  loadInitialFightersSub,
   restartGameSub,
-  playAgainSub as playAgainSub,
+  playAgainSub,
   startGameSub,
-  playSub,
+  playButtonSub,
+  tickingTimerSub,
 } from "./subscriptions";
-import { CLASSES } from "../../../environment";
+import { CLASSES, TIME } from "../../../environment";
 import {
   completeControlFlowObs,
   createControlFlowObs,
@@ -34,7 +28,9 @@ import {
 import { FightCard } from "../../model/fightCard";
 import { WeightClass } from "../../enums/WeightClassEnum";
 
-export function initFindingOponnent(findingOpponentDiv: HTMLDivElement): void {
+export function initFindingOponnentObs(
+  findingOpponentDiv: HTMLDivElement
+): void {
   let controlFindingOpponentOb$ = createControlFlowObs();
   let findingOpponent$ = createFindingOpponentObs(
     findingOpponentDiv,
@@ -48,7 +44,7 @@ export function initFindingOponnent(findingOpponentDiv: HTMLDivElement): void {
   );
 }
 
-export function initFindingNewOpponent(
+export function initFindingNewOpponentObs(
   controlStartGameFindingOb$: Subject<any>,
   container: HTMLDivElement,
   fightCard: FightCard,
@@ -58,7 +54,7 @@ export function initFindingNewOpponent(
   findNewOpponentSub(container, fightCard, findingOpponent$);
 }
 
-export function initRestartingGame(
+export function initRestartingGameObs(
   container: HTMLDivElement,
   fightCard: FightCard
 ): void {
@@ -66,7 +62,7 @@ export function initRestartingGame(
   restartGameSub(container, fightCard, restartGameOb$);
 }
 
-export function initChangeFighter(container: HTMLDivElement): void {
+export function initChangeFighterObs(container: HTMLDivElement): void {
   let changeBlueCornerOb$ = createChangeFighterObs(
     container,
     CLASSES.BLUE_CORNER_SEL
@@ -80,7 +76,7 @@ export function initChangeFighter(container: HTMLDivElement): void {
   changeRedCornerSub(container, changeRedCornerOb$);
 }
 
-export function initChangeWeightClass(container: HTMLDivElement): void {
+export function initChangeWeightClassObs(container: HTMLDivElement): void {
   let changeWeightClassOb$ = createChangeWeightClassObs(
     container,
     CLASSES.WEIGHT_CLASS_SEL
@@ -88,14 +84,14 @@ export function initChangeWeightClass(container: HTMLDivElement): void {
   changeWeightClassSub(container, changeWeightClassOb$);
 }
 
-export function initNewPick(container: HTMLDivElement): void {
+export function initLoadInitialFightersObs(container: HTMLDivElement): void {
   let initialNewPickOb$ = getFightersByWeightClass(
     WeightClass.Lightweight
   ).pipe(take(1));
-  initialNewPickSub(initialNewPickOb$, container);
+  loadInitialFightersSub(initialNewPickOb$, container);
 }
 
-export function initGame(
+export function initGameObs(
   container: HTMLDivElement,
   fightCard: FightCard
 ): void {
@@ -104,6 +100,13 @@ export function initGame(
     CLASSES.ADD_PICK_BTN,
     fightCard
   );
+  let playButtonOb$ = createButtonObs(container, CLASSES.PLAY_BTN);
+  playButtonSub(playButtonOb$, fightCard, container);
+  let timerOb$ = interval(TIME.SECOND);
+  let tickingTimerOb$ = combineLatest(timerOb$, playButtonOb$);
+  tickingTimerSub(tickingTimerOb$, container, fightCard);
+
+  //tickingTimerSub(tickingTimerOb$, container, fightCard);
 
   // V1 OBS
   // let playOb$ = createPlayObs(
@@ -113,12 +116,28 @@ export function initGame(
   //   addNewPickOb$
   // );
   // playSub(container, fightCard, playOb$);
-
-  //let timerOb$ = createTimerOb$()
-
 }
 
-export function initPlayAgain(
+// export function initTimerObs(container: HTMLDivElement, fightCard: FightCard) {
+//   let liveTimerOb$ = interval(TIME.SECOND);
+//   startTimerSub(liveTimerOb$, container, fightCard);
+// }
+
+// export function initPlayButtonObs(
+//   container: HTMLDivElement,
+//   fightCard: FightCard
+// ) {
+//   let playGameOb$ = createButtonObs(container, CLASSES.PLAY_BTN);
+//   playButtonSub(
+//     playGameOb$,
+//     container,
+//     fightCard,
+//     CLASSES.LIVE_DIV,
+//     CLASSES.HOME_DIV
+//   );
+// }
+
+export function initPlayAgainObs(
   container: HTMLDivElement,
   fightCard: FightCard
 ): void {

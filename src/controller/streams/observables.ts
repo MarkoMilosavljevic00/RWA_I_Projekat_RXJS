@@ -1,5 +1,4 @@
 import {
-  combineLatest,
   delayWhen,
   from,
   fromEvent,
@@ -7,15 +6,19 @@ import {
   merge,
   Observable,
   of,
-  scan,
   Subject,
   switchMap,
   takeUntil,
   timer,
   withLatestFrom,
-  zip,
 } from "rxjs";
-import { API_URL, CLASSES, INDEXES, PLAY_AGAIN_TIMER } from "../../../environment";
+import {
+  API_URL,
+  CLASSES,
+  FIGHTER,
+  INDEXES,
+  TIME,
+} from "../../../environment";
 import { DifficultyLevel } from "../../enums/DifficultyLevelEnum";
 import { Method } from "../../enums/MethodEnum";
 import { Round } from "../../enums/RoundEnum";
@@ -39,7 +42,7 @@ import {
   getRandomOpponent,
   getWeightClasses,
   initFighterFromArray,
-} from "../main";
+} from "../logic";
 
 export function createButtonObs(container: HTMLElement, selection: string) {
   let btn = selectElement(container, selection);
@@ -208,9 +211,7 @@ export function createChangeFighterObs(
 ): Observable<Fighter> {
   return createSelectOptionObs(container, selection).pipe(
     switchMap(() => getFighterById(getFighterId(container, selection))),
-    map((fightersArray) =>
-      initFighterFromArray(fightersArray, INDEXES.INITIAL_FIGHTER)
-    )
+    map((fightersArray) => initFighterFromArray(fightersArray, FIGHTER.INDEX.INITIAL))
   );
 }
 
@@ -239,7 +240,7 @@ export function createPlayAgainObs(
   // return playAgainOb$;
   let buttonOb$ = createButtonObs(container, selectionPlayAgain);
   let waitOb$ = createButtonObs(container, selectionPlay).pipe(
-    delayWhen(() => timer(PLAY_AGAIN_TIMER))
+    delayWhen(() => timer(TIME.PLAY_AGAIN))
   );
 
   return merge(buttonOb$, waitOb$);

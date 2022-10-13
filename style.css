@@ -38,7 +38,7 @@ body {
 }
 
 .top-div,
-.game-div {
+.home-div{
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -63,7 +63,10 @@ body {
 
 .your-picks-div,
 .result-div,
-.opponent-picks-div {
+.opponent-picks-div,
+.live-div
+.live-fight-number-div,
+.live-timer-div{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -73,12 +76,12 @@ body {
   flex-basis: 300px;
 }
 
-.new-pick-div {
+/* .new-pick-div{
   display: flex;
   flex-direction: column;
-}
+} */
 
-.bottom-new-pick-div {
+.bottom-new-pick-div{
   display: flex;
   flex-direction: row;
 }
@@ -92,7 +95,8 @@ body {
 
 .your-fightcard-div,
 .result-fightcard-div,
-.opponent-fightcard-div {
+.opponent-fightcard-div,
+.new-pick-div {
   display: flex;
   flex-direction: column;
 }

@@ -1,5 +1,5 @@
-import { CLASSES, INITIAL } from "../../environment";
-import { setOpponent, setScoreForBoth } from "../controller/main";
+import { CLASSES, SCORE } from "../../environment";
+import { setOpponent, setScoreForBoth } from "../controller/logic";
 import { Fight } from "../model/fight";
 import { Opponent } from "../model/opponent";
 import { Result } from "../model/result";
@@ -31,8 +31,8 @@ export function initContainer(
   replaceContainer(host, container, findingOpponentDiv);
   let topDiv = initTopDiv(findingOpponentDiv, opponent);
   let liveDiv = initLiveDiv();
-  let gameDiv = initGameDiv();
-  renderDivs(container, topDiv, gameDiv);
+  let gameDiv = initHomeDiv();
+  renderDivs(container, topDiv, liveDiv, gameDiv);
 
   return container;
 }
@@ -56,14 +56,14 @@ export function initTopDiv(
   let topElements = createTopElements(findingOpponentDiv);
 
   renderElements(topDiv, ...topElements);
-  setScoreForBoth(INITIAL.SCORE, topDiv);
+  setScoreForBoth(SCORE.INITIAL, topDiv);
   setOpponent(opponent, topDiv);
   return topDiv;
 }
 
-export function initGameDiv(): HTMLDivElement {
+export function initHomeDiv(): HTMLDivElement {
   let gameDiv: HTMLDivElement = document.createElement("div");
-  gameDiv.className = CLASSES.GAME_DIV;
+  gameDiv.className = CLASSES.HOME_DIV;
 
   let yourPicksDiv = initYourPicksDiv();
   let opponentPicksDiv = initOpponentPicksDiv();
@@ -133,11 +133,13 @@ export function initPointsForEachDiv(
   renderElements(fightDiv, pointsForEachDiv);
 }
 
-function initLiveDiv() {
+export function initLiveDiv(): HTMLDivElement {
   let liveDiv = document.createElement("div");
   liveDiv.className = CLASSES.LIVE_DIV;
 
   let liveElements = createLiveElements();
   renderElements(liveDiv, ...liveElements);
+
+  return liveDiv
 }
 

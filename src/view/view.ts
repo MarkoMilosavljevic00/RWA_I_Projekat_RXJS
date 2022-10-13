@@ -1,12 +1,16 @@
 import Swal from "sweetalert2";
 import {
   CLASSES,
-  PLAY_AGAIN_TIMER,
+  MAP_KEYS,
+  TIME,
 } from "../../environment";
 import { Method } from "../enums/MethodEnum";
+import { Odds } from "../enums/OddEnum";
 import { Round } from "../enums/RoundEnum";
-import { Winner } from "../enums/WinnerEnum";
+import { Corner } from "../enums/FightersCorner";
+import { Fight } from "../model/fight";
 import { Result } from "../model/result";
+import { DifficultyLevel } from "../enums/DifficultyLevelEnum";
 
 export function renderDivs(host: HTMLElement, ...childDivs: HTMLDivElement[]) {
   childDivs.forEach((child) => host.appendChild(child));
@@ -16,12 +20,51 @@ export function renderElements(host: HTMLElement, ...childs: HTMLElement[]) {
   childs.forEach((child) => host.appendChild(child));
 }
 
+function printElement(container: HTMLElement, newText: string, selection: string) {
+  let label = selectElement(container, selection);
+  setLabel(label, newText);
+}
+
+export function printRoundAndTime(container: HTMLElement, currentRound: Round, currentTime: Date) {
+  printElement(container, currentRound, CLASSES.LIVE_ROUND_LAB);
+  
+  let timeString = getTimeString(currentTime);
+  printElement(container, timeString, CLASSES.LIVE_COUNTER_LAB);
+}
+
+export function printFightInStream(currentFight: Fight, container: HTMLElement) {
+  printElement(container, currentFight.blueCorner.name, CLASSES.BLUE_STREAM_NAME_LAB)
+  printElement(container, currentFight.redCorner.name, CLASSES.RED_STREAM_NAME_LAB)
+
+  printOdd(container, currentFight, CLASSES.BLUE_STREAM_ODDS_LAB, Corner.BLUE_CORNER);
+  printOdd(container, currentFight, CLASSES.RED_STREAM_ODDS_LAB, Corner.RED_CORNER);
+
+  printElement(container, currentFight.blueCorner.damagePercent.toString(), CLASSES.BLUE_STREAM_DAMAGE_LAB);
+  printElement(container, currentFight.redCorner.damagePercent.toString(), CLASSES.RED_STREAM_DAMAGE_LAB);
+}
+
+function printOdd(container: HTMLElement,currentFight: Fight, selectionLabel: string, corner: Corner) {
+  let streamOddsLabel = selectElement(container, selectionLabel);
+  let odds = currentFight.getOdds();
+
+  if(odds.get(MAP_KEYS.ODDS.FAVOURITE) === corner){
+    streamOddsLabel.innerHTML = "FAVOURITE";
+    streamOddsLabel.style.color = "green";
+  }else if(odds.get(MAP_KEYS.ODDS.FAVOURITE) === undefined){
+    streamOddsLabel.innerHTML = "EQUAL";
+    streamOddsLabel.style.color = "yellow";
+  }else{
+    streamOddsLabel.innerHTML = "UNDERDOG";
+    streamOddsLabel.style.color = "red";
+  }
+}
+
 export function roundWinner(
   pick: Result,
   blueCornerDiv: HTMLDivElement,
   redCornerDiv: HTMLDivElement
 ) {
-  if (pick.winner === Winner.BLUE_CORNER) {
+  if (pick.winner === Corner.BLUE_CORNER) {
     blueCornerDiv.style.border = "solid";
     blueCornerDiv.style.borderColor = "green";
   } else {
@@ -35,6 +78,18 @@ export function replaceContainer(
   newContainer: HTMLDivElement,
   oldContainer: HTMLDivElement
 ) {
+  host.removeChild(oldContainer);
+  host.appendChild(newContainer);
+}
+
+export function replaceContainerWithSelections(
+  hostSelection: string,
+  newContainerSelection: string,
+  oldContainerSelection: string
+) {
+  let host = selectElement(document.body, hostSelection);
+  let newContainer = selectElement(host, newContainerSelection);
+  let oldContainer = selectElement(host, oldContainerSelection);
   host.removeChild(oldContainer);
   host.appendChild(newContainer);
 }
@@ -71,6 +126,16 @@ export function setSelectOptions(
     option.innerHTML = optionNames[index];
     select.appendChild(option);
   });
+}
+
+function getTimeString(currentTime: Date) {
+  let minutesString: string = (currentTime.getMinutes()) > 9 ? "0" : "";
+  minutesString = minutesString + currentTime.getMinutes();
+  let secondsString: string = (currentTime.getSeconds()) > 9 ? "0" : "";
+  secondsString = secondsString + currentTime.getSeconds();
+
+  let timeString: string = minutesString + " : " + secondsString;
+  return timeString;
 }
 
 export function getStringsOfMethods(methodesEnum: Method[]) {
@@ -145,6 +210,23 @@ export function getValuesOfFighterSelect(container: HTMLDivElement): number[] {
   return [blueValue, redValue];
 }
 
+
+export function getCurrentDifficulty(container: HTMLElement) {
+  let difficultyString = selectElement(
+    container,
+    CLASSES.OPP_DIFF_LABEL
+  ).innerHTML;
+  let difficulty = DifficultyLevel[difficultyString as keyof typeof DifficultyLevel];
+  return difficulty;
+}
+
+export function putElementBehind(container: HTMLElement, frontElementSelection:string, lastElementSelection: string){
+  let frontElement = selectElement(container, frontElementSelection);
+  let lastElement = selectElement(container, lastElementSelection);
+  frontElement.style.order = '98';
+  lastElement.style.order = '99';
+}
+
 export function selectElement(
   placeHolder: HTMLElement,
   selection: string
@@ -214,7 +296,7 @@ export function showVictory(yourScore: number, opponentScore: number): void {
     icon: "success",
     title: "Congratulations, you won!",
     text: `It's ${yourScore} : ${opponentScore}. You can play again in ${
-      PLAY_AGAIN_TIMER / 1000
+      TIME.PLAY_AGAIN / 1000
     } seconds or click on button Play Again!`,
   });
 }
@@ -224,7 +306,7 @@ export function showDefeat(yourScore: number, opponentScore: number): void {
     icon: "error",
     title: "You lost!",
     text: `It's ${yourScore} : ${opponentScore}. You can play again in ${
-      PLAY_AGAIN_TIMER / 1000
+      TIME.PLAY_AGAIN / 1000
     } seconds or click on button Play Again!`,
   });
 }
@@ -234,7 +316,7 @@ export function showDraw(yourScore: number, opponentScore: number): void {
     icon: "question",
     title: `It's draw!`,
     text: `It's ${yourScore} : ${opponentScore}. You can play again in ${
-      PLAY_AGAIN_TIMER / 1000
+      TIME.PLAY_AGAIN / 1000
     } seconds or click on button Play Again!`,
   });
 }

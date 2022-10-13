@@ -14,37 +14,41 @@ import {
   showError,
   getSelectedValue,
   enableElement,
-  disableElement,
   disableMultipleElements,
   enableMultipleElements,
+  replaceContainer,
+  replaceContainerWithSelections,
+  putElementBehind,
 } from "../view/view";
-import { CLASSES, INDEXES, INITIAL, ROUND_PERCENT } from "../../environment";
+import { CLASSES, FIGHTER, SCORE } from "../../environment";
 import { FightCard } from "../model/fightCard";
 import { WeightClass } from "../enums/WeightClassEnum";
 import { Fighter } from "../model/fighter";
 import {
-  initRestartingGame,
-  initFindingNewOpponent,
-  initChangeFighter,
-  initNewPick,
-  initChangeWeightClass,
-  initFindingOponnent,
-  initGame,
-  initPlayAgain,
+  initRestartingGameObs,
+  initFindingNewOpponentObs,
+  initChangeFighterObs,
+  initLoadInitialFightersObs,
+  initChangeWeightClassObs,
+  initFindingOponnentObs,
+  initGameObs,
+  initPlayAgainObs,
 } from "./streams/initalizing.observables";
 import {
   initContainer,
   initFindingOpponentDiv,
 } from "../view/initalizing.elements";
+import { areIntervalsOverlapping } from "date-fns";
+import { is } from "date-fns/locale";
 
-export function init(): void {
+export function initLogic(): void {
   let findingOpponentDiv = initFindingOpponentDiv();
   renderDivs(document.body, findingOpponentDiv);
 
-  initFindingOponnent(findingOpponentDiv);
+  initFindingOponnentObs(findingOpponentDiv);
 }
 
-export function startGame(
+export function startGameLogic(
   host: HTMLElement,
   findingOpponentDiv: HTMLDivElement,
   opponent: Opponent,
@@ -55,23 +59,21 @@ export function startGame(
   let container: HTMLDivElement;
 
   container = initContainer(host, findingOpponentDiv, opponent);
-  initRestartingGame(container, fightCard);
-  initFindingNewOpponent(
+  initRestartingGameObs(container, fightCard);
+  initFindingNewOpponentObs(
     controlFindingOpponentOb$,
     container,
     fightCard,
     findingOpponent$
   );
+  initChangeWeightClassObs(container);
+  initChangeFighterObs(container);
+  initLoadInitialFightersObs(container);
+  initGameObs(container, fightCard);
+  //initPlayAgainObs(container, fightCard);
 
-  initChangeWeightClass(container);
-  initChangeFighter(container);
-  initNewPick(container);
-
-  initGame(container, fightCard);
-  initPlayAgain(container, fightCard);
-
-  disableMultipleElements(container, CLASSES.PLAY_BTN, CLASSES.LIVE_DIV);
-  enableElement(container, CLASSES.ADD_PICK_BTN);
+  disableMultipleElements(container, CLASSES.LIVE_DIV);
+  putElementBehind(container, CLASSES.HOME_DIV, CLASSES.LIVE_DIV);
 }
 
 export function findNewOpponent(
@@ -89,7 +91,54 @@ export function findNewOpponent(
   enableElement(container, CLASSES.ADD_PICK_BTN);
 }
 
-export function playAgain(container: HTMLElement, fightCard: FightCard): void {
+// export function playGameLogic(container: HTMLElement, fightCard: FightCard) {
+//   fightCard.getResults();
+//   fightCard.getOpponentPicks(container);
+
+//   fightCard.calculateScores();
+//   fightCard.setScores(container);
+
+//   let resultFightCardDiv = selectElement(
+//     container,
+//     CLASSES.RESULT_FIGHTCARD_DIV
+//   );
+//   fightCard.createResultDivs();
+//   fightCard.renderResults(resultFightCardDiv);
+
+//   let opponentFightCardDiv = selectElement(
+//     container,
+//     CLASSES.OPP_FIGHTCARD_DIV
+//   );
+//   fightCard.createOpponentPickDivs();
+//   fightCard.renderOpponentPicks(opponentFightCardDiv);
+
+//   fightCard.renderScoresForEach();
+
+//   disableMultipleElements(
+//     container,
+//     CLASSES.PLAY_BTN,
+//     CLASSES.ADD_PICK_BTN,
+//     CLASSES.FINDING_OPP_BTN,
+//     CLASSES.RESTART_BTN
+//   );
+//   enableElement(container, CLASSES.PLAY_AGAIN_BTN);
+// }
+
+export function initLiveScoreLogic(fightCard: FightCard, container: HTMLDivElement) {
+  disableMultipleElements(container, CLASSES.HOME_DIV, CLASSES.ADD_PICK_BTN);
+  enableElement(container, CLASSES.LIVE_DIV);
+  putElementBehind(container, CLASSES.LIVE_DIV, CLASSES.HOME_DIV);
+  fightCard.renderCurrentFight(container);
+}
+
+export function tickingTimerLogic(container: HTMLElement, fightCard: FightCard) {
+  if (fightCard.isInProgress()) {
+    let currentFight = fightCard.getCurrentFight();
+    currentFight.tickSecond(container, fightCard);
+  }
+}
+
+export function playAgainLogic(container: HTMLElement, fightCard: FightCard): void {
   resetGameDiv(container);
 
   fightCard.reset();
@@ -103,7 +152,7 @@ export function playAgain(container: HTMLElement, fightCard: FightCard): void {
   disableMultipleElements(container, CLASSES.PLAY_BTN, CLASSES.PLAY_AGAIN_BTN);
 }
 
-export function restartGame(
+export function restartGameLogic(
   container: HTMLElement,
   fightCard: FightCard
 ): void {
@@ -117,38 +166,13 @@ export function restartGame(
   enableElement(container, CLASSES.ADD_PICK_BTN);
 }
 
-export function playGame(container: HTMLElement, fightCard: FightCard) {
-  fightCard.getResults();
-  fightCard.getOpponentPicks(container);
+// export function tickTimer(container: HTMLDivElement, fightCard: FightCard) {
+//   let currentFight = fightCard.getCurrentFight();
+//   currentFight.tickSecond();
+//   if(currentFight.isOver()){
 
-  fightCard.calculateScores();
-  fightCard.setScores(container);
-
-  let resultFightCardDiv = selectElement(
-    container,
-    CLASSES.RESULT_FIGHTCARD_DIV
-  );
-  fightCard.createResultDivs();
-  fightCard.renderResults(resultFightCardDiv);
-
-  let opponentFightCardDiv = selectElement(
-    container,
-    CLASSES.OPP_FIGHTCARD_DIV
-  );
-  fightCard.createOpponentPickDivs();
-  fightCard.renderOpponentPicks(opponentFightCardDiv);
-
-  fightCard.renderScoresForEach();
-
-  disableMultipleElements(
-    container,
-    CLASSES.PLAY_BTN,
-    CLASSES.ADD_PICK_BTN,
-    CLASSES.FINDING_OPP_BTN,
-    CLASSES.RESTART_BTN
-  );
-  enableElement(container, CLASSES.PLAY_AGAIN_BTN);
-}
+//   }
+// }
 
 export function checkAddingPick(
   container: HTMLDivElement,
@@ -267,11 +291,11 @@ export function resetGameDiv(container: HTMLElement): void {
 
 export function updateTopDiv(opponent: Opponent, container: HTMLElement): void {
   setOpponent(opponent, container);
-  setScoreForBoth(INITIAL.SCORE, container);
+  setScoreForBoth(SCORE.INITIAL, container);
 }
 
 export function resetTopDiv(container: HTMLElement): void {
-  setScoreForBoth(INITIAL.SCORE, container);
+  setScoreForBoth(SCORE.INITIAL, container);
 }
 
 export function fillFightersSelect(
@@ -294,7 +318,7 @@ export function fillFightersSelect(
   setSelectOptions(blueCornerSelect, namesOfFigters, idsOfFighters);
   setSelectOptions(redCornerSelect, namesOfFigters, idsOfFighters);
 
-  let fighter = initFighterFromArray(fightersArray, INDEXES.INITIAL_FIGHTER);
+  let fighter = initFighterFromArray(fightersArray, FIGHTER.INDEX.INITIAL);
 
   fillFightersRating(container, fighter, CLASSES.BLUE_CORNER_DIV);
   fillFightersRating(container, fighter, CLASSES.RED_CORNER_DIV);

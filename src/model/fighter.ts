@@ -1,12 +1,16 @@
-import { NUMBER_OF_RATINGS } from "../../environment";
+import { NUMBER_OF_RATINGS, PERCENTS } from "../../environment";
 import { WeightClass } from "../enums/WeightClassEnum";
 
 export class Fighter {
   id: number;
   name: string;
+
   weightClass: WeightClass;
+
   standup: number;
   grappling: number;
+  
+  damagePercent: number = PERCENTS.DAMAGE.INITIAL;
 
   constructor(
     id: number,

@@ -4,7 +4,7 @@ export const CLASSES = {
   INITIAL_DIV: "initial-div",
   CONTAINER: "container",
   TOP_DIV: "top-div",
-  GAME_DIV: "game-div",
+  HOME_DIV: "home-div",
   FINDING_OPP_DIV: "finding-opponent-div",
   FINDING_OPP_BTN: "finding-opponent-button",
   DIFFIULTY_SEL: "difficulty-select",
@@ -56,7 +56,7 @@ export const CLASSES = {
   LIVE_FIGHT_NUM_DIV: "live-fight-number-div",
   LIVE_ROUND_LAB: "live-round-label",
   LIVE_TIMER_DIV: "live-timer-div",
-  LIVE_CNTR_LAB: "live-counter-lab",
+  LIVE_COUNTER_LAB: "live-counter-lab",
   BLUE_STREAM_DIV: "blue-stream-div",
   RED_STREAM_DIV: "red-stream-div",
   STREAM_DIV: "stream-div",
@@ -64,11 +64,32 @@ export const CLASSES = {
   BLUE_STREAM_NAME_LAB: "blue-stream-name-label",
   BLUE_STREAM_ODDS_LAB: "blue-stream-odds-label",
   BLUE_STREAM_EVENTS_DIV: "blue-stream-events-div",
+  BLUE_STREAM_DAMAGE_DIV: "blue-stream-damage-div",
+  BLUE_STREAM_DAMAGE_TEXT: "blue-stream-damage-text",
+  BLUE_STREAM_DAMAGE_LAB: "blue-stream-damage-label",
   RED_STREAM_NAME_DIV: "red-stream-name-div",
   RED_STREAM_NAME_LAB: "red-stream-name-label",
   RED_STREAM_ODDS_LAB: "red-stream-name-label",
   RED_STREAM_EVENTS_DIV: "red-stream-events-div",
+  RED_STREAM_DAMAGE_DIV: "red-stream-damage-div",
+  RED_STREAM_DAMAGE_TEXT: "red-stream-damage-text",
+  RED_STREAM_DAMAGE_LAB: "red-stream-damage-label",
+};
 
+export const SCORE = {
+  INDEX: {
+    FIRST: 0,
+    SECOND: 1,
+  },
+  INITIAL: 0,
+};
+
+export const FIGHTER = {
+  INDEX: {
+    BLUE_CORNER: 0,
+    RED_CORNER: 1,
+    INITIAL: 0,
+  },
 };
 
 export const INDEXES = {
@@ -76,33 +97,54 @@ export const INDEXES = {
   SECOND_SCORE: 1,
   BLUE_CORNER: 0,
   RED_CORNER: 1,
-  INITIAL_FIGHTER: 0,
 };
 
-export const INITIAL = {
-  SCORE: 0,
+export const IMG_DIMENSIONS = {
+  OPP: {
+    WIDTH: 100,
+    HEIGHT: 80,
+  },
 };
 
-export const OPP_IMAGE_DIMENSIONS = {
-  WIDTH: 100,
-  HEIGHT: 80,
+export const PERCENTS = {
+  OPP: {
+    MAX: 100,
+    EASY: 30,
+    MEDIUM: 50,
+    HARD: 70,
+    WRONG_CHOICE: 0.5,
+  },
+  ROUND: {
+    MAX: 90,
+    FIRST: 30,
+    SECOND: 60,
+    THIRD: 90,
+  },
+  DAMAGE: {
+    INITIAL: 0,
+  },
 };
 
-export const ROUND_PERCENT = {
-  MAX: 90,
-  FIRST: 30,
-  SECOND: 60,
-  THIRD: 90,
+export const TIME = {
+  SECOND: 1000,
+  PLAY_AGAIN: 2000,
 };
 
-export const OPPONENT_PERCENT = {
-  MAX: 100,
-  EASY: 30,
-  MEDIUM: 50,
-  HARD: 70,
-  WRONG_CHOICE: 0.5,
-};
+export const RULES = {
+  MMA:{
+    ROUND_LENGTH:{
+      MINUTES: 1,
+      SECONDS: 0
+    }
+  } 
+}
 
-export const PLAY_AGAIN_TIMER = 200;
+export const MAP_KEYS = {
+  ODDS:{
+    FAVOURITE: "favourite",
+    UNDERDOG: "underdog",
+    EQUAL: "equal"
+  }
+}
 
 export const NUMBER_OF_RATINGS = 2;

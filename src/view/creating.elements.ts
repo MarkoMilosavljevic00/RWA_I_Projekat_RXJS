@@ -1,9 +1,9 @@
-import { CLASSES, INDEXES, OPP_IMAGE_DIMENSIONS } from "../../environment";
+import { CLASSES, INDEXES, IMG_DIMENSIONS, SCORE } from "../../environment";
 import { DifficultyLevel } from "../enums/DifficultyLevelEnum";
 import { Method } from "../enums/MethodEnum";
 import { Round } from "../enums/RoundEnum";
 import { WeightClass } from "../enums/WeightClassEnum";
-import { Winner } from "../enums/WinnerEnum";
+import { Corner } from "../enums/FightersCorner";
 import { Fight } from "../model/fight";
 import { Result } from "../model/result";
 import { initNewPickDiv } from "./initalizing.elements";
@@ -32,8 +32,8 @@ export function createFindingOpponentElements(): HTMLElement[] {
 
 export function createTopElements(findingOpponentDiv: HTMLDivElement) {
   let pointsDivs = createPointsElements();
-  let yourPointsDiv = pointsDivs[INDEXES.FIRST_SCORE];
-  let opponentPointsDiv = pointsDivs[INDEXES.SECOND_SCORE];
+  let yourPointsDiv = pointsDivs[SCORE.INDEX.FIRST];
+  let opponentPointsDiv = pointsDivs[SCORE.INDEX.SECOND];
 
   createRestartButton(findingOpponentDiv);
 
@@ -59,8 +59,8 @@ export function createOpponentStatsDiv() {
   opponentStatsDiv.className = CLASSES.OPP_STATS_DIV;
 
   let opponentPicture = new Image(
-    OPP_IMAGE_DIMENSIONS.WIDTH,
-    OPP_IMAGE_DIMENSIONS.HEIGHT
+    IMG_DIMENSIONS.OPP.WIDTH,
+    IMG_DIMENSIONS.OPP.HEIGHT
   );
   opponentPicture.className = CLASSES.OPP_PICTURE;
 
@@ -177,12 +177,12 @@ export function createBottomNewPickDiv() {
   let blueCornerDiv = createCornerDiv(
     CLASSES.BLUE_CORNER_DIV,
     CLASSES.BLUE_CORNER_SEL,
-    Winner.BLUE_CORNER
+    Corner.BLUE_CORNER
   );
   let redCornerDiv = createCornerDiv(
     CLASSES.RED_CORNER_DIV,
     CLASSES.RED_CORNER_SEL,
-    Winner.RED_CORNER
+    Corner.RED_CORNER
   );
 
   let outcomeDiv = createOutcomeDiv();
@@ -217,7 +217,7 @@ export function createLiveElements() {
   let liveTimerDiv = createLiveTimerDiv();
   let streamDiv = createStreamDiv();
 
-  return [fightNumberDiv, liveTimerDiv, streamDiv]
+  return [fightNumberDiv, liveTimerDiv, streamDiv];
 }
 
 function createStreamDiv() {
@@ -235,17 +235,26 @@ function createFighterStreamDiv(selection: string) {
   let selectionStreamNameDiv,
     selectionStreamNameLabel,
     selectionStreamOddsLabel,
-    selectionStreamEventsDiv: string;
+    selectionStreamEventsDiv,
+    selectionStreamDamageDiv,
+    selectionStreamDamageText,
+    selectionStreamDamageLabel: string;
   if (selection === CLASSES.BLUE_STREAM_DIV) {
     selectionStreamNameDiv = CLASSES.BLUE_STREAM_NAME_DIV;
     selectionStreamNameLabel = CLASSES.BLUE_STREAM_NAME_LAB;
     selectionStreamOddsLabel = CLASSES.BLUE_STREAM_ODDS_LAB;
     selectionStreamEventsDiv = CLASSES.BLUE_STREAM_EVENTS_DIV;
+    selectionStreamDamageDiv = CLASSES.BLUE_STREAM_DAMAGE_DIV;
+    selectionStreamDamageText = CLASSES.BLUE_STREAM_DAMAGE_TEXT;
+    selectionStreamDamageLabel = CLASSES.BLUE_STREAM_DAMAGE_LAB;
   } else {
     selectionStreamNameDiv = CLASSES.RED_STREAM_NAME_DIV;
     selectionStreamNameLabel = CLASSES.RED_STREAM_NAME_LAB;
     selectionStreamOddsLabel = CLASSES.RED_STREAM_ODDS_LAB;
     selectionStreamEventsDiv = CLASSES.RED_STREAM_EVENTS_DIV;
+    selectionStreamDamageDiv = CLASSES.RED_STREAM_DAMAGE_DIV;
+    selectionStreamDamageText = CLASSES.RED_STREAM_DAMAGE_TEXT;
+    selectionStreamDamageLabel = CLASSES.RED_STREAM_DAMAGE_LAB;
   }
 
   let fighterStreamDiv = document.createElement("div");
@@ -254,13 +263,20 @@ function createFighterStreamDiv(selection: string) {
   let fighterStreamNameDiv = createFighterStreamNameDiv(
     selectionStreamNameDiv,
     selectionStreamNameLabel,
-    selectionStreamOddsLabel
+    selectionStreamOddsLabel,
+    selectionStreamDamageDiv,
+    // selectionStreamDamageText,
+    selectionStreamDamageLabel
   );
   let fighterStreamEventsDiv = createFighterStreamEventsDiv(
     selectionStreamEventsDiv
   );
 
-  renderElements(fighterStreamDiv,fighterStreamNameDiv, fighterStreamEventsDiv);
+  renderElements(
+    fighterStreamDiv,
+    fighterStreamNameDiv,
+    fighterStreamEventsDiv
+  );
   return fighterStreamDiv;
 }
 
@@ -274,7 +290,10 @@ function createFighterStreamEventsDiv(selectionStreamEventsDiv: string) {
 function createFighterStreamNameDiv(
   selectionStreamNameDiv: string,
   selectionStreamNameLabel: string,
-  selectionStreamOddsLabel: string
+  selectionStreamOddsLabel: string,
+  selectionStreamDamageDiv: string,
+  // selectionStreamDamageText: string,
+  selectionStreamDamageLabel: string
 ) {
   let fighterStreamNameDiv = document.createElement("div");
   fighterStreamNameDiv.className = selectionStreamNameDiv;
@@ -284,13 +303,51 @@ function createFighterStreamNameDiv(
   let fighterStreamOddsLabel = document.createElement("label");
   fighterStreamOddsLabel.className = selectionStreamOddsLabel;
 
+  let fighterStreamDamageDiv = createStreamDamageDiv(
+    fighterStreamNameDiv,
+    selectionStreamDamageDiv,
+    selectionStreamDamageLabel
+  );
+
   renderElements(
     fighterStreamNameDiv,
     fighterStreamNameLabel,
-    fighterStreamOddsLabel
+    fighterStreamOddsLabel,
+    fighterStreamDamageDiv,
   );
 
   return fighterStreamNameDiv;
+}
+
+function createStreamDamageDiv(
+  fighterStreamNameDiv: HTMLDivElement,
+  selectionStreamDamageDiv: string,
+  selectionStreamDamageLabel: string
+) {
+  let fighterStreamDamageDiv = document.createElement("div");
+  fighterStreamNameDiv.className = selectionStreamDamageDiv;
+  let fighterStreamDamageText = document.createElement("label");
+  // fighterStreamNameLabel.className = selectionStreamDamageText;
+  fighterStreamDamageText.innerHTML = "Damage: ";
+
+  let fighterStreamDamageLabDiv = document.createElement("div");
+  let fighterStreamDamageLabel = document.createElement("label");
+  fighterStreamDamageLabel.className = selectionStreamDamageLabel;
+  let fighterStreamDamagePercent = document.createElement("label");
+  fighterStreamDamagePercent.innerHTML = "%";
+  renderElements(
+    fighterStreamDamageLabDiv,
+    fighterStreamDamageLabel,
+    fighterStreamDamagePercent
+  );
+
+  renderElements(
+    fighterStreamDamageDiv,
+    fighterStreamDamageText,
+    fighterStreamDamageLabDiv
+  );
+  
+  return fighterStreamDamageDiv;
 }
 
 function createLiveTimerDiv() {
@@ -308,7 +365,7 @@ function createLiveTimerDiv() {
   let counterText = document.createElement("label");
   counterText.innerHTML = "Time: ";
   let counterLabel = document.createElement("label");
-  counterLabel.className = CLASSES.LIVE_CNTR_LAB;
+  counterLabel.className = CLASSES.LIVE_COUNTER_LAB;
   renderElements(counterSpan, counterText, counterLabel);
 
   renderElements(liveTimerDiv, roundSpan, counterSpan);

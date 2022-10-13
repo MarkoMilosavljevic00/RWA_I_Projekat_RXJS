@@ -1,18 +1,21 @@
+import { secondsInDay } from "date-fns";
 import { Observable, Subject, Subscription } from "rxjs";
-import { CLASSES, INDEXES, INITIAL } from "../../../environment";
+import { CLASSES, FIGHTER, INDEXES } from "../../../environment";
 import { FightCard } from "../../model/fightCard";
 import { Fighter } from "../../model/fighter";
 import { Opponent } from "../../model/opponent";
+import { disableElement, disableMultipleElements, enableElement, putElementBehind, selectElement } from "../../view/view";
 import {
   fillFightersRating,
   fillFightersSelect,
   findNewOpponent,
   initFighterFromArray,
-  restartGame,
-  playAgain,
-  startGame,
-  playGame,
-} from "../main";
+  restartGameLogic,
+  playAgainLogic,
+  startGameLogic,
+  initLiveScoreLogic,
+  tickingTimerLogic,
+} from "../logic";
 
 export function startGameSub(
   host: HTMLElement,
@@ -21,7 +24,7 @@ export function startGameSub(
   controlStartGameOb$: Subject<any>
 ): Subscription {
   return findingOpponent$.subscribe((opponent) => {
-    startGame(
+    startGameLogic(
       host,
       findingOpponentDiv,
       opponent,
@@ -47,7 +50,7 @@ export function restartGameSub(
   restartGame$: Observable<Event>
 ): Subscription {
   return restartGame$.subscribe(() => {
-    restartGame(container, fightCard);
+    restartGameLogic(container, fightCard);
   });
 }
 
@@ -78,12 +81,12 @@ export function changeRedCornerSub(
   });
 }
 
-export function initialNewPickSub(
+export function loadInitialFightersSub(
   initialNewPickOb$: Observable<Fighter[]>,
   container: HTMLDivElement
 ) {
   initialNewPickOb$.subscribe((fightersArray) => {
-    let fighter = initFighterFromArray(fightersArray, INDEXES.INITIAL_FIGHTER);
+    let fighter = initFighterFromArray(fightersArray, FIGHTER.INDEX.INITIAL);
     fillFightersSelect(container, fightersArray);
     fillFightersRating(container, fighter, CLASSES.BLUE_CORNER_DIV);
     fillFightersRating(container, fighter, CLASSES.RED_CORNER_DIV);
@@ -97,7 +100,7 @@ export function playAgainSub(
 ): Subscription {
   return playAgain$.subscribe(() => {
     //console.log("playagain");
-    playAgain(container, fightCard);
+    playAgainLogic(container, fightCard);
   });
 }
 
@@ -108,6 +111,28 @@ export function playSub(
 ): Subscription {
   return playOb$.subscribe(() => {
     //console.log(fightCard);
-    playGame(container, fightCard);
+    //playGameLogic(container, fightCard);
+  });
+}
+
+export function playButtonSub(
+  playButtonOb$: Observable<Event>,
+  fightCard: FightCard,
+  container: HTMLDivElement
+) {
+  playButtonOb$.subscribe(() => {
+    if(fightCard.isInProgress()){
+      initLiveScoreLogic(fightCard, container);
+    }
+  });
+}
+
+export function tickingTimerSub(
+  tickingTimerOb$: Observable<[number, Event]>,
+  container: HTMLDivElement,
+  fightCard: FightCard
+) {
+  return tickingTimerOb$.subscribe(() => {
+    tickingTimerLogic(container, fightCard);
   });
 }
