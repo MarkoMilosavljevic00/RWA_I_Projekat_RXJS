@@ -16,11 +16,10 @@ import {
   enableElement,
   disableMultipleElements,
   enableMultipleElements,
-  replaceContainer,
-  replaceContainerWithSelections,
-  putElementBehind,
+  putElementInOrder,
+  disableElement,
 } from "../view/view";
-import { CLASSES, FIGHTER, SCORE } from "../../environment";
+import { ELEMENTS, FIGHTER, SCORE } from "../environment";
 import { FightCard } from "../model/fightCard";
 import { WeightClass } from "../enums/WeightClassEnum";
 import { Fighter } from "../model/fighter";
@@ -32,14 +31,12 @@ import {
   initChangeWeightClassObs,
   initFindingOponnentObs,
   initGameObs,
-  initPlayAgainObs,
 } from "./streams/initalizing.observables";
 import {
   initContainer,
   initFindingOpponentDiv,
 } from "../view/initalizing.elements";
-import { areIntervalsOverlapping } from "date-fns";
-import { is } from "date-fns/locale";
+import { max } from "date-fns";
 
 export function initLogic(): void {
   let findingOpponentDiv = initFindingOpponentDiv();
@@ -72,8 +69,7 @@ export function startGameLogic(
   initGameObs(container, fightCard);
   //initPlayAgainObs(container, fightCard);
 
-  disableMultipleElements(container, CLASSES.LIVE_DIV);
-  putElementBehind(container, CLASSES.HOME_DIV, CLASSES.LIVE_DIV);
+  showHomeDiv(container);
 }
 
 export function findNewOpponent(
@@ -87,8 +83,12 @@ export function findNewOpponent(
   fightCard.reset();
   fightCard.resetScore();
 
-  disableMultipleElements(container, CLASSES.PLAY_BTN, CLASSES.PLAY_AGAIN_BTN);
-  enableElement(container, CLASSES.ADD_PICK_BTN);
+  disableMultipleElements(
+    container,
+    ELEMENTS.PLAY_BTN,
+    ELEMENTS.PLAY_AGAIN_BTN
+  );
+  enableElement(container, ELEMENTS.ADD_PICK_BTN);
 }
 
 // export function playGameLogic(container: HTMLElement, fightCard: FightCard) {
@@ -124,32 +124,44 @@ export function findNewOpponent(
 //   enableElement(container, CLASSES.PLAY_AGAIN_BTN);
 // }
 
-export function initLiveScoreLogic(fightCard: FightCard, container: HTMLDivElement) {
-  disableMultipleElements(container, CLASSES.HOME_DIV, CLASSES.ADD_PICK_BTN);
-  enableElement(container, CLASSES.LIVE_DIV);
-  putElementBehind(container, CLASSES.LIVE_DIV, CLASSES.HOME_DIV);
-  fightCard.renderCurrentFight(container);
+export function initLiveScoreLogic(
+  fightCard: FightCard,
+  container: HTMLDivElement
+) {
+  disableMultipleElements(container, ELEMENTS.ADD_PICK_BTN, ELEMENTS.PLAY_BTN);
+  showLiveDiv(container);
+  fightCard.renderCurrentFight(container, fightCard.getCurrentFightNumber());
 }
 
-export function tickingTimerLogic(container: HTMLElement, fightCard: FightCard) {
+export function tickingTimerLogic(
+  container: HTMLElement,
+  fightCard: FightCard
+) {
   if (fightCard.isInProgress()) {
     let currentFight = fightCard.getCurrentFight();
     currentFight.tickSecond(container, fightCard);
   }
 }
 
-export function playAgainLogic(container: HTMLElement, fightCard: FightCard): void {
+export function playAgainLogic(
+  container: HTMLElement,
+  fightCard: FightCard
+): void {
   resetGameDiv(container);
 
   fightCard.reset();
 
   enableMultipleElements(
     container,
-    CLASSES.FINDING_OPP_BTN,
-    CLASSES.RESTART_BTN,
-    CLASSES.ADD_PICK_BTN
+    ELEMENTS.FINDING_OPP_BTN,
+    ELEMENTS.RESTART_BTN,
+    ELEMENTS.ADD_PICK_BTN
   );
-  disableMultipleElements(container, CLASSES.PLAY_BTN, CLASSES.PLAY_AGAIN_BTN);
+  disableMultipleElements(
+    container,
+    ELEMENTS.PLAY_BTN,
+    ELEMENTS.PLAY_AGAIN_BTN
+  );
 }
 
 export function restartGameLogic(
@@ -162,8 +174,12 @@ export function restartGameLogic(
   fightCard.reset();
   fightCard.resetScore();
 
-  disableMultipleElements(container, CLASSES.PLAY_BTN, CLASSES.PLAY_AGAIN_BTN);
-  enableElement(container, CLASSES.ADD_PICK_BTN);
+  disableMultipleElements(
+    container,
+    ELEMENTS.PLAY_BTN,
+    ELEMENTS.PLAY_AGAIN_BTN
+  );
+  enableElement(container, ELEMENTS.ADD_PICK_BTN);
 }
 
 // export function tickTimer(container: HTMLDivElement, fightCard: FightCard) {
@@ -182,8 +198,8 @@ export function checkAddingPick(
     return showError("You cannot add more than 10 fights on fight card!");
   }
 
-  const blueCornerValue = getSelectedValue(container, CLASSES.BLUE_CORNER_SEL);
-  const redCornerValue = getSelectedValue(container, CLASSES.RED_CORNER_SEL);
+  const blueCornerValue = getSelectedValue(container, ELEMENTS.BLUE_CORNER_SEL);
+  const redCornerValue = getSelectedValue(container, ELEMENTS.RED_CORNER_SEL);
   if (blueCornerValue === redCornerValue) {
     return showError("Please select two different fighters!");
   }
@@ -206,13 +222,13 @@ export function checkAddingPick(
   }
 
   let selectedRadio: HTMLInputElement = document.querySelector(
-    `input[name=${CLASSES.CORNER_RADIO}]:checked`
+    `input[name=${ELEMENTS.CORNER_RADIO}]:checked`
   );
   if (!selectedRadio) {
     return showError("Please select winner! ");
   }
 
-  enableElement(container, CLASSES.PLAY_BTN);
+  enableElement(container, ELEMENTS.PLAY_BTN);
   return true;
 }
 
@@ -226,22 +242,22 @@ export function setScore(
 }
 
 export function setScoreForBoth(score: number, placeHolder: HTMLElement): void {
-  setScore(score, placeHolder, CLASSES.YOUR_POINTS);
-  setScore(score, placeHolder, CLASSES.OPP_POINTS);
+  setScore(score, placeHolder, ELEMENTS.YOUR_POINTS);
+  setScore(score, placeHolder, ELEMENTS.OPP_POINTS);
 }
 
 export function setOpponent(opponent: Opponent, container: HTMLElement): void {
   let opponentPicture: HTMLImageElement = selectPicture(
     container,
-    CLASSES.OPP_PICTURE
+    ELEMENTS.OPP_PICTURE
   );
   setPicture(opponentPicture, opponent.pictureSrc);
 
-  let opponentNameLabel = selectElement(container, CLASSES.OPP_NAME_LABEL);
+  let opponentNameLabel = selectElement(container, ELEMENTS.OPP_NAME_LABEL);
   setLabel(opponentNameLabel, `${opponent.name}`);
   let opponentDifficultyLabel = selectElement(
     container,
-    CLASSES.OPP_DIFF_LABEL
+    ELEMENTS.OPP_DIFF_LABEL
   );
   setLabel(opponentDifficultyLabel, `${opponent.difficulty}`);
 }
@@ -256,13 +272,16 @@ export function getDifficulties(
 ): DifficultyLevel {
   let difficultyString = getSelectedValue(
     findingOpponentDiv,
-    CLASSES.DIFFIULTY_SEL
+    ELEMENTS.DIFFIULTY_SEL
   );
   return DifficultyLevel[difficultyString as keyof typeof DifficultyLevel];
 }
 
 export function getWeightClasses(container: HTMLDivElement): WeightClass {
-  let weightClassString = getSelectedValue(container, CLASSES.WEIGHT_CLASS_SEL);
+  let weightClassString = getSelectedValue(
+    container,
+    ELEMENTS.WEIGHT_CLASS_SEL
+  );
   return WeightClass[weightClassString as keyof typeof WeightClass];
 }
 
@@ -274,17 +293,37 @@ export function getFighterId(
   return fighterId;
 }
 
+export function getByProbability(percents: number[], ...objects: any[]): any {
+  let max: number = 0;
+  percents.forEach((percent) => (max += percent));
+  let drawnNumber = Math.floor(Math.random() * max);
+
+  let currentPercent: number = 0
+  let nextPercent: number = 0;
+  let drawnObject;
+
+  objects.forEach((objekat, index) => {
+    currentPercent = nextPercent;
+    nextPercent += percents[index];
+    if(drawnNumber > currentPercent && drawnNumber <= nextPercent){
+      drawnObject = objekat;
+    }
+  });
+
+  return drawnObject;
+}
+
 export function resetGameDiv(container: HTMLElement): void {
-  let yourFightCardDiv = selectElement(container, CLASSES.YOUR_FIGHTCARD_DIV);
+  let yourFightCardDiv = selectElement(container, ELEMENTS.YOUR_FIGHTCARD_DIV);
   clearChilds(yourFightCardDiv);
   let opponentFightCardDiv = selectElement(
     container,
-    CLASSES.OPP_FIGHTCARD_DIV
+    ELEMENTS.OPP_FIGHTCARD_DIV
   );
   clearChilds(opponentFightCardDiv);
   let resultFightCardDiv = selectElement(
     container,
-    CLASSES.RESULT_FIGHTCARD_DIV
+    ELEMENTS.RESULT_FIGHTCARD_DIV
   );
   clearChilds(resultFightCardDiv);
 }
@@ -302,8 +341,8 @@ export function fillFightersSelect(
   container: HTMLDivElement,
   fightersArray: Fighter[]
 ): void {
-  let blueCornerSelect = selectSelectionEl(container, CLASSES.BLUE_CORNER_SEL);
-  let redCornerSelect = selectSelectionEl(container, CLASSES.RED_CORNER_SEL);
+  let blueCornerSelect = selectSelectionEl(container, ELEMENTS.BLUE_CORNER_SEL);
+  let redCornerSelect = selectSelectionEl(container, ELEMENTS.RED_CORNER_SEL);
   clearSelect(blueCornerSelect);
   clearSelect(redCornerSelect);
 
@@ -320,8 +359,8 @@ export function fillFightersSelect(
 
   let fighter = initFighterFromArray(fightersArray, FIGHTER.INDEX.INITIAL);
 
-  fillFightersRating(container, fighter, CLASSES.BLUE_CORNER_DIV);
-  fillFightersRating(container, fighter, CLASSES.RED_CORNER_DIV);
+  fillFightersRating(container, fighter, ELEMENTS.BLUE_CORNER_DIV);
+  fillFightersRating(container, fighter, ELEMENTS.RED_CORNER_DIV);
 }
 
 export function fillFightersRating(
@@ -333,17 +372,17 @@ export function fillFightersRating(
 
   let standupRating: HTMLElement = selectElement(
     fighterDiv,
-    CLASSES.STANDUP_LAB
+    ELEMENTS.STANDUP_LAB
   );
   setLabel(standupRating, fighter.standup.toString());
   let grapplingRating: HTMLElement = selectElement(
     fighterDiv,
-    CLASSES.GRAPPLING_LAB
+    ELEMENTS.GRAPPLING_LAB
   );
   setLabel(grapplingRating, fighter.grappling.toString());
   let overallRating: HTMLElement = selectElement(
     fighterDiv,
-    CLASSES.OVERALL_LAB
+    ELEMENTS.OVERALL_LAB
   );
   setLabel(overallRating, fighter.calcOverall().toString());
 }
@@ -358,5 +397,29 @@ export function initFighterFromArray(
     fightersArray[index].weightClass,
     fightersArray[index].standup,
     fightersArray[index].grappling
+  );
+}
+
+export function showHomeDiv(container: HTMLElement) {
+  enableElement(container, ELEMENTS.HOME_DIV);
+  disableElement(container, ELEMENTS.LIVE_DIV);
+  putElementInOrder(
+    container,
+    ELEMENTS.HOME_DIV,
+    ELEMENTS.LIVE_DIV,
+    ELEMENTS.ORDER.FIRST,
+    ELEMENTS.ORDER.SECOND
+  );
+}
+
+export function showLiveDiv(container: HTMLDivElement) {
+  enableElement(container, ELEMENTS.LIVE_DIV);
+  disableElement(container, ELEMENTS.HOME_DIV);
+  putElementInOrder(
+    container,
+    ELEMENTS.LIVE_DIV,
+    ELEMENTS.HOME_DIV,
+    ELEMENTS.ORDER.FIRST,
+    ELEMENTS.ORDER.SECOND
   );
 }

@@ -1,10 +1,10 @@
 import { add } from "date-fns";
-import { CLASSES, MAP_KEYS, PERCENTS, RULES, SCORE } from "../../environment";
+import { ELEMENTS, MAP_KEYS, PERCENT, RULES, SCORE } from "../environment";
 import { DifficultyLevel } from "../enums/DifficultyLevelEnum";
 import { Method } from "../enums/MethodEnum";
 import { Odds } from "../enums/OddEnum";
 import { Round } from "../enums/RoundEnum";
-import { Corner } from "../enums/FightersCorner";
+import { Corner } from "../enums/CornerEnum";
 import {
   initFightDiv,
   initPointsForEachDiv,
@@ -17,8 +17,13 @@ import {
 import { FightCard } from "./fightCard";
 import { Fighter } from "./fighter";
 import { Result } from "./result";
+import { FightPosition } from "../enums/FightPositionEnum";
+import { RunHelpers } from "rxjs/testing";
+import { Rules } from "../enums/RulesEnum";
 
 export class Fight {
+  rules: Rules;
+
   blueCorner: Fighter;
   redCorner: Fighter;
 
@@ -35,6 +40,7 @@ export class Fight {
 
   currentRound: Round = Round.Round_1;
   currentTime: Date = new Date(0);
+  currentPosition: FightPosition = FightPosition.StandUp;
 
   // getResult() {
   //   let winner: Corner = this.determineWinner();
@@ -139,6 +145,10 @@ export class Fight {
     this.finalResult = new Result(winner, method, round);
   }
 
+  setPosition(position: FightPosition): FightPosition {
+    return this.currentPosition = position;
+  }
+
   tickSecond(container: HTMLElement, fightCard: FightCard) {
     this.currentTime = add(this.currentTime, { seconds: 1 });
     fightCard.renderCurrentRoundAndTime(container);
@@ -181,7 +191,7 @@ export class Fight {
     let percentage: number = this.getPercentage(difficulty);
 
     let winner: Corner;
-    let drawnNumber = Math.floor(Math.random() * PERCENTS.OPP.MAX);
+    let drawnNumber = Math.floor(Math.random() * PERCENT.OPP.MAX);
     if (drawnNumber < percentage) {
       winner = correctWinner;
     } else {
@@ -196,17 +206,17 @@ export class Fight {
     let faultyRound;
     if (correctRound === Round.Round_1) {
       faultyRound =
-        Math.random() < PERCENTS.OPP.WRONG_CHOICE
+        Math.random() < PERCENT.OPP.WRONG_CHOICE
           ? Round.Round_2
           : Round.Round_3;
     } else if (correctRound === Round.Round_2) {
       faultyRound =
-        Math.random() < PERCENTS.OPP.WRONG_CHOICE
+        Math.random() < PERCENT.OPP.WRONG_CHOICE
           ? Round.Round_1
           : Round.Round_3;
     } else {
       faultyRound =
-        Math.random() < PERCENTS.OPP.WRONG_CHOICE
+        Math.random() < PERCENT.OPP.WRONG_CHOICE
           ? Round.Round_1
           : Round.Round_2;
     }
@@ -214,7 +224,7 @@ export class Fight {
     let percentage: number = this.getPercentage(difficulty);
 
     let round: Round;
-    let drawnNumber = Math.floor(Math.random() * PERCENTS.OPP.MAX);
+    let drawnNumber = Math.floor(Math.random() * PERCENT.OPP.MAX);
     if (drawnNumber < percentage) {
       round = correctRound;
     } else {
@@ -229,17 +239,17 @@ export class Fight {
     let faultyMethod;
     if (correctMethod === Method.Decision) {
       faultyMethod =
-        Math.random() < PERCENTS.OPP.WRONG_CHOICE
+        Math.random() < PERCENT.OPP.WRONG_CHOICE
           ? Method.KO_TKO
           : Method.Submission;
     } else if (correctMethod === Method.KO_TKO) {
       faultyMethod =
-        Math.random() < PERCENTS.OPP.WRONG_CHOICE
+        Math.random() < PERCENT.OPP.WRONG_CHOICE
           ? Method.Decision
           : Method.Submission;
     } else {
       faultyMethod =
-        Math.random() < PERCENTS.OPP.WRONG_CHOICE
+        Math.random() < PERCENT.OPP.WRONG_CHOICE
           ? Method.Decision
           : Method.KO_TKO;
     }
@@ -247,7 +257,7 @@ export class Fight {
     let percentage: number = this.getPercentage(difficulty);
 
     let method: Method;
-    let drawnNumber = Math.floor(Math.random() * PERCENTS.OPP.MAX);
+    let drawnNumber = Math.floor(Math.random() * PERCENT.OPP.MAX);
     if (drawnNumber < percentage) {
       method = correctMethod;
     } else {
@@ -301,13 +311,13 @@ export class Fight {
   }
 
   determineRound(): Round {
-    let max = PERCENTS.ROUND.MAX;
+    let max = PERCENT.ROUND.MAX;
     let drawnNumber = Math.floor(Math.random() * max);
-    if (drawnNumber <= PERCENTS.ROUND.FIRST) {
+    if (drawnNumber <= PERCENT.ROUND.FIRST) {
       return Round.Round_1;
     } else if (
-      drawnNumber > PERCENTS.ROUND.FIRST &&
-      drawnNumber <= PERCENTS.ROUND.SECOND
+      drawnNumber > PERCENT.ROUND.FIRST &&
+      drawnNumber <= PERCENT.ROUND.SECOND
     ) {
       return Round.Round_2;
     } else {
@@ -319,13 +329,13 @@ export class Fight {
     let percentage: number;
     switch (difficulty) {
       case DifficultyLevel.Easy:
-        percentage = PERCENTS.OPP.EASY;
+        percentage = PERCENT.OPP.EASY;
         break;
       case DifficultyLevel.Medium:
-        percentage = PERCENTS.OPP.MEDIUM;
+        percentage = PERCENT.OPP.MEDIUM;
         break;
       case DifficultyLevel.Hard:
-        percentage = PERCENTS.OPP.HARD;
+        percentage = PERCENT.OPP.HARD;
         break;
       default:
         break;
@@ -383,8 +393,8 @@ export class Fight {
     redCorner: Fighter,
     container: HTMLDivElement
   ) {
-    const blueCornerId = getSelectedValue(container, CLASSES.BLUE_CORNER_SEL);
-    const redCornerId = getSelectedValue(container, CLASSES.RED_CORNER_SEL);
+    const blueCornerId = getSelectedValue(container, ELEMENTS.BLUE_CORNER_SEL);
+    const redCornerId = getSelectedValue(container, ELEMENTS.RED_CORNER_SEL);
     if (
       blueCorner.id === parseInt(redCornerId) &&
       redCorner.id === parseInt(blueCornerId)
@@ -396,7 +406,7 @@ export class Fight {
   createYourFightDiv() {
     this.yourFightDiv = initFightDiv(
       this,
-      CLASSES.YOUR_FIGHT_DIV,
+      ELEMENTS.YOUR_FIGHT_DIV,
       this.yourPick
     );
   }
@@ -404,7 +414,7 @@ export class Fight {
   createOpponentFightDiv() {
     this.opponentFightDiv = initFightDiv(
       this,
-      CLASSES.OPP_FIGHT_DIV,
+      ELEMENTS.OPP_FIGHT_DIV,
       this.opponentPick
     );
   }
@@ -412,7 +422,7 @@ export class Fight {
   createResultFightDiv() {
     this.resultFightDiv = initFightDiv(
       this,
-      CLASSES.RESULT_FIGHT_DIV,
+      ELEMENTS.RESULT_FIGHT_DIV,
       this.finalResult
     );
   }

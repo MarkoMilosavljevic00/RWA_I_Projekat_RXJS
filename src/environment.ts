@@ -1,6 +1,10 @@
 export const API_URL = "http://localhost:3000";
 
-export const CLASSES = {
+export const ELEMENTS = {
+  ORDER: {
+    FIRST: 98,
+    SECOND: 99,
+  },
   INITIAL_DIV: "initial-div",
   CONTAINER: "container",
   TOP_DIV: "top-div",
@@ -49,14 +53,15 @@ export const CLASSES = {
   STANDUP_LAB: "standup-label",
   GRAPPLING_LAB: "grappling-label",
   OVERALL_LAB: "overall-label",
-  FIGHTER_LABEL: "bold-labels",
+  FIGHTER_LABEL: "fighter-label",
   POINTS_FOR_EACH_DIV: "points-for-each-div",
   LIVE_DIV: "live-div",
-  LIVE_FIGHT_NUM_LAB: "live-fight-number-lab",
+  LIVE_FIGHT_NUM_LAB: "live-fight-number-label",
   LIVE_FIGHT_NUM_DIV: "live-fight-number-div",
   LIVE_ROUND_LAB: "live-round-label",
   LIVE_TIMER_DIV: "live-timer-div",
-  LIVE_COUNTER_LAB: "live-counter-lab",
+  TIMER_SPAN: "timer-span",
+  LIVE_COUNTER_LAB: "live-counter-label",
   BLUE_STREAM_DIV: "blue-stream-div",
   RED_STREAM_DIV: "red-stream-div",
   STREAM_DIV: "stream-div",
@@ -64,14 +69,14 @@ export const CLASSES = {
   BLUE_STREAM_NAME_LAB: "blue-stream-name-label",
   BLUE_STREAM_ODDS_LAB: "blue-stream-odds-label",
   BLUE_STREAM_EVENTS_DIV: "blue-stream-events-div",
-  BLUE_STREAM_DAMAGE_DIV: "blue-stream-damage-div",
+  BLUE_STREAM_DAMAGE_SPAN: "blue-stream-damage-span",
   BLUE_STREAM_DAMAGE_TEXT: "blue-stream-damage-text",
   BLUE_STREAM_DAMAGE_LAB: "blue-stream-damage-label",
   RED_STREAM_NAME_DIV: "red-stream-name-div",
   RED_STREAM_NAME_LAB: "red-stream-name-label",
-  RED_STREAM_ODDS_LAB: "red-stream-name-label",
+  RED_STREAM_ODDS_LAB: "red-stream-odds-label",
   RED_STREAM_EVENTS_DIV: "red-stream-events-div",
-  RED_STREAM_DAMAGE_DIV: "red-stream-damage-div",
+  RED_STREAM_DAMAGE_SPAN: "red-stream-damage-span",
   RED_STREAM_DAMAGE_TEXT: "red-stream-damage-text",
   RED_STREAM_DAMAGE_LAB: "red-stream-damage-label",
 };
@@ -106,7 +111,7 @@ export const IMG_DIMENSIONS = {
   },
 };
 
-export const PERCENTS = {
+export const PERCENT = {
   OPP: {
     MAX: 100,
     EASY: 30,
@@ -131,20 +136,69 @@ export const TIME = {
 };
 
 export const RULES = {
-  MMA:{
-    ROUND_LENGTH:{
-      MINUTES: 1,
-      SECONDS: 0
-    }
-  } 
-}
+  MMA: {
+    ROUND_LENGTH: {
+      MINUTES: 10,
+      SECONDS: 10,
+    },
+    PERCENT: {
+      TO_TRY: {
+        FROM_STANDUP: {
+          SUBMISSION: 10,
+          TAKEDOWN: 90,
+        },
+        FROM_GROUND: {
+          PUNCH: 60,
+          STAND: 40,
+          SUBMISSION: 40,
+        },
+      },
+      SUCCES: {
+        FROM_GROUND: {
+          RELIEF_ATTACK_PUNCH: 20,
+          RELIEF_DEFENSE_SUBMISSION: 20
+        },
+        FROM_STANDUP:{
+          RELIEF_DEFENSE_SUBMISSION: 50,
+        }
+      },
+    },
+  },
+  GRAPPLING: {
+    ROUND_LENGTH: {
+      MINUTES: 10,
+      SECONDS: 10,
+    },
+    PERCENT: {
+      SUCCES: {
+        FROM_STANDUP: {},
+      },
+      FROM_STANDUP: {
+        SUBMISSION: 25,
+        TAKEDOWN: 75,
+      },
+      FROM_GROUND: {
+        STAND: 5,
+        SUBMISSION: 95,
+      },
+    },
+  },
+};
 
 export const MAP_KEYS = {
-  ODDS:{
+  ODDS: {
     FAVOURITE: "favourite",
     UNDERDOG: "underdog",
-    EQUAL: "equal"
-  }
-}
+    EQUAL: "equal",
+  },
+};
 
 export const NUMBER_OF_RATINGS = 2;
+
+export const ATTACK = {
+  FREQUENCY: 1000,
+  PERCENT: {
+    TO_HAPPEN: 20,
+    NOT_TO_HAPPEN: 80,
+  },
+};

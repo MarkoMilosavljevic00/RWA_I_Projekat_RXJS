@@ -1,4 +1,4 @@
-import { combineLatest, interval, Observable, Subject, take } from "rxjs";
+import { combineLatest, interval, map, Observable, Subject, take, withLatestFrom } from "rxjs";
 import { Opponent } from "../../model/opponent";
 import {
   changeBlueCornerSub,
@@ -9,10 +9,10 @@ import {
   restartGameSub,
   playAgainSub,
   startGameSub,
-  playButtonSub,
+  initLiveScoreSubSub as initLiveScoreSub,
   tickingTimerSub,
 } from "./subscriptions";
-import { CLASSES, TIME } from "../../../environment";
+import { ATTACK, ELEMENTS, TIME } from "../../environment";
 import {
   completeControlFlowObs,
   createControlFlowObs,
@@ -24,6 +24,9 @@ import {
   createPlayAgainObs as createPlayAgainObs,
   createAddNewPickObs,
   createPlayObs,
+  createInitLiveScoreObs,
+  createTickingTimerObs,
+  createGeneratorAttackObs,
 } from "./observables";
 import { FightCard } from "../../model/fightCard";
 import { WeightClass } from "../../enums/WeightClassEnum";
@@ -58,18 +61,18 @@ export function initRestartingGameObs(
   container: HTMLDivElement,
   fightCard: FightCard
 ): void {
-  let restartGameOb$ = createButtonObs(container, CLASSES.RESTART_BTN);
+  let restartGameOb$ = createButtonObs(container, ELEMENTS.RESTART_BTN);
   restartGameSub(container, fightCard, restartGameOb$);
 }
 
 export function initChangeFighterObs(container: HTMLDivElement): void {
   let changeBlueCornerOb$ = createChangeFighterObs(
     container,
-    CLASSES.BLUE_CORNER_SEL
+    ELEMENTS.BLUE_CORNER_SEL
   );
   let changeRedCornerOb$ = createChangeFighterObs(
     container,
-    CLASSES.RED_CORNER_SEL
+    ELEMENTS.RED_CORNER_SEL
   );
 
   changeBlueCornerSub(container, changeBlueCornerOb$);
@@ -79,7 +82,7 @@ export function initChangeFighterObs(container: HTMLDivElement): void {
 export function initChangeWeightClassObs(container: HTMLDivElement): void {
   let changeWeightClassOb$ = createChangeWeightClassObs(
     container,
-    CLASSES.WEIGHT_CLASS_SEL
+    ELEMENTS.WEIGHT_CLASS_SEL
   );
   changeWeightClassSub(container, changeWeightClassOb$);
 }
@@ -97,16 +100,28 @@ export function initGameObs(
 ): void {
   let addNewPickOb$ = createAddNewPickObs(
     container,
-    CLASSES.ADD_PICK_BTN,
+    ELEMENTS.ADD_PICK_BTN,
     fightCard
   );
-  let playButtonOb$ = createButtonObs(container, CLASSES.PLAY_BTN);
-  playButtonSub(playButtonOb$, fightCard, container);
-  let timerOb$ = interval(TIME.SECOND);
-  let tickingTimerOb$ = combineLatest(timerOb$, playButtonOb$);
-  tickingTimerSub(tickingTimerOb$, container, fightCard);
 
-  //tickingTimerSub(tickingTimerOb$, container, fightCard);
+  let initLiveScoreOb$ = createInitLiveScoreObs(container, ELEMENTS.PLAY_BTN, addNewPickOb$);
+  initLiveScoreSub(initLiveScoreOb$, container);
+
+  let tickingTimerOb$ = createTickingTimerObs(container, ELEMENTS.PLAY_BTN, addNewPickOb$, TIME.SECOND);
+  tickingTimerSub(tickingTimerOb$, container);
+
+  let generatorAttackOb$ = createGeneratorAttackObs(container, addNewPickOb$, ATTACK.FREQUENCY, ATTACK.PERCENT.TO_HAPPEN, ATTACK.PERCENT.NOT_TO_HAPPEN)
+
+  // let tickingTimerOb$ = combineLatest(timerOb$, playButtonOb$).pipe(
+  //   map(arr => arr[0])
+  // );
+  // tickingTimerSub(tickingTimerOb$, container, fightCard);
+
+  // tickingTimerOb$.pipe(
+  //   withLatestFrom(addNewPickOb$),
+  //   map(arr => arr[1])
+  // ).subscribe(console.log);
+
 
   // V1 OBS
   // let playOb$ = createPlayObs(
@@ -143,8 +158,8 @@ export function initPlayAgainObs(
 ): void {
   let playAgainOb$ = createPlayAgainObs(
     container,
-    CLASSES.PLAY_BTN,
-    CLASSES.PLAY_AGAIN_BTN
+    ELEMENTS.PLAY_BTN,
+    ELEMENTS.PLAY_AGAIN_BTN
   );
   playAgainSub(container, fightCard, playAgainOb$);
 }

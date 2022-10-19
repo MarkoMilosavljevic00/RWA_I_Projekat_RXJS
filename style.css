@@ -9,7 +9,9 @@ h1 {
 
 label,
 button,
-select {
+select,
+h2,
+h3 {
   font-family: cursive;
 }
 
@@ -17,24 +19,9 @@ body {
   background-color: rgb(85, 154, 189);
 }
 
-.initial-div {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: rgb(167, 190, 244);
-  border-style: solid;
-  border-color: rgb(0, 0, 0);
-  flex-basis: 200px;
-}
-
 .container {
   display: flex;
-  /* justify-content: center;
-  align-items: center;
-  min-height: 100vh; */
   flex-direction: column;
-  justify-content: space-between;
 }
 
 .top-div,
@@ -42,7 +29,6 @@ body {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: center;
   border-width: 5px;
   justify-content: center;
 }
@@ -63,10 +49,7 @@ body {
 
 .your-picks-div,
 .result-div,
-.opponent-picks-div,
-.live-div
-.live-fight-number-div,
-.live-timer-div{
+.opponent-picks-div{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -75,11 +58,6 @@ body {
   border-color: rgb(0, 0, 0);
   flex-basis: 300px;
 }
-
-/* .new-pick-div{
-  display: flex;
-  flex-direction: column;
-} */
 
 .bottom-new-pick-div{
   display: flex;
@@ -119,14 +97,23 @@ body {
   align-items: flex-start;
 }
 
-.bold-labels,
+.fighter-label,
 .opponent-name-label,
 .opponent-difficulty-label,
 .your-points,
 .opponent-points,
 .standup-label,
 .grappling-label,
-.overall-label {
+.overall-label,
+.live-fight-number-label,
+.red-stream-damage-label,
+.blue-stream-damage-label,
+.red-stream-name-label,
+.blue-stream-name-label,
+.red-stream-odds-label,
+.blue-stream-odds-label,
+.live-round-label,
+.live-counter-label {
   font-weight: bold;
 }
 
@@ -137,3 +124,89 @@ body {
   font-weight: bold;
   background-color: rgb(95, 138, 239);
 }
+
+ .live-div{
+  display: flex;
+  flex-direction: column;
+  align-items:center;
+  flex-shrink: 1;
+  background-color: rgb(167, 190, 244);
+  border-style: solid;
+  width:70%;
+  align-self: center;
+}
+
+.stream-div{
+  display: flex;
+  flex-direction: row;
+  border-width: 5px;
+  justify-content: center;
+  border-style: solid;
+  background-color: rgb(99, 131, 206);
+}
+
+.blue-stream-name-div,
+.red-stream-name-div{
+  display: flex;
+  width: 300px;
+  justify-content: space-between;
+  border-style: solid;
+  border-width: 1px;
+  font-size: small;
+}
+
+.blue-stream-events-div,
+.red-stream-events-div{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border-style: solid;
+  border-width: 1px;
+  background-color: rgb(167, 190, 244);
+  font-size: small;
+  height: 500px;
+}
+
+.live-timer-div{
+  display:flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.timer-span{
+  background-color: rgb(95, 138, 239);
+  border-style: solid;
+  border-width: 1px;
+}
+/*
+.stream-div{
+  display:flex;
+  flex-direction: row;
+  flex-wrap:wrap;
+  flex-basis: 300px;
+  justify-content: space-between;
+}
+
+.blue-stream-div,
+.red-stream-div{
+  display: flex;
+  flex-direction: column;
+  border-style: solid;
+  width: 400px;
+  background-color: rgb(173, 197, 206);
+  justify-content: space-between;
+}
+
+.blue-stream-name-div,
+.red-stream-name-div{
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  background-color: rgb(32, 168, 218);
+}
+
+.live-timer-div{
+  display:flex;
+  width: 400px;
+  justify-content: space-between;
+} */

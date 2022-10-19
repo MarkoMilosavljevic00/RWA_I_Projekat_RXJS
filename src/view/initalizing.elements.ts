@@ -1,4 +1,4 @@
-import { CLASSES, SCORE } from "../../environment";
+import { ELEMENTS, SCORE } from "../environment";
 import { setOpponent, setScoreForBoth } from "../controller/logic";
 import { Fight } from "../model/fight";
 import { Opponent } from "../model/opponent";
@@ -26,7 +26,7 @@ export function initContainer(
   opponent: Opponent
 ): HTMLDivElement {
   let container: HTMLDivElement = document.createElement("div");
-  container.className = container.className = CLASSES.CONTAINER;
+  container.className = container.className = ELEMENTS.CONTAINER;
 
   replaceContainer(host, container, findingOpponentDiv);
   let topDiv = initTopDiv(findingOpponentDiv, opponent);
@@ -39,7 +39,7 @@ export function initContainer(
 
 export function initFindingOpponentDiv(): HTMLDivElement {
   const findingOpponentDiv: HTMLDivElement = document.createElement("div");
-  findingOpponentDiv.className = CLASSES.INITIAL_DIV;
+  findingOpponentDiv.className = ELEMENTS.INITIAL_DIV;
 
   let findingOpponentElements = createFindingOpponentElements();
   renderElements(findingOpponentDiv, ...findingOpponentElements);
@@ -51,7 +51,7 @@ export function initTopDiv(
   opponent: Opponent
 ): HTMLDivElement {
   let topDiv: HTMLDivElement = document.createElement("div");
-  topDiv.className = CLASSES.TOP_DIV;
+  topDiv.className = ELEMENTS.TOP_DIV;
 
   let topElements = createTopElements(findingOpponentDiv);
 
@@ -63,7 +63,7 @@ export function initTopDiv(
 
 export function initHomeDiv(): HTMLDivElement {
   let gameDiv: HTMLDivElement = document.createElement("div");
-  gameDiv.className = CLASSES.HOME_DIV;
+  gameDiv.className = ELEMENTS.HOME_DIV;
 
   let yourPicksDiv = initYourPicksDiv();
   let opponentPicksDiv = initOpponentPicksDiv();
@@ -75,7 +75,7 @@ export function initHomeDiv(): HTMLDivElement {
 
 export function initYourPicksDiv(): HTMLDivElement {
   let yourPicksDiv: HTMLDivElement = document.createElement("div");
-  yourPicksDiv.className = CLASSES.YOUR_PICKS_DIV;
+  yourPicksDiv.className = ELEMENTS.YOUR_PICKS_DIV;
 
   let yourPicksElements = createYourPicksElements();
   renderElements(yourPicksDiv, ...yourPicksElements);
@@ -84,7 +84,7 @@ export function initYourPicksDiv(): HTMLDivElement {
 
 export function initNewPickDiv(): HTMLDivElement {
   let newPickDiv = document.createElement("div");
-  newPickDiv.className = CLASSES.NEW_PICK_DIV;
+  newPickDiv.className = ELEMENTS.NEW_PICK_DIV;
 
   let newPickElements = createNewPickElements();
   renderElements(newPickDiv, ...newPickElements);
@@ -94,7 +94,7 @@ export function initNewPickDiv(): HTMLDivElement {
 
 export function initOpponentPicksDiv(): HTMLDivElement {
   let opponentPicksDiv: HTMLDivElement = document.createElement("div");
-  opponentPicksDiv.className = CLASSES.OPP_PICKS_DIV;
+  opponentPicksDiv.className = ELEMENTS.OPP_PICKS_DIV;
 
   let opponentPicksElements = createOpponentPicksElements();
   renderElements(opponentPicksDiv, ...opponentPicksElements);
@@ -103,7 +103,7 @@ export function initOpponentPicksDiv(): HTMLDivElement {
 
 export function initResultsDiv(): HTMLDivElement {
   let resultDiv: HTMLDivElement = document.createElement("div");
-  resultDiv.className = CLASSES.RESULT_DIV;
+  resultDiv.className = ELEMENTS.RESULT_DIV;
 
   let resultElements = createResultsElements();
   renderElements(resultDiv, ...resultElements);
@@ -128,14 +128,14 @@ export function initPointsForEachDiv(
   score: number
 ): void {
   let pointsForEachDiv: HTMLDivElement = createPointsForEachDiv(score);
-  pointsForEachDiv.className = CLASSES.POINTS_FOR_EACH_DIV;
+  pointsForEachDiv.className = ELEMENTS.POINTS_FOR_EACH_DIV;
 
   renderElements(fightDiv, pointsForEachDiv);
 }
 
 export function initLiveDiv(): HTMLDivElement {
   let liveDiv = document.createElement("div");
-  liveDiv.className = CLASSES.LIVE_DIV;
+  liveDiv.className = ELEMENTS.LIVE_DIV;
 
   let liveElements = createLiveElements();
   renderElements(liveDiv, ...liveElements);

@@ -1,5 +1,5 @@
-import { CLASSES, FIGHTER, SCORE } from "../../environment";
-import { setScore } from "../controller/logic";
+import { ELEMENTS, FIGHTER, SCORE } from "../environment";
+import { setScore, showHomeDiv } from "../controller/logic";
 import { Method } from "../enums/MethodEnum";
 import { Round } from "../enums/RoundEnum";
 import {
@@ -9,6 +9,9 @@ import {
   showDraw,
   showVictory,
   printRoundAndTime,
+  selectElement,
+  putElementInOrder,
+  disableElement,
 } from "../view/view";
 import { Fight } from "./fight";
 import { Result } from "./result";
@@ -44,9 +47,16 @@ export class FightCard {
     }
   }
 
+  getCurrentFightNumber(): number {
+    if (this.isInProgress) {
+      return this.currentFightIndex + 1;
+    } else 
+    return undefined;
+  }
+
   setScores(container: HTMLElement) {
-    setScore(this.yourTotalScore, container, CLASSES.YOUR_POINTS);
-    setScore(this.opponentTotalScore, container, CLASSES.OPP_POINTS);
+    setScore(this.yourTotalScore, container, ELEMENTS.YOUR_POINTS);
+    setScore(this.opponentTotalScore, container, ELEMENTS.OPP_POINTS);
   }
 
   start() {
@@ -66,7 +76,10 @@ export class FightCard {
   }
 
   isInProgress(): boolean {
-    if (this.currentFightIndex !== undefined && this.currentFightIndex < this.fights.length) {
+    if (
+      this.currentFightIndex !== undefined &&
+      this.currentFightIndex < this.fights.length
+    ) {
       return true;
     } else {
       return false;
@@ -75,39 +88,77 @@ export class FightCard {
 
   isOver(): boolean {
     if (this.currentFightIndex !== this.fights.length) {
-      return true;
-    } else {
       return false;
+    } else {
+      return true;
     }
   }
 
   nextFight(container: HTMLElement) {
     this.currentFightIndex++;
-    if (this.currentFightIndex !== this.fights.length) {
-      this.renderCurrentFight(container);
+    if (!this.isOver()) {
+      this.renderCurrentFight(container, this.getCurrentFightNumber());
       this.renderCurrentRoundAndTime(container);
     } else {
-      this.cardIsOver();
+      this.cardIsOver(container);
     }
   }
 
-  cardIsOver() {
-    throw new Error("Method not implemented.");
+  cardIsOver(container: HTMLElement) {
+    showHomeDiv(container);
+
+    this.calculateScores();
+    this.setScores(container);
+
+    let resultFightCardDiv = selectElement(
+      container,
+      ELEMENTS.RESULT_FIGHTCARD_DIV
+    );
+    this.createResultDivs();
+    this.renderResults(resultFightCardDiv);
+
+    let opponentFightCardDiv = selectElement(
+      container,
+      ELEMENTS.OPP_FIGHTCARD_DIV
+    );
+    this.createOpponentPickDivs();
+    this.renderOpponentPicks(opponentFightCardDiv);
+
+    this.renderScoresForEach();
+    this.reset();
+  }
+
+  calculateScores() {
+    let yourNewScore: number = SCORE.INITIAL;
+    let opponentNewScore: number = SCORE.INITIAL;
+    this.fights.forEach((fight) => {
+      fight.calculateScores();
+      yourNewScore += fight.yourScore;
+      opponentNewScore += fight.opponentScore;
+    });
+
+    this.yourTotalScore += yourNewScore;
+    this.opponentTotalScore += opponentNewScore;
+    this.showScores(yourNewScore, opponentNewScore);
   }
 
   renderCurrentRoundAndTime(container: HTMLElement) {
     if (this.isInProgress()) {
       let currentFight = this.getCurrentFight();
-      printRoundAndTime(container, currentFight.currentRound, currentFight.currentTime);
+      printRoundAndTime(
+        container,
+        currentFight.currentRound,
+        currentFight.currentTime
+      );
     } else {
       console.log("currentFightIndex je undefined");
     }
   }
 
-  renderCurrentFight(container: HTMLElement) {
+  renderCurrentFight(container: HTMLElement, fightNumber: number) {
     if (this.isInProgress()) {
       let currentFight = this.getCurrentFight();
-      printFightInStream(currentFight, container);
+      printFightInStream(currentFight, fightNumber, container);
     } else {
       console.log("currentFightIndex je undefined");
     }
@@ -149,20 +200,6 @@ export class FightCard {
 
   createOpponentPickDivs() {
     this.fights.forEach((fight) => fight.createOpponentFightDiv());
-  }
-
-  calculateScores() {
-    let yourNewScore: number = SCORE.INITIAL;
-    let opponentNewScore: number = SCORE.INITIAL;
-    this.fights.forEach((fight) => {
-      fight.calculateScores();
-      yourNewScore += fight.yourScore;
-      opponentNewScore += fight.opponentScore;
-    });
-
-    this.yourTotalScore += yourNewScore;
-    this.opponentTotalScore += opponentNewScore;
-    this.showScores(yourNewScore, opponentNewScore);
   }
 
   showScores(yourNewScore: number, opponentNewScore: number) {

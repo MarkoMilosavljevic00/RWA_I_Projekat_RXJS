@@ -1,6 +1,6 @@
 import { Method } from "../enums/MethodEnum";
 import { Round } from "../enums/RoundEnum";
-import { Corner } from "../enums/FightersCorner";
+import { Corner } from "../enums/CornerEnum";
 
 export class Result {
   winner: Corner;

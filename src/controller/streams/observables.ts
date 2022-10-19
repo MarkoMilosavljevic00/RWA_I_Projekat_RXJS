@@ -1,7 +1,10 @@
 import {
+  combineLatest,
   delayWhen,
+  filter,
   from,
   fromEvent,
+  interval,
   map,
   merge,
   Observable,
@@ -12,14 +15,9 @@ import {
   timer,
   withLatestFrom,
 } from "rxjs";
-import {
-  API_URL,
-  CLASSES,
-  FIGHTER,
-  INDEXES,
-  TIME,
-} from "../../../environment";
+import { API_URL, ELEMENTS, FIGHTER, INDEXES, TIME } from "../../environment";
 import { DifficultyLevel } from "../../enums/DifficultyLevelEnum";
+import { Corner } from "../../enums/CornerEnum";
 import { Method } from "../../enums/MethodEnum";
 import { Round } from "../../enums/RoundEnum";
 import { WeightClass } from "../../enums/WeightClassEnum";
@@ -32,6 +30,7 @@ import {
   enableElement,
   getCheckedRadioValue,
   getSelectedValue,
+  getYourPickFromForm,
   selectElement,
   selectSelectionEl,
 } from "../../view/view";
@@ -39,10 +38,12 @@ import {
   checkAddingPick,
   getDifficulties,
   getFighterId,
+  getByProbability,
   getRandomOpponent,
   getWeightClasses,
   initFighterFromArray,
 } from "../logic";
+import { Attack } from "../../model/attack";
 
 export function createButtonObs(container: HTMLElement, selection: string) {
   let btn = selectElement(container, selection);
@@ -113,8 +114,8 @@ export function getFightersFromForm(
     return of(emptyArray);
   }
 
-  const blueCornerId = getSelectedValue(container, CLASSES.BLUE_CORNER_SEL);
-  const redCornerId = getSelectedValue(container, CLASSES.RED_CORNER_SEL);
+  const blueCornerId = getSelectedValue(container, ELEMENTS.BLUE_CORNER_SEL);
+  const redCornerId = getSelectedValue(container, ELEMENTS.RED_CORNER_SEL);
 
   return from(
     fetch(`${API_URL}/fighters/?id=${blueCornerId}&id=${redCornerId}`)
@@ -149,22 +150,15 @@ export function addFightToFightCardObs(
     );
     fight.setFighters(blueCornerFighter, redCornerFighter, container);
 
-    let winnerValue = getCheckedRadioValue(container, CLASSES.CORNER_RADIO);
-    let methodValue = getSelectedValue(container, CLASSES.METHOD_SEL);
-    let roundValue: string;
-    if (methodValue === Method.Decision) {
-      roundValue = Round.Round_3.toString();
-    } else {
-      roundValue = getSelectedValue(container, CLASSES.ROUND_SEL);
-    }
-
-    let yourPick = new Result(winnerValue, methodValue, roundValue);
+    let yourPick = getYourPickFromForm(container);
     fight.setYourPick(yourPick);
 
-    let yourFightCardDiv = selectElement(container, CLASSES.YOUR_FIGHTCARD_DIV);
+    let yourFightCardDiv = selectElement(
+      container,
+      ELEMENTS.YOUR_FIGHTCARD_DIV
+    );
     fight.createYourFightDiv();
     fightCard.fights.push(fight);
-
     fightCard.renderYourPicksDivs(yourFightCardDiv);
 
     //console.log("niz", fightCard);
@@ -172,24 +166,11 @@ export function addFightToFightCardObs(
   });
 }
 
-export function createAddNewPickObs(
-  container: HTMLDivElement,
-  selection: string,
-  fightCard: FightCard
-): Observable<FightCard> {
-  return createButtonObs(container, selection).pipe(
-    switchMap(() => getFightersFromForm(container, fightCard)),
-    switchMap((fightersArray) =>
-      addFightToFightCardObs(container, fightCard, fightersArray)
-    )
-  );
-}
-
 export function createFindingOpponentObs(
   findingOpponentDiv: HTMLDivElement,
   controlStartGameOb$: Subject<any>
 ): Observable<Opponent> {
-  return createButtonObs(findingOpponentDiv, CLASSES.FINDING_OPP_BTN).pipe(
+  return createButtonObs(findingOpponentDiv, ELEMENTS.FINDING_OPP_BTN).pipe(
     switchMap(() => getOpponents(getDifficulties(findingOpponentDiv))),
     map((opponents) => getRandomOpponent(opponents)),
     takeUntil(controlStartGameOb$)
@@ -211,8 +192,63 @@ export function createChangeFighterObs(
 ): Observable<Fighter> {
   return createSelectOptionObs(container, selection).pipe(
     switchMap(() => getFighterById(getFighterId(container, selection))),
-    map((fightersArray) => initFighterFromArray(fightersArray, FIGHTER.INDEX.INITIAL))
+    map((fightersArray) =>
+      initFighterFromArray(fightersArray, FIGHTER.INDEX.INITIAL)
+    )
   );
+}
+
+export function createAddNewPickObs(
+  container: HTMLDivElement,
+  selection: string,
+  fightCard: FightCard
+): Observable<FightCard> {
+  return createButtonObs(container, selection).pipe(
+    switchMap(() => getFightersFromForm(container, fightCard)),
+    switchMap((fightersArray) =>
+      addFightToFightCardObs(container, fightCard, fightersArray)
+    )
+  );
+}
+
+export function createInitLiveScoreObs(
+  container: HTMLElement,
+  selection: string,
+  addNewPickOb$: Observable<FightCard>
+): Observable<FightCard> {
+  return createButtonObs(container, selection).pipe(
+    withLatestFrom(addNewPickOb$),
+    map((fightCard) => fightCard[1])
+  );
+}
+
+export function createTickingTimerObs(
+  container: HTMLElement,
+  selection: string,
+  addNewPickOb$: Observable<FightCard>,
+  frequency: number,
+) {
+  let intervalOb$ = interval(frequency);
+  let playButtonOb$ = createButtonObs(container, selection);
+  return combineLatest(intervalOb$, playButtonOb$).pipe(
+    withLatestFrom(addNewPickOb$),
+    map((fightCard) => fightCard[1])
+  );
+}
+
+export function createGeneratorAttackObs(
+  container: HTMLDivElement,
+  addNewPickOb$: Observable<FightCard>,
+  frequency: number,
+  toHappen: number,
+  notToHappen: number
+) {
+  return interval(frequency).pipe(
+    filter(() => getByProbability([toHappen, notToHappen], true, false)),
+    withLatestFrom(addNewPickOb$),
+    map((fightCard) => new Attack(fightCard[1].getCurrentFight())),
+  );
+
 }
 
 export function createPlayObs(

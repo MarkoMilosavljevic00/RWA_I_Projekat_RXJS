@@ -1,10 +1,9 @@
 import { secondsInDay } from "date-fns";
 import { Observable, Subject, Subscription } from "rxjs";
-import { CLASSES, FIGHTER, INDEXES } from "../../../environment";
+import { ELEMENTS, FIGHTER, INDEXES } from "../../environment";
 import { FightCard } from "../../model/fightCard";
 import { Fighter } from "../../model/fighter";
 import { Opponent } from "../../model/opponent";
-import { disableElement, disableMultipleElements, enableElement, putElementBehind, selectElement } from "../../view/view";
 import {
   fillFightersRating,
   fillFightersSelect,
@@ -68,7 +67,7 @@ export function changeBlueCornerSub(
   changeBlueCornerOb$: Observable<Fighter>
 ) {
   return changeBlueCornerOb$.subscribe((fighter) => {
-    fillFightersRating(container, fighter, CLASSES.BLUE_CORNER_DIV);
+    fillFightersRating(container, fighter, ELEMENTS.BLUE_CORNER_DIV);
   });
 }
 
@@ -77,7 +76,7 @@ export function changeRedCornerSub(
   changeRedCornerOb$: Observable<Fighter>
 ) {
   return changeRedCornerOb$.subscribe((fighter) => {
-    fillFightersRating(container, fighter, CLASSES.RED_CORNER_DIV);
+    fillFightersRating(container, fighter, ELEMENTS.RED_CORNER_DIV);
   });
 }
 
@@ -88,8 +87,8 @@ export function loadInitialFightersSub(
   initialNewPickOb$.subscribe((fightersArray) => {
     let fighter = initFighterFromArray(fightersArray, FIGHTER.INDEX.INITIAL);
     fillFightersSelect(container, fightersArray);
-    fillFightersRating(container, fighter, CLASSES.BLUE_CORNER_DIV);
-    fillFightersRating(container, fighter, CLASSES.RED_CORNER_DIV);
+    fillFightersRating(container, fighter, ELEMENTS.BLUE_CORNER_DIV);
+    fillFightersRating(container, fighter, ELEMENTS.RED_CORNER_DIV);
   });
 }
 
@@ -115,24 +114,21 @@ export function playSub(
   });
 }
 
-export function playButtonSub(
-  playButtonOb$: Observable<Event>,
-  fightCard: FightCard,
+export function initLiveScoreSubSub(
+  playButtonOb$: Observable<FightCard>,
   container: HTMLDivElement
 ) {
-  playButtonOb$.subscribe(() => {
-    if(fightCard.isInProgress()){
-      initLiveScoreLogic(fightCard, container);
-    }
+  playButtonOb$.subscribe((fightCard) => {
+    fightCard.start();
+    initLiveScoreLogic(fightCard, container);
   });
 }
 
 export function tickingTimerSub(
-  tickingTimerOb$: Observable<[number, Event]>,
-  container: HTMLDivElement,
-  fightCard: FightCard
+  tickingTimerOb$: Observable<FightCard>,
+  container: HTMLDivElement
 ) {
-  return tickingTimerOb$.subscribe(() => {
+  return tickingTimerOb$.subscribe((fightCard) => {
     tickingTimerLogic(container, fightCard);
   });
 }

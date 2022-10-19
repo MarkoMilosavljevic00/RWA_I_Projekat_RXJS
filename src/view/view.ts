@@ -1,13 +1,9 @@
 import Swal from "sweetalert2";
-import {
-  CLASSES,
-  MAP_KEYS,
-  TIME,
-} from "../../environment";
+import { ELEMENTS, MAP_KEYS, TIME } from "../environment";
 import { Method } from "../enums/MethodEnum";
 import { Odds } from "../enums/OddEnum";
 import { Round } from "../enums/RoundEnum";
-import { Corner } from "../enums/FightersCorner";
+import { Corner } from "../enums/CornerEnum";
 import { Fight } from "../model/fight";
 import { Result } from "../model/result";
 import { DifficultyLevel } from "../enums/DifficultyLevelEnum";
@@ -20,40 +16,89 @@ export function renderElements(host: HTMLElement, ...childs: HTMLElement[]) {
   childs.forEach((child) => host.appendChild(child));
 }
 
-function printElement(container: HTMLElement, newText: string, selection: string) {
+function printElement(
+  container: HTMLElement,
+  newText: string,
+  selection: string
+) {
   let label = selectElement(container, selection);
   setLabel(label, newText);
 }
 
-export function printRoundAndTime(container: HTMLElement, currentRound: Round, currentTime: Date) {
-  printElement(container, currentRound, CLASSES.LIVE_ROUND_LAB);
-  
+export function printRoundAndTime(
+  container: HTMLElement,
+  currentRound: Round,
+  currentTime: Date
+) {
+  printElement(container, currentRound, ELEMENTS.LIVE_ROUND_LAB);
+
   let timeString = getTimeString(currentTime);
-  printElement(container, timeString, CLASSES.LIVE_COUNTER_LAB);
+  printElement(container, timeString, ELEMENTS.LIVE_COUNTER_LAB);
 }
 
-export function printFightInStream(currentFight: Fight, container: HTMLElement) {
-  printElement(container, currentFight.blueCorner.name, CLASSES.BLUE_STREAM_NAME_LAB)
-  printElement(container, currentFight.redCorner.name, CLASSES.RED_STREAM_NAME_LAB)
+export function printFightInStream(
+  currentFight: Fight,
+  fightNumber: number,
+  container: HTMLElement
+) {
+  printElement(
+    container,
+    fightNumber.toString(),
+    ELEMENTS.LIVE_FIGHT_NUM_LAB
+  );
 
-  printOdd(container, currentFight, CLASSES.BLUE_STREAM_ODDS_LAB, Corner.BLUE_CORNER);
-  printOdd(container, currentFight, CLASSES.RED_STREAM_ODDS_LAB, Corner.RED_CORNER);
+  printElement(
+    container,
+    currentFight.blueCorner.name,
+    ELEMENTS.BLUE_STREAM_NAME_LAB
+  );
+  printElement(
+    container,
+    currentFight.redCorner.name,
+    ELEMENTS.RED_STREAM_NAME_LAB
+  );
 
-  printElement(container, currentFight.blueCorner.damagePercent.toString(), CLASSES.BLUE_STREAM_DAMAGE_LAB);
-  printElement(container, currentFight.redCorner.damagePercent.toString(), CLASSES.RED_STREAM_DAMAGE_LAB);
+  printOdd(
+    container,
+    currentFight,
+    ELEMENTS.BLUE_STREAM_ODDS_LAB,
+    Corner.BLUE_CORNER
+  );
+  printOdd(
+    container,
+    currentFight,
+    ELEMENTS.RED_STREAM_ODDS_LAB,
+    Corner.RED_CORNER
+  );
+
+  printElement(
+    container,
+    currentFight.blueCorner.damagePercent.toString(),
+    ELEMENTS.BLUE_STREAM_DAMAGE_LAB
+  );
+  printElement(
+    container,
+    currentFight.redCorner.damagePercent.toString(),
+    ELEMENTS.RED_STREAM_DAMAGE_LAB
+  );
 }
 
-function printOdd(container: HTMLElement,currentFight: Fight, selectionLabel: string, corner: Corner) {
+function printOdd(
+  container: HTMLElement,
+  currentFight: Fight,
+  selectionLabel: string,
+  corner: Corner
+) {
   let streamOddsLabel = selectElement(container, selectionLabel);
   let odds = currentFight.getOdds();
 
-  if(odds.get(MAP_KEYS.ODDS.FAVOURITE) === corner){
+  if (odds.get(MAP_KEYS.ODDS.FAVOURITE) === corner) {
     streamOddsLabel.innerHTML = "FAVOURITE";
     streamOddsLabel.style.color = "green";
-  }else if(odds.get(MAP_KEYS.ODDS.FAVOURITE) === undefined){
+  } else if (odds.get(MAP_KEYS.ODDS.FAVOURITE) === undefined) {
     streamOddsLabel.innerHTML = "EQUAL";
     streamOddsLabel.style.color = "yellow";
-  }else{
+  } else {
     streamOddsLabel.innerHTML = "UNDERDOG";
     streamOddsLabel.style.color = "red";
   }
@@ -129,9 +174,9 @@ export function setSelectOptions(
 }
 
 function getTimeString(currentTime: Date) {
-  let minutesString: string = (currentTime.getMinutes()) > 9 ? "0" : "";
+  let minutesString: string = currentTime.getMinutes() <= 9 ? "0" : "";
   minutesString = minutesString + currentTime.getMinutes();
-  let secondsString: string = (currentTime.getSeconds()) > 9 ? "0" : "";
+  let secondsString: string = currentTime.getSeconds() <= 9 ? "0" : "";
   secondsString = secondsString + currentTime.getSeconds();
 
   let timeString: string = minutesString + " : " + secondsString;
@@ -201,8 +246,8 @@ export function getSelectedValue(
 }
 
 export function getValuesOfFighterSelect(container: HTMLDivElement): number[] {
-  let blueSelect = selectSelectionEl(container, CLASSES.BLUE_CORNER_SEL);
-  let redSelect = selectSelectionEl(container, CLASSES.RED_CORNER_SEL);
+  let blueSelect = selectSelectionEl(container, ELEMENTS.BLUE_CORNER_SEL);
+  let redSelect = selectSelectionEl(container, ELEMENTS.RED_CORNER_SEL);
 
   let blueValue = parseInt(blueSelect.options[blueSelect.selectedIndex].value);
   let redValue = parseInt(redSelect.options[redSelect.selectedIndex].value);
@@ -210,21 +255,43 @@ export function getValuesOfFighterSelect(container: HTMLDivElement): number[] {
   return [blueValue, redValue];
 }
 
-
-export function getCurrentDifficulty(container: HTMLElement) {
+export function getCurrentDifficulty(container: HTMLElement): DifficultyLevel {
   let difficultyString = selectElement(
     container,
-    CLASSES.OPP_DIFF_LABEL
+    ELEMENTS.OPP_DIFF_LABEL
   ).innerHTML;
-  let difficulty = DifficultyLevel[difficultyString as keyof typeof DifficultyLevel];
+  let difficulty =
+    DifficultyLevel[difficultyString as keyof typeof DifficultyLevel];
   return difficulty;
 }
 
-export function putElementBehind(container: HTMLElement, frontElementSelection:string, lastElementSelection: string){
+export function getYourPickFromForm(container: HTMLDivElement): Result {
+  let winnerValue = getCheckedRadioValue(container, ELEMENTS.CORNER_RADIO);
+  let winner = Corner[winnerValue as keyof typeof Corner];
+  let methodValue = getSelectedValue(container, ELEMENTS.METHOD_SEL);
+  let method = Method[methodValue as keyof typeof Method];
+  let roundValue: string;
+  if (methodValue === Method.Decision) {
+    roundValue = Round.Round_3.toString();
+  } else {
+    roundValue = getSelectedValue(container, ELEMENTS.ROUND_SEL);
+  }
+  let round = Round[roundValue as keyof typeof Round];
+  let yourPick = new Result(winner, method, round);
+  return yourPick;
+}
+
+export function putElementInOrder(
+  container: HTMLElement,
+  frontElementSelection: string,
+  lastElementSelection: string,
+  orderNumOFFirst: number,
+  orderNumOFSecond: number
+) {
   let frontElement = selectElement(container, frontElementSelection);
   let lastElement = selectElement(container, lastElementSelection);
-  frontElement.style.order = '98';
-  lastElement.style.order = '99';
+  frontElement.style.order = orderNumOFFirst.toString();
+  lastElement.style.order = orderNumOFSecond.toString();
 }
 
 export function selectElement(
@@ -259,18 +326,23 @@ export function selectSelectionEl(
   return select;
 }
 
-export function disableMultipleElements(container: HTMLElement, ...selections: string[]){
-  selections.forEach(selection => {
+export function disableMultipleElements(
+  container: HTMLElement,
+  ...selections: string[]
+) {
+  selections.forEach((selection) => {
     disableElement(container, selection);
   });
 }
 
-export function enableMultipleElements(container: HTMLElement, ...selections: string[]){
-  selections.forEach(selection => {
+export function enableMultipleElements(
+  container: HTMLElement,
+  ...selections: string[]
+) {
+  selections.forEach((selection) => {
     enableElement(container, selection);
   });
 }
-
 
 export function disableElement(container: HTMLElement, selection: string) {
   let element = selectElement(container, selection);
