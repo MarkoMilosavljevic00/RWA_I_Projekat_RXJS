@@ -70,9 +70,10 @@ export function startGameLogic(
   //initPlayAgainObs(container, fightCard);
 
   showHomeDiv(container);
+  disableElement(container, ELEMENTS.PLAY_BTN);
 }
 
-export function findNewOpponent(
+export function findNewOpponentLogic(
   container: HTMLElement,
   fightCard: FightCard,
   opponent: Opponent
@@ -298,19 +299,27 @@ export function getByProbability(percents: number[], ...objects: any[]): any {
   percents.forEach((percent) => (max += percent));
   let drawnNumber = Math.floor(Math.random() * max);
 
-  let currentPercent: number = 0
+  let currentPercent: number = 0;
   let nextPercent: number = 0;
   let drawnObject;
 
   objects.forEach((objekat, index) => {
     currentPercent = nextPercent;
     nextPercent += percents[index];
-    if(drawnNumber > currentPercent && drawnNumber <= nextPercent){
+    if (drawnNumber > currentPercent && drawnNumber <= nextPercent) {
       drawnObject = objekat;
     }
   });
 
   return drawnObject;
+}
+
+export function getRandomNumberTo(to: number): number {
+  return Math.random() * to;
+}
+
+export function getRandomNumberRange(from: number, to: number): number {
+  return Math.floor(Math.random() * (to - from) + from);
 }
 
 export function resetGameDiv(container: HTMLElement): void {

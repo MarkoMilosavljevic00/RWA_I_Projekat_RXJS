@@ -147,8 +147,8 @@ export class FightCard {
       let currentFight = this.getCurrentFight();
       printRoundAndTime(
         container,
-        currentFight.currentRound,
-        currentFight.currentTime
+        currentFight.currentState.getRound(),
+        currentFight.currentState.getTime(),
       );
     } else {
       console.log("currentFightIndex je undefined");

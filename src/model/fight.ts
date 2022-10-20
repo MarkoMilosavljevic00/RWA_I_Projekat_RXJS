@@ -2,7 +2,6 @@ import { add } from "date-fns";
 import { ELEMENTS, MAP_KEYS, PERCENT, RULES, SCORE } from "../environment";
 import { DifficultyLevel } from "../enums/DifficultyLevelEnum";
 import { Method } from "../enums/MethodEnum";
-import { Odds } from "../enums/OddEnum";
 import { Round } from "../enums/RoundEnum";
 import { Corner } from "../enums/CornerEnum";
 import {
@@ -18,8 +17,8 @@ import { FightCard } from "./fightCard";
 import { Fighter } from "./fighter";
 import { Result } from "./result";
 import { FightPosition } from "../enums/FightPositionEnum";
-import { RunHelpers } from "rxjs/testing";
 import { Rules } from "../enums/RulesEnum";
+import { StateOfFight } from "./stateOfFight";
 
 export class Fight {
   rules: Rules;
@@ -27,9 +26,9 @@ export class Fight {
   blueCorner: Fighter;
   redCorner: Fighter;
 
+  finalResult: Result;
   yourPick: Result;
   opponentPick: Result;
-  finalResult: Result;
 
   yourScore: number = SCORE.INITIAL;
   opponentScore: number = SCORE.INITIAL;
@@ -38,9 +37,7 @@ export class Fight {
   opponentFightDiv: HTMLDivElement;
   resultFightDiv: HTMLDivElement;
 
-  currentRound: Round = Round.Round_1;
-  currentTime: Date = new Date(0);
-  currentPosition: FightPosition = FightPosition.StandUp;
+  currentState: StateOfFight;
 
   // getResult() {
   //   let winner: Corner = this.determineWinner();
@@ -103,6 +100,28 @@ export class Fight {
     return odds;
   }
 
+  getDifficultyPercentage(difficulty: DifficultyLevel) {
+    let percentage: number;
+    switch (difficulty) {
+      case DifficultyLevel.Easy:
+        percentage = PERCENT.OPP.EASY;
+        break;
+      case DifficultyLevel.Medium:
+        percentage = PERCENT.OPP.MEDIUM;
+        break;
+      case DifficultyLevel.Hard:
+        percentage = PERCENT.OPP.HARD;
+        break;
+      default:
+        break;
+    }
+    return percentage;
+  }
+
+  getPosition(): FightPosition {
+    return this.currentState.getPosition();
+  }
+
   setFighters(
     blueCorner: Fighter,
     redCorner: Fighter,
@@ -146,30 +165,36 @@ export class Fight {
   }
 
   setPosition(position: FightPosition): FightPosition {
-    return this.currentPosition = position;
+    return this.currentState.setPosition(position);
   }
 
   tickSecond(container: HTMLElement, fightCard: FightCard) {
-    this.currentTime = add(this.currentTime, { seconds: 1 });
+    this.currentState.addSecond()
     fightCard.renderCurrentRoundAndTime(container);
+    // ovo ce pomeris ispod svega da renderuje kad uradis ovo u donjem komentaru
     if (this.checkIfIsOver(container)) {
       fightCard.nextFight(container);
     }
+    // kad napravis runde, gore ces da preimenujes ovo u checkIfRoundIsOver i ako jeste
+    // ces da povecas rundu a posle toga ces da cekiras za da li je zavrsena i zadnja runda
+    // sa checkFightIsOver i ako jeste da uradis ovo dole sto radis u zadnjem Case-u u Switch-u
   }
 
   checkIfIsOver(container: HTMLElement) {
     if (
-      this.currentTime.getMinutes() === RULES.MMA.ROUND_LENGTH.MINUTES &&
-      this.currentTime.getSeconds() === RULES.MMA.ROUND_LENGTH.SECONDS
+      this.currentState.getTime().getMinutes() === RULES.MMA.ROUND_LENGTH.MINUTES &&
+      this.currentState.getTime().getSeconds() === RULES.MMA.ROUND_LENGTH.SECONDS
     ) {
-      switch (this.currentRound) {
+      switch (this.currentState.getRound()) {
         case Round.Round_1:
-          this.currentTime = new Date(0);
-          this.currentRound = Round.Round_2;
+          this.currentState.resetTime();
+          //this.currentState.addRound();
+          this.currentState.setRound(Round.Round_2);
           return false;
         case Round.Round_2:
-          this.currentTime = new Date(0);
-          this.currentRound = Round.Round_3;
+          this.currentState.resetTime();
+          //this.currentState.addRound();
+          this.currentState.setRound(Round.Round_3);
           return false;
         case Round.Round_3:
           this.setFinalResult(Method.Decision, Round.Round_3);
@@ -188,7 +213,7 @@ export class Fight {
       faultyWinner = Corner.BLUE_CORNER;
     }
 
-    let percentage: number = this.getPercentage(difficulty);
+    let percentage: number = this.getDifficultyPercentage(difficulty);
 
     let winner: Corner;
     let drawnNumber = Math.floor(Math.random() * PERCENT.OPP.MAX);
@@ -221,7 +246,7 @@ export class Fight {
           : Round.Round_2;
     }
 
-    let percentage: number = this.getPercentage(difficulty);
+    let percentage: number = this.getDifficultyPercentage(difficulty);
 
     let round: Round;
     let drawnNumber = Math.floor(Math.random() * PERCENT.OPP.MAX);
@@ -254,7 +279,7 @@ export class Fight {
           : Method.KO_TKO;
     }
 
-    let percentage: number = this.getPercentage(difficulty);
+    let percentage: number = this.getDifficultyPercentage(difficulty);
 
     let method: Method;
     let drawnNumber = Math.floor(Math.random() * PERCENT.OPP.MAX);
@@ -278,70 +303,53 @@ export class Fight {
     }
   }
 
-  determineWinner(): Corner {
-    let max = this.blueCorner.calcOverall() + this.redCorner.calcOverall();
-    let drawnNumber = Math.floor(Math.random() * max);
-    if (drawnNumber < this.blueCorner.calcOverall()) {
-      return Corner.BLUE_CORNER;
-    } else {
-      return Corner.RED_CORNER;
-    }
-  }
+  // V1
+  // determineWinner(): Corner {
+  //   let max = this.blueCorner.calcOverall() + this.redCorner.calcOverall();
+  //   let drawnNumber = Math.floor(Math.random() * max);
+  //   if (drawnNumber < this.blueCorner.calcOverall()) {
+  //     return Corner.BLUE_CORNER;
+  //   } else {
+  //     return Corner.RED_CORNER;
+  //   }
+  // }
 
-  determineMethod(winnerEnum: Corner): Method {
-    let winner: Fighter;
-    if (winnerEnum === Corner.BLUE_CORNER) {
-      winner = this.blueCorner;
-    } else {
-      winner = this.redCorner;
-    }
+  // determineMethod(winnerEnum: Corner): Method {
+  //   let winner: Fighter;
+  //   if (winnerEnum === Corner.BLUE_CORNER) {
+  //     winner = this.blueCorner;
+  //   } else {
+  //     winner = this.redCorner;
+  //   }
 
-    let max = winner.grappling + this.redCorner.standup + winner.calcOverall();
-    let drawnNumber = Math.floor(Math.random() * max);
-    if (drawnNumber < winner.grappling) {
-      return Method.Submission;
-    } else if (
-      drawnNumber >= winner.grappling &&
-      drawnNumber < winner.grappling + winner.standup
-    ) {
-      return Method.KO_TKO;
-    } else {
-      return Method.Decision;
-    }
-  }
+  //   let max = winner.grappling + this.redCorner.standup + winner.calcOverall();
+  //   let drawnNumber = Math.floor(Math.random() * max);
+  //   if (drawnNumber < winner.grappling) {
+  //     return Method.Submission;
+  //   } else if (
+  //     drawnNumber >= winner.grappling &&
+  //     drawnNumber < winner.grappling + winner.standup
+  //   ) {
+  //     return Method.KO_TKO;
+  //   } else {
+  //     return Method.Decision;
+  //   }
+  // }
 
-  determineRound(): Round {
-    let max = PERCENT.ROUND.MAX;
-    let drawnNumber = Math.floor(Math.random() * max);
-    if (drawnNumber <= PERCENT.ROUND.FIRST) {
-      return Round.Round_1;
-    } else if (
-      drawnNumber > PERCENT.ROUND.FIRST &&
-      drawnNumber <= PERCENT.ROUND.SECOND
-    ) {
-      return Round.Round_2;
-    } else {
-      return Round.Round_3;
-    }
-  }
-
-  getPercentage(difficulty: DifficultyLevel) {
-    let percentage: number;
-    switch (difficulty) {
-      case DifficultyLevel.Easy:
-        percentage = PERCENT.OPP.EASY;
-        break;
-      case DifficultyLevel.Medium:
-        percentage = PERCENT.OPP.MEDIUM;
-        break;
-      case DifficultyLevel.Hard:
-        percentage = PERCENT.OPP.HARD;
-        break;
-      default:
-        break;
-    }
-    return percentage;
-  }
+  // determineRound(): Round {
+  //   let max = PERCENT.ROUND.MAX;
+  //   let drawnNumber = Math.floor(Math.random() * max);
+  //   if (drawnNumber <= PERCENT.ROUND.FIRST) {
+  //     return Round.Round_1;
+  //   } else if (
+  //     drawnNumber > PERCENT.ROUND.FIRST &&
+  //     drawnNumber <= PERCENT.ROUND.SECOND
+  //   ) {
+  //     return Round.Round_2;
+  //   } else {
+  //     return Round.Round_3;
+  //   }
+  // }
 
   calculateScores(): void {
     this.calculateYourScore();

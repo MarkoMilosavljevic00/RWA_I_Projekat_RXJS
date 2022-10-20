@@ -31,7 +31,6 @@ export function printRoundAndTime(
   currentTime: Date
 ) {
   printElement(container, currentRound, ELEMENTS.LIVE_ROUND_LAB);
-
   let timeString = getTimeString(currentTime);
   printElement(container, timeString, ELEMENTS.LIVE_COUNTER_LAB);
 }

@@ -1,13 +1,14 @@
 import { secondsInDay } from "date-fns";
 import { Observable, Subject, Subscription } from "rxjs";
 import { ELEMENTS, FIGHTER, INDEXES } from "../../environment";
+import { Attack } from "../../model/attack";
 import { FightCard } from "../../model/fightCard";
 import { Fighter } from "../../model/fighter";
 import { Opponent } from "../../model/opponent";
 import {
   fillFightersRating,
   fillFightersSelect,
-  findNewOpponent,
+  findNewOpponentLogic,
   initFighterFromArray,
   restartGameLogic,
   playAgainLogic,
@@ -39,7 +40,7 @@ export function findNewOpponentSub(
   findingOpponent$: Observable<Opponent>
 ): Subscription {
   return findingOpponent$.subscribe((newOpponent) => {
-    findNewOpponent(container, fightCard, newOpponent);
+    findNewOpponentLogic(container, fightCard, newOpponent);
   });
 }
 
@@ -131,4 +132,13 @@ export function tickingTimerSub(
   return tickingTimerOb$.subscribe((fightCard) => {
     tickingTimerLogic(container, fightCard);
   });
+}
+
+export function generatorAttackSub(
+  generatorAttackOb$: Observable<Attack>,
+  container: HTMLElement
+) {
+  return generatorAttackOb$.subscribe((attack) => {
+    
+  })
 }

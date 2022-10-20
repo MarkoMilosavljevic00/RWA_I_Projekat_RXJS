@@ -1,4 +1,4 @@
-import { NUMBER_OF_RATINGS, PERCENT } from "../environment";
+import { FIGHTER,PERCENT, RULES } from "../environment";
 import { WeightClass } from "../enums/WeightClassEnum";
 
 export class Fighter {
@@ -10,7 +10,7 @@ export class Fighter {
   standup: number;
   grappling: number;
   
-  damagePercent: number = PERCENT.DAMAGE.INITIAL;
+  damagePercent: number = FIGHTER.INITIAL_DAMAGE;
 
   constructor(
     id: number,
@@ -27,7 +27,7 @@ export class Fighter {
   }
 
   calcOverall() {
-    let overall = Math.round((this.standup + this.grappling) / NUMBER_OF_RATINGS);
+    let overall = Math.round((this.standup + this.grappling) / RULES.MMA.NUMBER_OF_RATINGS);
     return overall;
   }
 }

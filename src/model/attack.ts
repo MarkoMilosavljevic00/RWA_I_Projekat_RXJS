@@ -1,8 +1,12 @@
-import { getByProbability } from "../controller/logic";
+import {
+  getByProbability,
+  getRandomNumberRange,
+  getRandomNumberTo,
+} from "../controller/logic";
 import { FightPosition } from "../enums/FightPositionEnum";
 import { Rules } from "../enums/RulesEnum";
 import { TypeOfAction } from "../enums/ActionEnum";
-import { RULES } from "../environment";
+import { ATTACK, RULES } from "../environment";
 import { Fight } from "./fight";
 import { Fighter } from "./fighter";
 
@@ -20,12 +24,12 @@ export class Attack {
     this.attacker = this.getAttacker(
       fight.blueCorner,
       fight.redCorner,
-      fight.currentPosition
+      fight.getPosition()
     );
     this.defender = this.getDefender(fight.blueCorner, fight.redCorner);
-
-    this.type = this.getTypeOfAttack(fight.rules, fight.currentPosition);
+    this.type = this.getTypeOfAttack(fight.rules, fight.getPosition());
     this.success = this.getSuccesOfAttack(fight);
+    this.determineDamages(fight.getPosition());
   }
 
   getAttacker(
@@ -147,22 +151,28 @@ export class Attack {
     switch (this.type) {
       case TypeOfAction.Punch:
         return this.getSuccesOfPunch(
-          fight.currentPosition,
+          fight.getPosition(),
           this.attacker,
           this.defender
         );
       case TypeOfAction.Submission:
         return this.getSuccesOfSubmission(
-          fight.currentPosition,
+          fight.getPosition(),
           this.attacker,
           this.defender
         );
       case TypeOfAction.Takedown:
-        let successOfTakedown = this.getSuccesOfTakedown(this.attacker, this.defender);
+        let successOfTakedown = this.getSuccesOfTakedown(
+          this.attacker,
+          this.defender
+        );
         if (successOfTakedown) fight.setPosition(FightPosition.Ground);
         return successOfTakedown;
       case TypeOfAction.Stand:
-        let successOfStanding = this.getSuccesOfStanding(this.attacker, this.defender);
+        let successOfStanding = this.getSuccesOfStanding(
+          this.attacker,
+          this.defender
+        );
         if (successOfStanding) fight.setPosition(FightPosition.StandUp);
         return successOfStanding;
 
@@ -186,7 +196,7 @@ export class Attack {
       return getByProbability(
         [
           attacker.standup +
-            RULES.MMA.PERCENT.SUCCES.FROM_GROUND.RELIEF_ATTACK_PUNCH,
+            RULES.MMA.PERCENT.TO_SUCCES.FROM_GROUND.ADVANTAGE_ATTACK_PUNCH,
           defender.grappling,
         ],
         true,
@@ -205,7 +215,8 @@ export class Attack {
         [
           attacker.grappling,
           defender.grappling +
-            RULES.MMA.PERCENT.SUCCES.FROM_STANDUP.RELIEF_DEFENSE_SUBMISSION,
+            RULES.MMA.PERCENT.TO_SUCCES.FROM_STANDUP
+              .ADVANTAGE_DEFENSE_SUBMISSION,
         ],
         true,
         false
@@ -215,7 +226,8 @@ export class Attack {
         [
           attacker.grappling,
           defender.grappling +
-            RULES.MMA.PERCENT.SUCCES.FROM_GROUND.RELIEF_DEFENSE_SUBMISSION,
+            RULES.MMA.PERCENT.TO_SUCCES.FROM_GROUND
+              .ADVANTAGE_DEFENSE_SUBMISSION,
         ],
         true,
         false
@@ -225,7 +237,11 @@ export class Attack {
 
   getSuccesOfTakedown(attacker: Fighter, defender: Fighter): boolean {
     return getByProbability(
-      [attacker.grappling, defender.grappling],
+      [
+        attacker.grappling,
+        defender.grappling +
+          RULES.MMA.PERCENT.TO_SUCCES.FROM_STANDUP.ADVANTAGE_DEFENSE_TAKEDOWN,
+      ],
       true,
       false
     );
@@ -237,5 +253,113 @@ export class Attack {
       true,
       false
     );
+  }
+
+  getAdvantage(attackerSkill: number, defenderSkill: number) {
+    let advantage: number = 0;
+    if (attackerSkill > defenderSkill) {
+      advantage = getRandomNumberTo((attackerSkill - defenderSkill) / 2);
+    }
+    return advantage;
+  }
+
+  setDamages(
+    advantage: number,
+    success: number,
+    unsuccessToSelf: number,
+    unsuccessToOpp: number
+  ) {
+    if (this.success) {
+      this.defenderDamage = getRandomNumberTo(success + advantage);
+    } else {
+      this.attackerDamage = getRandomNumberTo(unsuccessToSelf);
+      this.defenderDamage = getRandomNumberTo(unsuccessToOpp + advantage);
+    }
+  }
+
+  determineDamages(position: FightPosition): void {
+    let standUpAdvantage: number = this.getAdvantage(
+      this.attacker.standup,
+      this.defender.standup
+    );
+    let groundAdvantage: number = this.getAdvantage(
+      this.attacker.grappling,
+      this.defender.grappling
+    );
+    if (position === FightPosition.StandUp) {
+      this.determineStandUpDamages(
+        standUpAdvantage,
+        groundAdvantage,
+        this.type
+      );
+    } else {
+      this.determineGroundDamages(groundAdvantage, standUpAdvantage, this.type);
+    }
+  }
+
+  determineStandUpDamages(
+    standUpAdvantage: number,
+    groundAdvantage: number,
+    typeOfAction: TypeOfAction
+  ) {
+    switch (typeOfAction) {
+      case TypeOfAction.Punch:
+        this.setDamages(
+          standUpAdvantage,
+          ATTACK.DAMAGE.FROM_STANDUP.CLEAR_PUNCH,
+          ATTACK.DAMAGE.FROM_STANDUP.BLOCKED_PUNCH.SELF_DAMAGE,
+          ATTACK.DAMAGE.FROM_STANDUP.BLOCKED_PUNCH.OPP_DAMAGE
+        );
+        break;
+      case TypeOfAction.Submission:
+        this.setDamages(
+          groundAdvantage,
+          0,
+          ATTACK.DAMAGE.FROM_STANDUP.UNSUCCESSFUL_SUBMISSION.SELF_DAMAGE,
+          ATTACK.DAMAGE.FROM_STANDUP.UNSUCCESSFUL_SUBMISSION.OPP_DAMAGE
+        );
+        break;
+      case TypeOfAction.Takedown:
+        this.setDamages(
+          groundAdvantage,
+          ATTACK.DAMAGE.FROM_STANDUP.LANDED_TAKEDOWN,
+          ATTACK.DAMAGE.FROM_STANDUP.DEFENDED_TAKEDOWN.SELF_DAMAGE,
+          ATTACK.DAMAGE.FROM_STANDUP.DEFENDED_TAKEDOWN.OPP_DAMAGE
+        );
+        break;
+    }
+  }
+
+  determineGroundDamages(
+    groundAdvantage: number,
+    standUpAdvantage: number,
+    typeOfAction: TypeOfAction
+  ) {
+    switch (typeOfAction) {
+      case TypeOfAction.Punch:
+        this.setDamages(
+          standUpAdvantage + groundAdvantage,
+          ATTACK.DAMAGE.FROM_GROUND.CLEAR_PUNCH,
+          ATTACK.DAMAGE.FROM_GROUND.BLOCKED_PUNCH.SELF_DAMAGE,
+          ATTACK.DAMAGE.FROM_GROUND.BLOCKED_PUNCH.OPP_DAMAGE
+        );
+        break;
+      case TypeOfAction.Submission:
+        this.setDamages(
+          groundAdvantage,
+          0,
+          ATTACK.DAMAGE.FROM_GROUND.UNSUCCESSFUL_SUBMISSION.SELF_DAMAGE,
+          ATTACK.DAMAGE.FROM_GROUND.UNSUCCESSFUL_SUBMISSION.OPP_DAMAGE
+        );
+        break;
+      case TypeOfAction.Stand:
+        this.setDamages(
+          groundAdvantage,
+          0,
+          ATTACK.DAMAGE.FROM_GROUND.UNSUCCESSFUL_STANDING.SELF_DAMAGE,
+          ATTACK.DAMAGE.FROM_GROUND.UNSUCCESSFUL_STANDING.OPP_DAMAGE,
+        );
+        break;
+    }
   }
 }

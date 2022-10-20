@@ -1,4 +1,12 @@
-import { combineLatest, interval, map, Observable, Subject, take, withLatestFrom } from "rxjs";
+import {
+  combineLatest,
+  interval,
+  map,
+  Observable,
+  Subject,
+  take,
+  withLatestFrom,
+} from "rxjs";
 import { Opponent } from "../../model/opponent";
 import {
   changeBlueCornerSub,
@@ -11,6 +19,7 @@ import {
   startGameSub,
   initLiveScoreSubSub as initLiveScoreSub,
   tickingTimerSub,
+  generatorAttackSub,
 } from "./subscriptions";
 import { ATTACK, ELEMENTS, TIME } from "../../environment";
 import {
@@ -104,13 +113,31 @@ export function initGameObs(
     fightCard
   );
 
-  let initLiveScoreOb$ = createInitLiveScoreObs(container, ELEMENTS.PLAY_BTN, addNewPickOb$);
+  let initLiveScoreOb$ = createInitLiveScoreObs(
+    container,
+    ELEMENTS.PLAY_BTN,
+    addNewPickOb$
+  );
   initLiveScoreSub(initLiveScoreOb$, container);
 
-  let tickingTimerOb$ = createTickingTimerObs(container, ELEMENTS.PLAY_BTN, addNewPickOb$, TIME.SECOND);
+  let tickingTimerOb$ = createTickingTimerObs(
+    container,
+    ELEMENTS.PLAY_BTN,
+    fightCard,
+    addNewPickOb$,
+    TIME.SECOND
+  );
   tickingTimerSub(tickingTimerOb$, container);
 
-  let generatorAttackOb$ = createGeneratorAttackObs(container, addNewPickOb$, ATTACK.FREQUENCY, ATTACK.PERCENT.TO_HAPPEN, ATTACK.PERCENT.NOT_TO_HAPPEN)
+  let generatorAttackOb$ = createGeneratorAttackObs(
+    container,
+    fightCard,
+    addNewPickOb$,
+    ATTACK.FREQUENCY,
+    ATTACK.PERCENT.TO_HAPPEN,
+    ATTACK.PERCENT.NOT_TO_HAPPEN
+  );
+  generatorAttackSub(generatorAttackOb$, container);
 
   // let tickingTimerOb$ = combineLatest(timerOb$, playButtonOb$).pipe(
   //   map(arr => arr[0])
@@ -121,7 +148,6 @@ export function initGameObs(
   //   withLatestFrom(addNewPickOb$),
   //   map(arr => arr[1])
   // ).subscribe(console.log);
-
 
   // V1 OBS
   // let playOb$ = createPlayObs(

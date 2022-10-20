@@ -90,6 +90,7 @@ export const SCORE = {
 };
 
 export const FIGHTER = {
+  INITIAL_DAMAGE: 0,
   INDEX: {
     BLUE_CORNER: 0,
     RED_CORNER: 1,
@@ -125,9 +126,6 @@ export const PERCENT = {
     SECOND: 60,
     THIRD: 90,
   },
-  DAMAGE: {
-    INITIAL: 0,
-  },
 };
 
 export const TIME = {
@@ -137,30 +135,34 @@ export const TIME = {
 
 export const RULES = {
   MMA: {
+    NUMBER_OF_RATINGS: 2,
     ROUND_LENGTH: {
       MINUTES: 10,
       SECONDS: 10,
     },
     PERCENT: {
+      TO_HAPPEN: 20,
+      NOT_TO_HAPPEN: 80,
       TO_TRY: {
         FROM_STANDUP: {
           SUBMISSION: 10,
           TAKEDOWN: 90,
         },
         FROM_GROUND: {
-          PUNCH: 60,
+          PUNCH: 70,
           STAND: 40,
-          SUBMISSION: 40,
+          SUBMISSION: 30,
         },
       },
-      SUCCES: {
+      TO_SUCCES: {
         FROM_GROUND: {
-          RELIEF_ATTACK_PUNCH: 20,
-          RELIEF_DEFENSE_SUBMISSION: 20
+          ADVANTAGE_ATTACK_PUNCH: 20,
+          ADVANTAGE_DEFENSE_SUBMISSION: 30,
         },
-        FROM_STANDUP:{
-          RELIEF_DEFENSE_SUBMISSION: 50,
-        }
+        FROM_STANDUP: {
+          ADVANTAGE_DEFENSE_SUBMISSION: 50,
+          ADVANTAGE_DEFENSE_TAKEDOWN: 15,
+        },
       },
     },
   },
@@ -193,12 +195,39 @@ export const MAP_KEYS = {
   },
 };
 
-export const NUMBER_OF_RATINGS = 2;
-
 export const ATTACK = {
-  FREQUENCY: 1000,
-  PERCENT: {
-    TO_HAPPEN: 20,
-    NOT_TO_HAPPEN: 80,
+  FREQUENCY: 2000,
+  DAMAGE: {
+    FROM_STANDUP: {
+      CLEAR_PUNCH: 7,
+      BLOCKED_PUNCH: {
+        SELF_DAMAGE: 3,
+        OPP_DAMAGE: 2,
+      },
+      LANDED_TAKEDOWN: 6,
+      DEFENDED_TAKEDOWN: {
+        SELF_DAMAGE: 3,
+        OPP_DAMAGE: 2,
+      },
+      UNSUCCESSFUL_SUBMISSION: {
+        SELF_DAMAGE: 15,
+        OPP_DAMAGE: 20,
+      },
+    },
+    FROM_GROUND: {
+      CLEAR_PUNCH: 4,
+      BLOCKED_PUNCH: {
+        SELF_DAMAGE: 1,
+        OPP_DAMAGE: 1,
+      },
+      UNSUCCESSFUL_STANDING: {
+        SELF_DAMAGE: 3,
+        OPP_DAMAGE: 2,
+      },
+      UNSUCCESSFUL_SUBMISSION: {
+        SELF_DAMAGE: 15,
+        OPP_DAMAGE: 20,
+      },
+    },
   },
 };

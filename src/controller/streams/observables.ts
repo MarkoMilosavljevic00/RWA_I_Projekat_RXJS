@@ -225,12 +225,14 @@ export function createInitLiveScoreObs(
 export function createTickingTimerObs(
   container: HTMLElement,
   selection: string,
+  fightCard: FightCard,
   addNewPickOb$: Observable<FightCard>,
   frequency: number,
 ) {
   let intervalOb$ = interval(frequency);
   let playButtonOb$ = createButtonObs(container, selection);
   return combineLatest(intervalOb$, playButtonOb$).pipe(
+    filter(() => fightCard.isInProgress()),
     withLatestFrom(addNewPickOb$),
     map((fightCard) => fightCard[1])
   );
@@ -238,12 +240,14 @@ export function createTickingTimerObs(
 
 export function createGeneratorAttackObs(
   container: HTMLDivElement,
+  fightCard: FightCard,
   addNewPickOb$: Observable<FightCard>,
   frequency: number,
   toHappen: number,
   notToHappen: number
 ) {
   return interval(frequency).pipe(
+    filter(() => fightCard.isInProgress()),
     filter(() => getByProbability([toHappen, notToHappen], true, false)),
     withLatestFrom(addNewPickOb$),
     map((fightCard) => new Attack(fightCard[1].getCurrentFight())),
