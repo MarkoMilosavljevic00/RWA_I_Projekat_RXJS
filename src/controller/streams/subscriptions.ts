@@ -5,6 +5,7 @@ import { Attack } from "../../model/attack";
 import { FightCard } from "../../model/fightCard";
 import { Fighter } from "../../model/fighter";
 import { Opponent } from "../../model/opponent";
+import { StateOfFight } from "../../model/stateOfFight";
 import {
   fillFightersRating,
   fillFightersSelect,
@@ -23,7 +24,7 @@ export function startGameSub(
   findingOpponent$: Observable<Opponent>,
   controlStartGameOb$: Subject<any>
 ): Subscription {
-  return findingOpponent$.subscribe((opponent) => {
+  return findingOpponent$.subscribe((opponent: Opponent) => {
     startGameLogic(
       host,
       findingOpponentDiv,
@@ -39,7 +40,7 @@ export function findNewOpponentSub(
   fightCard: FightCard,
   findingOpponent$: Observable<Opponent>
 ): Subscription {
-  return findingOpponent$.subscribe((newOpponent) => {
+  return findingOpponent$.subscribe((newOpponent: Opponent) => {
     findNewOpponentLogic(container, fightCard, newOpponent);
   });
 }
@@ -58,8 +59,8 @@ export function changeWeightClassSub(
   container: HTMLDivElement,
   changeWeightClassOb$: Observable<Fighter[]>
 ): Subscription {
-  return changeWeightClassOb$.subscribe((fighters) => {
-    fillFightersSelect(container, fighters);
+  return changeWeightClassOb$.subscribe((fightersArray: Fighter[]) => {
+    fillFightersSelect(container, fightersArray);
   });
 }
 
@@ -67,7 +68,7 @@ export function changeBlueCornerSub(
   container: HTMLDivElement,
   changeBlueCornerOb$: Observable<Fighter>
 ) {
-  return changeBlueCornerOb$.subscribe((fighter) => {
+  return changeBlueCornerOb$.subscribe((fighter: Fighter) => {
     fillFightersRating(container, fighter, ELEMENTS.BLUE_CORNER_DIV);
   });
 }
@@ -76,7 +77,7 @@ export function changeRedCornerSub(
   container: HTMLDivElement,
   changeRedCornerOb$: Observable<Fighter>
 ) {
-  return changeRedCornerOb$.subscribe((fighter) => {
+  return changeRedCornerOb$.subscribe((fighter: Fighter) => {
     fillFightersRating(container, fighter, ELEMENTS.RED_CORNER_DIV);
   });
 }
@@ -85,7 +86,7 @@ export function loadInitialFightersSub(
   initialNewPickOb$: Observable<Fighter[]>,
   container: HTMLDivElement
 ) {
-  initialNewPickOb$.subscribe((fightersArray) => {
+  initialNewPickOb$.subscribe((fightersArray: Fighter[]) => {
     let fighter = initFighterFromArray(fightersArray, FIGHTER.INDEX.INITIAL);
     fillFightersSelect(container, fightersArray);
     fillFightersRating(container, fighter, ELEMENTS.BLUE_CORNER_DIV);
@@ -119,7 +120,7 @@ export function initLiveScoreSubSub(
   playButtonOb$: Observable<FightCard>,
   container: HTMLDivElement
 ) {
-  playButtonOb$.subscribe((fightCard) => {
+  playButtonOb$.subscribe((fightCard: FightCard) => {
     fightCard.start();
     initLiveScoreLogic(fightCard, container);
   });
@@ -136,9 +137,11 @@ export function tickingTimerSub(
 
 export function generatorAttackSub(
   generatorAttackOb$: Observable<Attack>,
+  fightCard: FightCard,
   container: HTMLElement
 ) {
   return generatorAttackOb$.subscribe((attack) => {
-    
-  })
+    attack.performAttack(container, fightCard.getCurrentFight().currentState);
+    attack.checkIsAnyoneFinished(container, fightCard);
+  });
 }

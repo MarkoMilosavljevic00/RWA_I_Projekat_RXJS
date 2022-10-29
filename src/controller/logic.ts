@@ -37,6 +37,7 @@ import {
   initFindingOpponentDiv,
 } from "../view/initalizing.elements";
 import { max } from "date-fns";
+import { StateOfFight } from "../model/stateOfFight";
 
 export function initLogic(): void {
   let findingOpponentDiv = initFindingOpponentDiv();
@@ -136,7 +137,7 @@ export function initLiveScoreLogic(
 
 export function tickingTimerLogic(
   container: HTMLElement,
-  fightCard: FightCard
+  fightCard: FightCard,
 ) {
   if (fightCard.isInProgress()) {
     let currentFight = fightCard.getCurrentFight();

@@ -5,10 +5,16 @@ import {
 } from "../controller/logic";
 import { FightPosition } from "../enums/FightPositionEnum";
 import { Rules } from "../enums/RulesEnum";
-import { TypeOfAction } from "../enums/ActionEnum";
-import { ATTACK, RULES } from "../environment";
+import { Action } from "../enums/ActionEnum";
+import { ATTACK, FIGHTER, RULES } from "../environment";
 import { Fight } from "./fight";
 import { Fighter } from "./fighter";
+import { Method } from "../enums/MethodEnum";
+import { FightCard } from "./fightCard";
+import { Corner } from "../enums/CornerEnum";
+import { StateOfFight } from "./stateOfFight";
+import { renderFinish } from "../view/view";
+import { createAttackDiv } from "../view/creating.elements";
 
 export class Attack {
   attacker: Fighter;
@@ -17,8 +23,10 @@ export class Attack {
   attackerDamage: number;
   defenderDamage: number;
 
-  type: TypeOfAction;
+  type: Action;
   success: boolean;
+
+  attackDiv: HTMLDivElement;
 
   constructor(fight: Fight) {
     this.attacker = this.getAttacker(
@@ -30,6 +38,7 @@ export class Attack {
     this.type = this.getTypeOfAttack(fight.rules, fight.getPosition());
     this.success = this.getSuccesOfAttack(fight);
     this.determineDamages(fight.getPosition());
+    this.attackDiv = createAttackDiv(this);
   }
 
   getAttacker(
@@ -40,8 +49,10 @@ export class Attack {
     if (currentPosition === FightPosition.StandUp) {
       return getByProbability(
         [
-          blueCorner.calcOverall() + blueCorner.standup / 2,
-          redCorner.calcOverall() + redCorner.standup / 2,
+          blueCorner.calcOverall() +
+            blueCorner.standup * ATTACK.FACTOR.IMPORTANCE_OF_POSITON,
+          redCorner.calcOverall() +
+            redCorner.standup * ATTACK.FACTOR.IMPORTANCE_OF_POSITON,
         ],
         blueCorner,
         redCorner
@@ -49,8 +60,10 @@ export class Attack {
     } else {
       return getByProbability(
         [
-          blueCorner.calcOverall() + blueCorner.grappling / 2,
-          redCorner.calcOverall() + redCorner.grappling / 2,
+          blueCorner.calcOverall() +
+            blueCorner.grappling * ATTACK.FACTOR.IMPORTANCE_OF_POSITON,
+          redCorner.calcOverall() +
+            redCorner.grappling * ATTACK.FACTOR.IMPORTANCE_OF_POSITON,
         ],
         blueCorner,
         redCorner
@@ -66,7 +79,7 @@ export class Attack {
     }
   }
 
-  getTypeOfAttack(rules: Rules, currentPosition: FightPosition): TypeOfAction {
+  getTypeOfAttack(rules: Rules, currentPosition: FightPosition): Action {
     switch (rules) {
       case Rules.MMA:
         return this.getMMAAttack(currentPosition);
@@ -80,18 +93,18 @@ export class Attack {
     }
   }
 
-  getMMAAttack(currentPosition: FightPosition): TypeOfAction {
+  getMMAAttack(currentPosition: FightPosition): Action {
     if (currentPosition === FightPosition.StandUp) {
       return getByProbability(
         [this.attacker.standup, this.attacker.grappling],
-        TypeOfAction.Punch,
+        Action.Punch,
         getByProbability(
           [
             RULES.MMA.PERCENT.TO_TRY.FROM_STANDUP.TAKEDOWN,
             RULES.MMA.PERCENT.TO_TRY.FROM_STANDUP.SUBMISSION,
           ],
-          TypeOfAction.Takedown,
-          TypeOfAction.Submission
+          Action.Takedown,
+          Action.Submission
         )
       );
     } else {
@@ -103,35 +116,35 @@ export class Attack {
               RULES.MMA.PERCENT.TO_TRY.FROM_GROUND.PUNCH,
               RULES.MMA.PERCENT.TO_TRY.FROM_GROUND.STAND,
             ],
-            TypeOfAction.Punch,
-            TypeOfAction.Stand
+            Action.Punch,
+            Action.Stand
           ),
           getByProbability(
             [
               RULES.MMA.PERCENT.TO_TRY.FROM_GROUND.PUNCH,
               RULES.MMA.PERCENT.TO_TRY.FROM_GROUND.SUBMISSION,
             ],
-            TypeOfAction.Punch,
-            TypeOfAction.Submission
+            Action.Punch,
+            Action.Submission
           )
         );
       }
     }
   }
 
-  getStandUpAttack(): TypeOfAction {
-    return TypeOfAction.Punch;
+  getStandUpAttack(): Action {
+    return Action.Punch;
   }
 
-  getGrapplingAttack(currentPosition: FightPosition): TypeOfAction {
+  getGrapplingAttack(currentPosition: FightPosition): Action {
     if (currentPosition === FightPosition.StandUp) {
       return getByProbability(
         [
           RULES.GRAPPLING.PERCENT.FROM_STANDUP.TAKEDOWN,
           RULES.GRAPPLING.PERCENT.FROM_STANDUP.SUBMISSION,
         ],
-        TypeOfAction.Takedown,
-        TypeOfAction.Submission
+        Action.Takedown,
+        Action.Submission
       );
     } else {
       if (currentPosition === FightPosition.Ground) {
@@ -140,8 +153,8 @@ export class Attack {
             RULES.GRAPPLING.PERCENT.FROM_GROUND.SUBMISSION,
             RULES.GRAPPLING.PERCENT.FROM_GROUND.STAND,
           ],
-          TypeOfAction.Submission,
-          TypeOfAction.Stand
+          Action.Submission,
+          Action.Stand
         );
       }
     }
@@ -149,26 +162,21 @@ export class Attack {
 
   getSuccesOfAttack(fight: Fight): boolean {
     switch (this.type) {
-      case TypeOfAction.Punch:
+      case Action.Punch:
         return this.getSuccesOfPunch(
           fight.getPosition(),
           this.attacker,
           this.defender
         );
-      case TypeOfAction.Submission:
+      case Action.Submission:
         return this.getSuccesOfSubmission(
           fight.getPosition(),
           this.attacker,
           this.defender
         );
-      case TypeOfAction.Takedown:
-        let successOfTakedown = this.getSuccesOfTakedown(
-          this.attacker,
-          this.defender
-        );
-        if (successOfTakedown) fight.setPosition(FightPosition.Ground);
-        return successOfTakedown;
-      case TypeOfAction.Stand:
+      case Action.Takedown:
+        return this.getSuccesOfTakedown(this.attacker, this.defender);
+      case Action.Stand:
         let successOfStanding = this.getSuccesOfStanding(
           this.attacker,
           this.defender
@@ -258,9 +266,15 @@ export class Attack {
   getAdvantage(attackerSkill: number, defenderSkill: number) {
     let advantage: number = 0;
     if (attackerSkill > defenderSkill) {
-      advantage = getRandomNumberTo((attackerSkill - defenderSkill) / 2);
+      advantage = getRandomNumberTo(
+        (attackerSkill - defenderSkill) * ATTACK.FACTOR.ADVANTAGE
+      );
     }
     return advantage;
+  }
+
+  isSuccess() {
+    return this.success;
   }
 
   setDamages(
@@ -300,10 +314,10 @@ export class Attack {
   determineStandUpDamages(
     standUpAdvantage: number,
     groundAdvantage: number,
-    typeOfAction: TypeOfAction
+    typeOfAction: Action
   ) {
     switch (typeOfAction) {
-      case TypeOfAction.Punch:
+      case Action.Punch:
         this.setDamages(
           standUpAdvantage,
           ATTACK.DAMAGE.FROM_STANDUP.CLEAR_PUNCH,
@@ -311,15 +325,15 @@ export class Attack {
           ATTACK.DAMAGE.FROM_STANDUP.BLOCKED_PUNCH.OPP_DAMAGE
         );
         break;
-      case TypeOfAction.Submission:
+      case Action.Submission:
         this.setDamages(
           groundAdvantage,
-          0,
+          FIGHTER.DAMAGE.MAX,
           ATTACK.DAMAGE.FROM_STANDUP.UNSUCCESSFUL_SUBMISSION.SELF_DAMAGE,
           ATTACK.DAMAGE.FROM_STANDUP.UNSUCCESSFUL_SUBMISSION.OPP_DAMAGE
         );
         break;
-      case TypeOfAction.Takedown:
+      case Action.Takedown:
         this.setDamages(
           groundAdvantage,
           ATTACK.DAMAGE.FROM_STANDUP.LANDED_TAKEDOWN,
@@ -333,10 +347,10 @@ export class Attack {
   determineGroundDamages(
     groundAdvantage: number,
     standUpAdvantage: number,
-    typeOfAction: TypeOfAction
+    typeOfAction: Action
   ) {
     switch (typeOfAction) {
-      case TypeOfAction.Punch:
+      case Action.Punch:
         this.setDamages(
           standUpAdvantage + groundAdvantage,
           ATTACK.DAMAGE.FROM_GROUND.CLEAR_PUNCH,
@@ -344,22 +358,107 @@ export class Attack {
           ATTACK.DAMAGE.FROM_GROUND.BLOCKED_PUNCH.OPP_DAMAGE
         );
         break;
-      case TypeOfAction.Submission:
+      case Action.Submission:
         this.setDamages(
           groundAdvantage,
-          0,
+          FIGHTER.DAMAGE.MAX,
           ATTACK.DAMAGE.FROM_GROUND.UNSUCCESSFUL_SUBMISSION.SELF_DAMAGE,
           ATTACK.DAMAGE.FROM_GROUND.UNSUCCESSFUL_SUBMISSION.OPP_DAMAGE
         );
         break;
-      case TypeOfAction.Stand:
+      case Action.Stand:
         this.setDamages(
           groundAdvantage,
           0,
           ATTACK.DAMAGE.FROM_GROUND.UNSUCCESSFUL_STANDING.SELF_DAMAGE,
-          ATTACK.DAMAGE.FROM_GROUND.UNSUCCESSFUL_STANDING.OPP_DAMAGE,
+          ATTACK.DAMAGE.FROM_GROUND.UNSUCCESSFUL_STANDING.OPP_DAMAGE
         );
         break;
     }
   }
+
+  performAttack(container: HTMLElement, currentState: StateOfFight) {
+    this.calculateDamages();
+    this.renderAttackDiv(container, currentState);
+  }
+
+  calculateDamages() {
+    this.defender.damagePercent += this.defenderDamage;
+    this.defender.normalizeFighterDamage();
+    this.attacker.damagePercent += this.attackerDamage;
+    this.attacker.normalizeFighterDamage();
+  }
+
+  isAnyoneFinished() {
+    if (this.attacker.isFighterFinished() || this.defender.isFighterFinished())
+      return true;
+    else return false;
+  }
+  checkIsAnyoneFinished(container: HTMLElement, fightCard: FightCard) {
+    if (this.isAnyoneFinished()) {
+      let fight: Fight = fightCard.getCurrentFight();
+      let winnerCorner: Corner = fight.getWinner();
+      let method: Method;
+      let details: string;
+
+      this.checkIsDefenderFinished(method, details);
+      this.checkIsAttackerInjured(method, details);
+
+      renderFinish(
+        container,
+        winnerCorner,
+        method,
+        fight.currentState,
+        details
+      );
+
+      fight.fightIsOver(
+        container,
+        fightCard,
+        method,
+        fight.currentState.getRound(),
+        winnerCorner
+      );
+    }
+  }
+  checkIsAttackerInjured(method: Method, details: string) {
+    if (this.attacker.isFighterFinished()) {
+      method = Method.KO_TKO;
+      details = "Injury";
+    }
+  }
+
+  checkIsDefenderFinished(method: Method, details: string) {
+    if (this.defender.isFighterFinished()) {
+      this.getMethodOfFinish(method, details);
+    }
+  }
+
+  getMethodOfFinish(method: Method, details: string) {
+    switch (this.type) {
+      case Action.Punch:
+        method = Method.KO_TKO;
+        details = "Punches"
+        //details = Attack.getTypeOfPunch();
+        break;
+      case Action.Submission:
+        method = Method.Submission;
+        //details = Attack.getTypeOfPunch();
+        break;
+      case Action.Takedown:
+        method = Method.KO_TKO;
+        details = "From Takedown"
+        //details = Attack.getTypeOfPunch();
+        break;
+    }
+  }
+
+  static getTypeOfPunch(): string {
+    return "nista za sad";
+  }
+
+  renderAttackDiv(container: HTMLElement, currentState: StateOfFight) {
+    throw new Error("Method not implemented.");
+  }
 }
+

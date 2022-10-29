@@ -44,6 +44,7 @@ import {
   initFighterFromArray,
 } from "../logic";
 import { Attack } from "../../model/attack";
+import { StateOfFight } from "../../model/stateOfFight";
 
 export function createButtonObs(container: HTMLElement, selection: string) {
   let btn = selectElement(container, selection);
@@ -213,8 +214,8 @@ export function createAddNewPickObs(
 
 export function createInitLiveScoreObs(
   container: HTMLElement,
+  addNewPickOb$: Observable<FightCard>,
   selection: string,
-  addNewPickOb$: Observable<FightCard>
 ): Observable<FightCard> {
   return createButtonObs(container, selection).pipe(
     withLatestFrom(addNewPickOb$),
@@ -224,35 +225,31 @@ export function createInitLiveScoreObs(
 
 export function createTickingTimerObs(
   container: HTMLElement,
-  selection: string,
-  fightCard: FightCard,
   addNewPickOb$: Observable<FightCard>,
+  selection: string,
   frequency: number,
-) {
+){
   let intervalOb$ = interval(frequency);
   let playButtonOb$ = createButtonObs(container, selection);
-  return combineLatest(intervalOb$, playButtonOb$).pipe(
-    filter(() => fightCard.isInProgress()),
-    withLatestFrom(addNewPickOb$),
-    map((fightCard) => fightCard[1])
+  return combineLatest(intervalOb$, playButtonOb$, addNewPickOb$).pipe(
+    filter((fightCard) => fightCard[2].isInProgress()),
+    map(fightCard => fightCard[2])
   );
 }
 
 export function createGeneratorAttackObs(
   container: HTMLDivElement,
-  fightCard: FightCard,
-  addNewPickOb$: Observable<FightCard>,
+  tickingTimerOb$: Observable<FightCard>,
   frequency: number,
   toHappen: number,
   notToHappen: number
 ) {
-  return interval(frequency).pipe(
-    filter(() => fightCard.isInProgress()),
+  let intervalOb$ = interval(frequency);
+  return combineLatest(intervalOb$, tickingTimerOb$).pipe(
+    filter((fightCard) => fightCard[1].isInProgress()),
     filter(() => getByProbability([toHappen, notToHappen], true, false)),
-    withLatestFrom(addNewPickOb$),
     map((fightCard) => new Attack(fightCard[1].getCurrentFight())),
   );
-
 }
 
 export function createPlayObs(

@@ -90,7 +90,10 @@ export const SCORE = {
 };
 
 export const FIGHTER = {
-  INITIAL_DAMAGE: 0,
+  DAMAGE:{
+    INITIAL: 0,
+    MAX: 100,
+  },
   INDEX: {
     BLUE_CORNER: 0,
     RED_CORNER: 1,
@@ -131,6 +134,7 @@ export const PERCENT = {
 export const TIME = {
   SECOND: 1000,
   PLAY_AGAIN: 2000,
+  GO_TO_NEXT_FIGHT: 5000,
 };
 
 export const RULES = {
@@ -141,8 +145,6 @@ export const RULES = {
       SECONDS: 10,
     },
     PERCENT: {
-      TO_HAPPEN: 20,
-      NOT_TO_HAPPEN: 80,
       TO_TRY: {
         FROM_STANDUP: {
           SUBMISSION: 10,
@@ -197,21 +199,29 @@ export const MAP_KEYS = {
 
 export const ATTACK = {
   FREQUENCY: 2000,
+  FACTOR: {
+    IMPORTANCE_OF_POSITON: 0.25,
+    ADVANTAGE: 0.5,
+  },
+  PERCENT:{
+    TO_HAPPEN: 20,
+    NOT_TO_HAPPEN: 80,
+  },
   DAMAGE: {
     FROM_STANDUP: {
       CLEAR_PUNCH: 7,
       BLOCKED_PUNCH: {
         SELF_DAMAGE: 3,
-        OPP_DAMAGE: 2,
+        OPP_DAMAGE: 1,
       },
       LANDED_TAKEDOWN: 6,
       DEFENDED_TAKEDOWN: {
         SELF_DAMAGE: 3,
-        OPP_DAMAGE: 2,
+        OPP_DAMAGE: 0,
       },
       UNSUCCESSFUL_SUBMISSION: {
-        SELF_DAMAGE: 15,
-        OPP_DAMAGE: 20,
+        SELF_DAMAGE: 10,
+        OPP_DAMAGE: 5,
       },
     },
     FROM_GROUND: {
@@ -221,13 +231,42 @@ export const ATTACK = {
         OPP_DAMAGE: 1,
       },
       UNSUCCESSFUL_STANDING: {
-        SELF_DAMAGE: 3,
-        OPP_DAMAGE: 2,
+        SELF_DAMAGE: 2,
+        OPP_DAMAGE: 0,
       },
       UNSUCCESSFUL_SUBMISSION: {
-        SELF_DAMAGE: 15,
-        OPP_DAMAGE: 20,
+        SELF_DAMAGE: 10,
+        OPP_DAMAGE: 0,
       },
     },
   },
+  TYPE_OF:{
+    SUBMISSION:{
+      ARM_TRIANGLE: "Arm Triangle choke",
+      REAR_NAKED: "Rear-naked choke",
+      ARMBAR: "Armbar",
+      GUILLOTINE: "Guillotine choke",
+      TRIANGLE: "Triangle choke",
+    },
+    PUNCH:{
+      JAB: "Jab",
+      CROSS: "Cross",
+      HOOK: "Hook",
+      UPPERCUT: "Uppercut",
+    },
+    KICK:{
+      ROUNDHOUSE: "Roundhouse kick", 
+      PUSH: "Push kick",
+      SPINNING_BACK: "Spinning back kick", 
+      CALF: "Calf kick",
+      HIGH: "High kick",
+    },
+    TAKEDOWN:{
+      SINGLE_LEG: "Single leg",
+      DOUBLE_LEG: "Double leg",
+      ANKLE_PICK: "Ankle pick",
+      LEG_TRIP: "Leg trip",
+      SUPLEX: "Suplex",
+    }
+  }
 };

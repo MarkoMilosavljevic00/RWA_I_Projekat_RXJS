@@ -7,6 +7,7 @@ import { Corner } from "../enums/CornerEnum";
 import { Fight } from "../model/fight";
 import { Result } from "../model/result";
 import { DifficultyLevel } from "../enums/DifficultyLevelEnum";
+import { StateOfFight } from "../model/stateOfFight";
 
 export function renderDivs(host: HTMLElement, ...childDivs: HTMLDivElement[]) {
   childDivs.forEach((child) => host.appendChild(child));
@@ -101,6 +102,10 @@ function printOdd(
     streamOddsLabel.innerHTML = "UNDERDOG";
     streamOddsLabel.style.color = "red";
   }
+}
+
+export function renderFinish(container: HTMLElement, winnerCorner: Corner, method: Method, currentState: StateOfFight, reason?: string) {
+  throw new Error("Function not implemented.");
 }
 
 export function roundWinner(

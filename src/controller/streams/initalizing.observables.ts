@@ -115,29 +115,27 @@ export function initGameObs(
 
   let initLiveScoreOb$ = createInitLiveScoreObs(
     container,
+    addNewPickOb$,
     ELEMENTS.PLAY_BTN,
-    addNewPickOb$
   );
   initLiveScoreSub(initLiveScoreOb$, container);
 
   let tickingTimerOb$ = createTickingTimerObs(
     container,
-    ELEMENTS.PLAY_BTN,
-    fightCard,
     addNewPickOb$,
+    ELEMENTS.PLAY_BTN,
     TIME.SECOND
   );
   tickingTimerSub(tickingTimerOb$, container);
 
   let generatorAttackOb$ = createGeneratorAttackObs(
     container,
-    fightCard,
-    addNewPickOb$,
+    tickingTimerOb$,
     ATTACK.FREQUENCY,
     ATTACK.PERCENT.TO_HAPPEN,
     ATTACK.PERCENT.NOT_TO_HAPPEN
   );
-  generatorAttackSub(generatorAttackOb$, container);
+  generatorAttackSub(generatorAttackOb$, fightCard,  container);
 
   // let tickingTimerOb$ = combineLatest(timerOb$, playButtonOb$).pipe(
   //   map(arr => arr[0])

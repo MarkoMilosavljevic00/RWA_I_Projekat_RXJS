@@ -14,6 +14,7 @@ import {
   getStringsOfRounds,
   roundWinner,
 } from "./view";
+import { Attack } from "../model/attack";
 
 export function createFindingOpponentElements(): HTMLElement[] {
   let findingOpponentLabel = document.createElement("label");
@@ -532,6 +533,12 @@ function createFightCornerDiv(fight: Fight, selection: string) {
   renderElements(cornerDiv, cornerText, cornerFighterLabel);
 
   return cornerDiv;
+}
+
+export function createAttackDiv(attack: Attack): HTMLDivElement {
+  let attackDiv: HTMLDivElement = document.createElement("div");
+  
+  return attackDiv
 }
 
 export function createSelect(classEl: string) {

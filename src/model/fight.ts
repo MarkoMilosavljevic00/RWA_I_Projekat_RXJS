@@ -1,5 +1,5 @@
 import { add } from "date-fns";
-import { ELEMENTS, MAP_KEYS, PERCENT, RULES, SCORE } from "../environment";
+import { ELEMENTS, MAP_KEYS, PERCENT, RULES, SCORE, TIME } from "../environment";
 import { DifficultyLevel } from "../enums/DifficultyLevelEnum";
 import { Method } from "../enums/MethodEnum";
 import { Round } from "../enums/RoundEnum";
@@ -19,6 +19,9 @@ import { Result } from "./result";
 import { FightPosition } from "../enums/FightPositionEnum";
 import { Rules } from "../enums/RulesEnum";
 import { StateOfFight } from "./stateOfFight";
+import { Attack } from "./attack";
+import { Action } from "../enums/ActionEnum";
+import { timer } from "rxjs";
 
 export class Fight {
   rules: Rules;
@@ -122,6 +125,17 @@ export class Fight {
     return this.currentState.getPosition();
   }
 
+  getWinner() {
+    let blueCornerDamage = this.blueCorner.damagePercent;
+    let redCornerDamage = this.redCorner.damagePercent;
+
+    if (redCornerDamage < blueCornerDamage) {
+      return Corner.RED_CORNER;
+    } else {
+      return Corner.BLUE_CORNER;
+    }
+  }
+
   setFighters(
     blueCorner: Fighter,
     redCorner: Fighter,
@@ -159,7 +173,7 @@ export class Fight {
 
   setFinalResult(method: Method, round: Round, winner?: Corner) {
     if (!winner) {
-      winner = this.determineWinnerByDamage();
+      winner = this.getWinner();
     }
     this.finalResult = new Result(winner, method, round);
   }
@@ -169,39 +183,31 @@ export class Fight {
   }
 
   tickSecond(container: HTMLElement, fightCard: FightCard) {
-    this.currentState.addSecond()
+    this.currentState.addSecond();
     fightCard.renderCurrentRoundAndTime(container);
     // ovo ce pomeris ispod svega da renderuje kad uradis ovo u donjem komentaru
-    if (this.checkIfIsOver(container)) {
-      fightCard.nextFight(container);
+    if (this.currentState.isOver()) {
+      this.fightIsOver(container, fightCard, Method.Decision, Round.Round_3);
     }
     // kad napravis runde, gore ces da preimenujes ovo u checkIfRoundIsOver i ako jeste
     // ces da povecas rundu a posle toga ces da cekiras za da li je zavrsena i zadnja runda
     // sa checkFightIsOver i ako jeste da uradis ovo dole sto radis u zadnjem Case-u u Switch-u
   }
 
-  checkIfIsOver(container: HTMLElement) {
-    if (
-      this.currentState.getTime().getMinutes() === RULES.MMA.ROUND_LENGTH.MINUTES &&
-      this.currentState.getTime().getSeconds() === RULES.MMA.ROUND_LENGTH.SECONDS
-    ) {
-      switch (this.currentState.getRound()) {
-        case Round.Round_1:
-          this.currentState.resetTime();
-          //this.currentState.addRound();
-          this.currentState.setRound(Round.Round_2);
-          return false;
-        case Round.Round_2:
-          this.currentState.resetTime();
-          //this.currentState.addRound();
-          this.currentState.setRound(Round.Round_3);
-          return false;
-        case Round.Round_3:
-          this.setFinalResult(Method.Decision, Round.Round_3);
-          this.setOpponentPick(container);
-          return true;
-      }
-    } else return false;
+  fightIsOver(
+    container: HTMLElement,
+    fightCard: FightCard,
+    method: Method,
+    round: Round,
+    winner?: Corner
+  ) {
+    this.setFinalResult(method, round);
+    this.setOpponentPick(container);
+    timer(TIME.GO_TO_NEXT_FIGHT).subscribe(() => fightCard.nextFight(container));
+  }
+
+  isAnyoneFinished() {
+    throw new Error("Method not implemented.");
   }
 
   determineOpponentWinner(difficulty: DifficultyLevel): Corner {
@@ -290,17 +296,6 @@ export class Fight {
     }
 
     return method;
-  }
-
-  determineWinnerByDamage() {
-    let blueCornerDamage = this.blueCorner.damagePercent;
-    let redCornerDamage = this.redCorner.damagePercent;
-
-    if (redCornerDamage < blueCornerDamage) {
-      return Corner.RED_CORNER;
-    } else {
-      return Corner.BLUE_CORNER;
-    }
   }
 
   // V1
@@ -440,3 +435,4 @@ export class Fight {
     initPointsForEachDiv(this.opponentFightDiv, this.opponentScore);
   }
 }
+

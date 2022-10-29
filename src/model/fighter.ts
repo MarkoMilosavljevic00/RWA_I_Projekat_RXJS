@@ -10,7 +10,7 @@ export class Fighter {
   standup: number;
   grappling: number;
   
-  damagePercent: number = FIGHTER.INITIAL_DAMAGE;
+  damagePercent: number = FIGHTER.DAMAGE.INITIAL;
 
   constructor(
     id: number,
@@ -29,5 +29,17 @@ export class Fighter {
   calcOverall() {
     let overall = Math.round((this.standup + this.grappling) / RULES.MMA.NUMBER_OF_RATINGS);
     return overall;
+  }
+
+  normalizeFighterDamage() {
+    if (this.damagePercent > FIGHTER.DAMAGE.MAX) {
+      this.damagePercent = FIGHTER.DAMAGE.MAX;
+    }
+  }
+
+  isFighterFinished() {
+    if(this.damagePercent === FIGHTER.DAMAGE.MAX){
+      return true;
+    } else return false;
   }
 }

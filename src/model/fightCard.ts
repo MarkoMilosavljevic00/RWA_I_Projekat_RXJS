@@ -15,6 +15,7 @@ import {
 } from "../view/view";
 import { Fight } from "./fight";
 import { Result } from "./result";
+import { timer } from "rxjs";
 
 export class FightCard {
   fights: Fight[];
