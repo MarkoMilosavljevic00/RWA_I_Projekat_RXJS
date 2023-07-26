@@ -37,5 +37,7 @@ npm run api
 ![slika1](src/assets/rm-01.jpg)
 
 > Potrebne ekstenzije za pokretanje:
+
 > Live-Server
+
 > Json-Server
