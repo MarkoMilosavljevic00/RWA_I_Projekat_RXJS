@@ -38,6 +38,6 @@ npm run api
 
 > Potrebne ekstenzije za pokretanje:
 
-> Live-Server
+> - Live-Server
 
-> Json-Server
+> - Json-Server
