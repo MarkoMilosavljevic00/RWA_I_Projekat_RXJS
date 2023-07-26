@@ -1,9 +1,13 @@
 # Pick the Right Fight
 
 ## _Aplikacija_
-**Naziv:** Pick the Right Fight 
+
+**Naziv:** Pick the Right Fight
+
 **Tehnologija:** RxJS
+
 **Namena:** Prvi projekat iz predmeta Razvoj Web Aplikacija
+
 **Opis:** Web aplikacija namenjena ljubiteljima borilackih vestina. Predvidjajte ishode matchup-ova koji su vama zanimljivi u razlicitim borilackim sportovima i pobedite protivnika tako sto cete pogodite sto vise parova. Srecno!
 
 ## _Instalacija_
