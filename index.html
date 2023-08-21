@@ -11,7 +11,10 @@
     </style>
 
     <link rel="stylesheet" href="/src/main.css" />
-    <link href="node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link
+      href="node_modules/bootstrap-icons/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
 
     <title>Bootstrap - example 02</title>
   </head>
@@ -57,9 +60,8 @@
     </div>
 
     <!-- <div class="container-fluid custombg img-fluid img-thumbnails center"></div> -->
-    <div class="container border rounded my-2 ">
+    <div class="container border rounded my-2">
       <div class="row">
-
         <div class="col-12 order-md-2 col-md-8 px-1">
           <div class="card text-center">
             <div class="row g-0">
@@ -70,14 +72,22 @@
                     <p class="card-text fw-bold">Nickname</p>
                     <p class="card-text fw-bold">Difficulty</p>
                   </div>
-                  <div class="col-12 col-md-6" >
+                  <div class="col-12 col-md-6">
                     <div class="input-group">
-                      <select class="form-select col-12" id="inputGroupSelect04" aria-label="Example select with button addon" data-np-intersection-state="visible">
+                      <select
+                        class="form-select col-12"
+                        id="inputGroupSelect04"
+                        aria-label="Example select with button addon"
+                        data-np-intersection-state="visible"
+                      >
                         <option selected value="1">EASY</option>
                         <option value="2">MEDIUM</option>
                         <option value="3">HARD</option>
                       </select>
-                      <button class="btn btn-outline-secondary col-12" type="button">
+                      <button
+                        class="btn btn-outline-secondary col-12"
+                        type="button"
+                      >
                         Find New Opponent
                       </button>
                       <button class="btn btn btn-primary col-12" type="button">
@@ -88,7 +98,12 @@
                 </div>
               </div>
               <div class="col-md-4 my-auto">
-                <img src="./src/assets/default_avatar.png" class="img-fluid rounded-start" style="max-height: 100px;"  alt="...">
+                <img
+                  src="./src/assets/default_avatar.png"
+                  class="img-fluid rounded-start"
+                  style="max-height: 100px"
+                  alt="..."
+                />
               </div>
             </div>
           </div>
@@ -100,22 +115,20 @@
           </button>
         </div> -->
 
-        <div class="col-6 order-md-1 col-md-2 bg-secondary bg-opacity-25 rounded border d-flex flex-column justify-content-center align-items-center">
+        <div
+          class="col-6 order-md-1 col-md-2 bg-secondary bg-opacity-25 rounded border d-flex flex-column justify-content-center align-items-center"
+        >
           Your points:
-          <div class="fw-bold fs-2">
-              0
-          </div>
+          <div class="fw-bold fs-2">0</div>
         </div>
 
-        <div class="col-6 order-md-4 col-md-2 bg-secondary bg-opacity-25 rounded border d-flex flex-column justify-content-center align-items-center">
+        <div
+          class="col-6 order-md-4 col-md-2 bg-secondary bg-opacity-25 rounded border d-flex flex-column justify-content-center align-items-center"
+        >
           Opponent points:
-          <div class="fw-bold fs-2">
-              0
-          </div>
+          <div class="fw-bold fs-2">0</div>
         </div>
-
       </div>
-
     </div>
 
     <div class="container border border-1 rounded">
@@ -137,7 +150,7 @@
         </li>
         <li class="nav-item" role="presentation">
           <button
-            class="nav-link "
+            class="nav-link"
             id="home-tab"
             data-bs-toggle="tab"
             data-bs-target="#home-tab-pane"
@@ -183,7 +196,7 @@
       </ul>
       <div class="tab-content" id="myTabContent">
         <div
-          class="tab-pane fade show active"
+          class="tab-pane fade"
           id="start-tab-pane"
           role="tabpanel"
           aria-labelledby="start-tab"
@@ -196,19 +209,18 @@
                 Select the difficulty level and start picking your fights:
               </p>
               <select
-              class="form-select mx-auto my-2"
-              style="width: 200px;"
-              id="inputGroupSelect04"
+                class="form-select mx-auto my-2"
+                style="width: 200px"
+                id="inputGroupSelect04"
               >
                 <option selected>Choose difficulty...</option>
                 <option value="1">EASY</option>
                 <option value="2">MEDIUM</option>
                 <option value="3">HARD</option>
               </select>
-              <button href="#" class="btn btn-primary">START</a>
+              <button href="#" class="btn btn-primary">START</button>
             </div>
           </div>
-
         </div>
 
         <div
@@ -219,13 +231,24 @@
           tabindex="0"
         >
           <div class="row d-flex justify-content-center m-2">
-
-            <div class="col-md-5 d-flex justify-content-center justify-content-md-end">
-              <div class="text-center m-2 text-danger border border-danger bg-danger bg-opacity-25" style="width: 18rem;">
-                <h4 class=" title fw-bold"> Red corner</h4>
-                <img src="./src/assets/default_fighter.png" style="max-width:80px;">
+            <div
+              class="col-md-5 d-flex justify-content-center justify-content-md-end"
+            >
+              <div
+                class="text-center m-2 text-danger border border-danger bg-danger bg-opacity-25"
+                style="width: 18rem"
+              >
+                <h4 class="title fw-bold">Red corner</h4>
+                <img
+                  src="./src/assets/default_fighter.png"
+                  style="max-width: 80px"
+                />
                 <div class="text-center m-2 justify-content-center">
-                  <select class="form-select form-select-sm m-auto fw-light text-danger" aria-label="Default select example" style="max-width:150px;">
+                  <select
+                    class="form-select form-select-sm m-auto fw-light text-danger"
+                    aria-label="Default select example"
+                    style="max-width: 150px"
+                  >
                     <option selected>Open this select menu</option>
                     <option value="1">One</option>
                     <option value="2">Two</option>
@@ -233,74 +256,141 @@
                   </select>
                 </div>
                 <div class="text-start bg-secondary bg-opacity-25 p-1">
-                  <div class="row"> 
+                  <div class="row">
                     <div class="col-4">
-                      Striking:
-                      Grappling:
-                      <b>Overall:</b> 
+                      Striking: Grappling:
+                      <b>Overall:</b>
                     </div>
                     <div class="col-8">
-        
                       <div class="progress mx-1 my-2">
-                        <div class="progress-bar bg-danger" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">75%</div>
+                        <div
+                          class="progress-bar bg-danger"
+                          role="progressbar"
+                          style="width: 75%"
+                          aria-valuenow="75"
+                          aria-valuemin="0"
+                          aria-valuemax="100"
+                        >
+                          75%
+                        </div>
                       </div>
-        
-                      <div class="progress mx-1 my-2">
-                        <div class="progress-bar bg-danger" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">75%</div>
-                      </div>
-        
-                      <div class="progress mx-1 my-2">
-                        <div class="progress-bar bg-danger" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">75%</div>
-                      </div>
-        
-                    </div>
-                </div>
-              </div>
-            </div>
-            </div>
 
-            <div class="col-md-5 d-flex justify-content-center justify-content-md-start order-md-1">
-              <div class="text-center m-2 text-primary border border-primary bg-primary bg-opacity-25" style="width: 18rem;">
-              <h4 class=" title fw-bold"> Blue corner</h4>
-              <img src="./src/assets/default_fighter.png" style="max-width:80px;">
-              <div class="text-center m-2 justify-content-center">
-                <select class="form-select form-select-sm m-auto fw-light text-primary" aria-label="Default select example" style="max-width:150px;">
-                  <option selected>Open this select menu</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </select>
-              </div>
-              <div class="text-start bg-secondary bg-opacity-25 p-1">
-                <div class="row"> 
-                  <div class="col-4">
-                    Striking:
-                    Grappling:
-                    <b>Overall:</b> 
-                  </div>
-                  <div class="col-8">
-      
-                    <div class="progress mx-1 my-2">
-                      <div class="progress-bar bg-primary" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">75%</div>
+                      <div class="progress mx-1 my-2">
+                        <div
+                          class="progress-bar bg-danger"
+                          role="progressbar"
+                          style="width: 75%"
+                          aria-valuenow="75"
+                          aria-valuemin="0"
+                          aria-valuemax="100"
+                        >
+                          75%
+                        </div>
+                      </div>
+
+                      <div class="progress mx-1 my-2">
+                        <div
+                          class="progress-bar bg-danger"
+                          role="progressbar"
+                          style="width: 75%"
+                          aria-valuenow="75"
+                          aria-valuemin="0"
+                          aria-valuemax="100"
+                        >
+                          75%
+                        </div>
+                      </div>
                     </div>
-      
-                    <div class="progress mx-1 my-2">
-                      <div class="progress-bar bg-primary" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">75%</div>
-                    </div>
-      
-                    <div class="progress mx-1 my-2">
-                      <div class="progress-bar bg-primary" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">75%</div>
-                    </div>
-      
                   </div>
                 </div>
               </div>
             </div>
+
+            <div
+              class="col-md-5 d-flex justify-content-center justify-content-md-start order-md-1"
+            >
+              <div
+                class="text-center m-2 text-primary border border-primary bg-primary bg-opacity-25"
+                style="width: 18rem"
+              >
+                <h4 class="title fw-bold">Blue corner</h4>
+                <img
+                  src="./src/assets/default_fighter.png"
+                  style="max-width: 80px"
+                />
+                <div class="text-center m-2 justify-content-center">
+                  <select
+                    class="form-select form-select-sm m-auto fw-light text-primary"
+                    aria-label="Default select example"
+                    style="max-width: 150px"
+                  >
+                    <option selected>Open this select menu</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                  </select>
+                </div>
+                <div class="text-start bg-secondary bg-opacity-25 p-1">
+                  <div class="row">
+                    <div class="col-4">
+                      Striking: Grappling:
+                      <b>Overall:</b>
+                    </div>
+                    <div class="col-8">
+                      <div class="progress mx-1 my-2">
+                        <div
+                          class="progress-bar bg-primary"
+                          role="progressbar"
+                          style="width: 75%"
+                          aria-valuenow="75"
+                          aria-valuemin="0"
+                          aria-valuemax="100"
+                        >
+                          75%
+                        </div>
+                      </div>
+
+                      <div class="progress mx-1 my-2">
+                        <div
+                          class="progress-bar bg-primary"
+                          role="progressbar"
+                          style="width: 75%"
+                          aria-valuenow="75"
+                          aria-valuemin="0"
+                          aria-valuemax="100"
+                        >
+                          75%
+                        </div>
+                      </div>
+
+                      <div class="progress mx-1 my-2">
+                        <div
+                          class="progress-bar bg-primary"
+                          role="progressbar"
+                          style="width: 75%"
+                          aria-valuenow="75"
+                          aria-valuemin="0"
+                          aria-valuemax="100"
+                        >
+                          75%
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div class="col-md-2 text-center order-md-0 border rounded bg-secondary bg-opacity-10 p-2">
+            <div
+              class="col-md-2 text-center order-md-0 border rounded bg-secondary bg-opacity-10 p-2"
+            >
               Sport:
-              <select class="form-select form-select-sm m-auto fw-light text-primary p-1" aria-label="Default select example" style="max-width:150px;" data-np-intersection-state="visible">
+              <select
+                class="form-select form-select-sm m-auto fw-light text-primary p-1"
+                aria-label="Default select example"
+                style="max-width: 150px"
+                data-np-intersection-state="visible"
+              >
                 <option selected="">Open this select menu</option>
                 <option value="1">One</option>
                 <option value="2">Two</option>
@@ -308,299 +398,460 @@
               </select>
 
               Weightclass:
-              <select class="form-select form-select-sm m-auto fw-light text-primary" aria-label="Default select example" style="max-width:150px;" data-np-intersection-state="visible">
+              <select
+                class="form-select form-select-sm m-auto fw-light text-primary"
+                aria-label="Default select example"
+                style="max-width: 150px"
+                data-np-intersection-state="visible"
+              >
                 <option selected="">Open this select menu</option>
                 <option value="1">One</option>
                 <option value="2">Two</option>
                 <option value="3">Three</option>
               </select>
-            
-              <hr>
-            
+
+              <hr />
+
               Winner:
               <div class="row justify-content-between ms-2">
                 <div class="col-auto">
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input bg-danger" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                    <input
+                      class="form-check-input bg-danger"
+                      type="radio"
+                      name="inlineRadioOptions"
+                      id="inlineRadio1"
+                      value="option1"
+                    />
                   </div>
                 </div>
                 <div class="col-auto">
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input bg-primary" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                    <input
+                      class="form-check-input bg-primary"
+                      type="radio"
+                      name="inlineRadioOptions"
+                      id="inlineRadio2"
+                      value="option2"
+                    />
                   </div>
                 </div>
               </div>
-            
+
               Method:
-              <select class="form-select form-select-sm m-auto fw-light text-primary" aria-label="Default select example" style="max-width:150px;" data-np-intersection-state="visible">
+              <select
+                class="form-select form-select-sm m-auto fw-light text-primary"
+                aria-label="Default select example"
+                style="max-width: 150px"
+                data-np-intersection-state="visible"
+              >
                 <option selected="">Open this select menu</option>
                 <option value="1">One</option>
                 <option value="2">Two</option>
                 <option value="3">Three</option>
               </select>
-            
+
               Round:
-              <select class="form-select form-select-sm m-auto fw-light text-primary" aria-label="Default select example" style="max-width:150px;" data-np-intersection-state="visible">
+              <select
+                class="form-select form-select-sm m-auto fw-light text-primary"
+                aria-label="Default select example"
+                style="max-width: 150px"
+                data-np-intersection-state="visible"
+              >
                 <option selected="">Open this select menu</option>
                 <option value="1">One</option>
                 <option value="2">Two</option>
                 <option value="3">Three</option>
               </select>
-            
             </div>
           </div>
 
           <div class="card bg-secondary bg-opacity-25">
+            <div class="card-header fs-2 fw-bold">Card</div>
 
-          <div class="card-header fs-2 fw-bold">
-            Card
-          </div>
-
-
-          <div class="d-flex flex-row m-2 row rounded border border-black bg-black bg-opacity-25 p-2">
-            <div class="col-md-6 col-12 d-flex ">
-              <div class="text-center align-items-center col-5 fw-bold border border-danger border-2">
-                <p class="fw-light">
-                </p>
-                <img src="./src/assets/default_fighter.png" style="max-width: 50px;">
-                <div> Ime Prezime</div>
+            <div
+              class="d-flex flex-row m-2 row rounded border border-black bg-black bg-opacity-25 p-2"
+            >
+              <div class="col-md-6 col-12 d-flex">
+                <div
+                  class="text-center align-items-center col-5 fw-bold border border-danger border-2"
+                >
+                  <p class="fw-light"></p>
+                  <img
+                    src="./src/assets/default_fighter.png"
+                    style="max-width: 50px"
+                  />
+                  <div>Ime Prezime</div>
+                </div>
+                <div
+                  class="col-2 d-flex justify-content-center align-items-center fs-2 fw-bold"
+                >
+                  VS
+                </div>
+                <div class="text-center col-5">
+                  <p class="fw-light text-success">
+                    <i class="bi bi-star-fill"> Fav </i>
+                  </p>
+                  <img
+                    src="./src/assets/default_fighter.png"
+                    style="max-width: 50px"
+                  />
+                  <div>Ime Prezime</div>
+                </div>
               </div>
-              <div class="col-2 d-flex justify-content-center align-items-center fs-2 fw-bold">
-                VS
-              </div>
-              <div class="text-center col-5">
-                <p class="fw-light text-success">
-                  <i class="bi bi-star-fill"> Fav </i>
-                </p>
-                <img src="./src/assets/default_fighter.png" style="max-width: 50px;">
-                <div> Ime Prezime</div>
-              </div>
-            </div>
 
-            <div class="col-md-4 col-12 d-flex flex-column">
-              <div>Sport: <label class="fw-bold">Boxing</label></div>
-              <div>Winner: <label class="fw-bold">Ime Prezime</label></div>
-              <div>Method: <label class="fw-bold">KO/TKO</label></div>
-              <div>Round: <label class="fw-bold">1</label></div>
-            </div>
-
-            <div class="col-md-2 col-12 align-items-center d-flex">
-              <button class="btn btn-danger">
-                <i class="bi bi-trash"></i> Remove
-              </button>
-              
-            </div>
-          </div>
-
-
-          <div class="d-flex flex-row m-2 row rounded border border-black bg-black bg-opacity-25 p-2">
-            <div class="col-md-6 col-12 d-flex ">
-              <div class="text-center align-items-center col-5 fw-bold border border-danger border-2">
-                <p class="fw-light">
-                </p>
-                <img src="./src/assets/default_fighter.png" style="max-width: 50px;">
-                <div> Ime Prezime</div>
+              <div class="col-md-4 col-12 d-flex flex-column">
+                <div>Sport: <label class="fw-bold">Boxing</label></div>
+                <div>Winner: <label class="fw-bold">Ime Prezime</label></div>
+                <div>Method: <label class="fw-bold">KO/TKO</label></div>
+                <div>Round: <label class="fw-bold">1</label></div>
               </div>
-              <div class="col-2 d-flex justify-content-center align-items-center fs-2 fw-bold">
-                VS
-              </div>
-              <div class="text-center col-5">
-                <p class="fw-light text-success">
-                  <i class="bi bi-star-fill"> Fav </i>
-                </p>
-                <img src="./src/assets/default_fighter.png" style="max-width: 50px;">
-                <div> Ime Prezime</div>
+
+              <div class="col-md-2 col-12 align-items-center d-flex">
+                <button class="btn btn-danger">
+                  <i class="bi bi-trash"></i> Remove
+                </button>
               </div>
             </div>
 
-            <div class="col-md-4 col-12 d-flex flex-column">
-              <div>Sport: <label class="fw-bold">Boxing</label></div>
-              <div>Winner: <label class="fw-bold">Ime Prezime</label></div>
-              <div>Method: <label class="fw-bold">KO/TKO</label></div>
-              <div>Round: <label class="fw-bold">1</label></div>
-            </div>
-
-            <div class="col-md-2 col-12 align-items-center d-flex">
-              <button class="btn btn-danger">
-                <i class="bi bi-trash"></i> Remove
-              </button>
-              
-            </div>
-          </div>
-
-          <div class="d-flex flex-row m-2 row rounded border border-black bg-black bg-opacity-25 p-2">
-            <div class="col-md-6 col-12 d-flex ">
-              <div class="text-center align-items-center col-5 fw-bold border border-danger border-2">
-                <p class="fw-light text-success">
-                  <i class="bi bi-star-fill"> Fav </i>
-                </p>
-                <img src="./src/assets/default_fighter.png" style="max-width: 50px;">
-                <div> Ime Prezime</div>
+            <div
+              class="d-flex flex-row m-2 row rounded border border-black bg-black bg-opacity-25 p-2"
+            >
+              <div class="col-md-6 col-12 d-flex">
+                <div
+                  class="text-center align-items-center col-5 fw-bold border border-danger border-2"
+                >
+                  <p class="fw-light"></p>
+                  <img
+                    src="./src/assets/default_fighter.png"
+                    style="max-width: 50px"
+                  />
+                  <div>Ime Prezime</div>
+                </div>
+                <div
+                  class="col-2 d-flex justify-content-center align-items-center fs-2 fw-bold"
+                >
+                  VS
+                </div>
+                <div class="text-center col-5">
+                  <p class="fw-light text-success">
+                    <i class="bi bi-star-fill"> Fav </i>
+                  </p>
+                  <img
+                    src="./src/assets/default_fighter.png"
+                    style="max-width: 50px"
+                  />
+                  <div>Ime Prezime</div>
+                </div>
               </div>
-              <div class="col-2 d-flex justify-content-center align-items-center fs-2 fw-bold">
-                VS
+
+              <div class="col-md-4 col-12 d-flex flex-column">
+                <div>Sport: <label class="fw-bold">Boxing</label></div>
+                <div>Winner: <label class="fw-bold">Ime Prezime</label></div>
+                <div>Method: <label class="fw-bold">KO/TKO</label></div>
+                <div>Round: <label class="fw-bold">1</label></div>
               </div>
-              <div class="text-center col-5">
-                <p class="fw-light">
-                  
-                </p>
-                <img src="./src/assets/default_fighter.png" style="max-width: 50px;">
-                <div> Ime Prezime</div>
+
+              <div class="col-md-2 col-12 align-items-center d-flex">
+                <button class="btn btn-danger">
+                  <i class="bi bi-trash"></i> Remove
+                </button>
               </div>
             </div>
 
-            <div class="col-md-4 col-12 d-flex flex-column">
-              <div>Sport: <label class="fw-bold">Boxing</label></div>
-              <div>Winner: <label class="fw-bold">Ime Prezime</label></div>
-              <div>Method: <label class="fw-bold">KO/TKO</label></div>
-              <div>Round: <label class="fw-bold">1</label></div>
-            </div>
+            <div
+              class="d-flex flex-row m-2 row rounded border border-black bg-black bg-opacity-25 p-2"
+            >
+              <div class="col-md-6 col-12 d-flex">
+                <div
+                  class="text-center align-items-center col-5 fw-bold border border-danger border-2"
+                >
+                  <p class="fw-light text-success">
+                    <i class="bi bi-star-fill"> Fav </i>
+                  </p>
+                  <img
+                    src="./src/assets/default_fighter.png"
+                    style="max-width: 50px"
+                  />
+                  <div>Ime Prezime</div>
+                </div>
+                <div
+                  class="col-2 d-flex justify-content-center align-items-center fs-2 fw-bold"
+                >
+                  VS
+                </div>
+                <div class="text-center col-5">
+                  <p class="fw-light"></p>
+                  <img
+                    src="./src/assets/default_fighter.png"
+                    style="max-width: 50px"
+                  />
+                  <div>Ime Prezime</div>
+                </div>
+              </div>
 
-            <div class="col-md-2 col-12 align-items-center d-flex">
-              <button class="btn btn-danger">
-                <i class="bi bi-trash"></i> Remove
-              </button>
-              
+              <div class="col-md-4 col-12 d-flex flex-column">
+                <div>Sport: <label class="fw-bold">Boxing</label></div>
+                <div>Winner: <label class="fw-bold">Ime Prezime</label></div>
+                <div>Method: <label class="fw-bold">KO/TKO</label></div>
+                <div>Round: <label class="fw-bold">1</label></div>
+              </div>
+
+              <div class="col-md-2 col-12 align-items-center d-flex">
+                <button class="btn btn-danger">
+                  <i class="bi bi-trash"></i> Remove
+                </button>
+              </div>
             </div>
-          </div>
-        
           </div>
         </div>
 
         <div
-        class="tab-pane fade"
-        id="live-tab-pane"
-        role="tabpanel"
-        aria-labelledby="live-tab"
-        tabindex="0"
+          class="tab-pane fade show active"
+          id="live-tab-pane"
+          role="tabpanel"
+          aria-labelledby="live-tab"
+          tabindex="0"
         >
-        
           <div class="row d-flex justify-content-center m-2">
+            <div
+              class="col-md-4 col-6 d-flex justify-content-center justify-content-md-end align-items-center"
+            >
+              <div
+                class="text-center text-danger border border-secondary bg-secondary bg-opacity-25 align-items-center"
+                style="width: 18rem"
+              >
+                <h4 class="fw-bold">Red corner</h4>
+                <img
+                  src="./src/assets/default_fighter.png"
+                  style="max-width: 80px"
+                />
+                <div class="text-center m-2 justify-content-center">
+                  <h5 class="fw-bold">Ime Prezime</h5>
+                </div>
+                <div class="text-start bg-secondary bg-opacity-25 p-1">
+                  <div class="row">
+                    <div class="col-4">
+                      Striking: Grappling:
+                      <b>Overall:</b>
+                    </div>
+                    <div class="col-8">
+                      <div class="progress mx-1 my-2">
+                        <div
+                          class="progress-bar bg-danger"
+                          role="progressbar"
+                          style="width: 75%"
+                          aria-valuenow="75"
+                          aria-valuemin="0"
+                          aria-valuemax="100"
+                        >
+                          75%
+                        </div>
+                      </div>
 
-          <div class="col-md-4 col-6 d-flex justify-content-center justify-content-md-end align-items-center">
-            <div class="text-center text-danger border border-secondary bg-secondary bg-opacity-25 align-items-center" style="width: 18rem;">
-              <h4 class="  fw-bold"> Red corner</h4>
-              <img src="./src/assets/default_fighter.png" style="max-width:80px;">
-              <div class="text-center m-2 justify-content-center">
-              <h5 class="fw-bold">Ime Prezime</h5>
-              </div>
-              <div class="text-start bg-secondary bg-opacity-25 p-1">
-                <div class="row"> 
-                  <div class="col-4">
-                    Striking:
-                    Grappling:
-                    <b>Overall:</b> 
-                  </div>
-                  <div class="col-8">
-      
-                    <div class="progress mx-1 my-2">
-                      <div class="progress-bar bg-danger" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">75%</div>
-                    </div>
-      
-                    <div class="progress mx-1 my-2">
-                      <div class="progress-bar bg-danger" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">75%</div>
-                    </div>
-      
-                    <div class="progress mx-1 my-2">
-                      <div class="progress-bar bg-danger" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">75%</div>
+                      <div class="progress mx-1 my-2">
+                        <div
+                          class="progress-bar bg-danger"
+                          role="progressbar"
+                          style="width: 75%"
+                          aria-valuenow="75"
+                          aria-valuemin="0"
+                          aria-valuemax="100"
+                        >
+                          75%
+                        </div>
+                      </div>
+
+                      <div class="progress mx-1 my-2">
+                        <div
+                          class="progress-bar bg-danger"
+                          role="progressbar"
+                          style="width: 75%"
+                          aria-valuenow="75"
+                          aria-valuemin="0"
+                          aria-valuemax="100"
+                        >
+                          75%
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div class="col-md-4 col-6 d-flex justify-content-center justify-content-md-start order-md-1 align-items-center">
-            <div class="text-center text-primary border border-secondary bg-secondary bg-opacity-25 align-items-center" style="width: 18rem;">
-              <h4 class="  fw-bold"> Blue corner</h4>
-              <img src="./src/assets/default_fighter.png" style="max-width:80px;">
-              <div class="text-center m-2 justify-content-center">
-              <h5 class="fw-bold">Ime Prezime</h5>
-              </div>
-              <div class="text-start bg-secondary bg-opacity-25 p-1">
-                <div class="row"> 
-                  <div class="col-4">
-                    Striking:
-                    Grappling:
-                    <b>Overall:</b> 
-                  </div>
-                  <div class="col-8">
-      
-                    <div class="progress mx-1 my-2">
-                      <div class="progress-bar bg-primary" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">75%</div>
+            <div
+              class="col-md-4 col-6 d-flex justify-content-center justify-content-md-start order-md-1 align-items-center"
+            >
+              <div
+                class="text-center text-primary border border-secondary bg-secondary bg-opacity-25 align-items-center"
+                style="width: 18rem"
+              >
+                <h4 class="fw-bold">Blue corner</h4>
+                <img
+                  src="./src/assets/default_fighter.png"
+                  style="max-width: 80px"
+                />
+                <div class="text-center m-2 justify-content-center">
+                  <h5 class="fw-bold">Ime Prezime</h5>
+                </div>
+                <div class="text-start bg-secondary bg-opacity-25 p-1">
+                  <div class="row">
+                    <div class="col-4">
+                      Striking: Grappling:
+                      <b>Overall:</b>
                     </div>
-      
-                    <div class="progress mx-1 my-2">
-                      <div class="progress-bar bg-primary" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">75%</div>
-                    </div>
-      
-                    <div class="progress mx-1 my-2">
-                      <div class="progress-bar bg-primary" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">75%</div>
+                    <div class="col-8">
+                      <div class="progress mx-1 my-2">
+                        <div
+                          class="progress-bar bg-primary"
+                          role="progressbar"
+                          style="width: 75%"
+                          aria-valuenow="75"
+                          aria-valuemin="0"
+                          aria-valuemax="100"
+                        >
+                          75%
+                        </div>
+                      </div>
+
+                      <div class="progress mx-1 my-2">
+                        <div
+                          class="progress-bar bg-primary"
+                          role="progressbar"
+                          style="width: 75%"
+                          aria-valuenow="75"
+                          aria-valuemin="0"
+                          aria-valuemax="100"
+                        >
+                          75%
+                        </div>
+                      </div>
+
+                      <div class="progress mx-1 my-2">
+                        <div
+                          class="progress-bar bg-primary"
+                          role="progressbar"
+                          style="width: 75%"
+                          aria-valuenow="75"
+                          aria-valuemin="0"
+                          aria-valuemax="100"
+                        >
+                          75%
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+
+            <div
+              class="col-md-4 d-flex flex-column align-items-center text-center rounded border fs-4 text-white"
+            >
+              <b>Time:</b>
+              <div
+                class="d-flex flex-row col-8 justify-content-between bg-secondary bg-opacity-25 rounded m-2 p-2 text-white"
+              >
+                <span>0:00</span>
+                <span>R1</span>
+              </div>
+              <p
+                class="d-flex flex-column bg-secondary bg-opacity-25 rounded p-1 fs-6 text-white"
+              >
+                <small>Boxing</small>
+                <small>Middleweight bout</small>
+              </p>
+              <b>Damage:</b>
+              <div class="d-flex justify-content-between col-12 m-2">
+                <div class="progress col-5" style="height: 25px">
+                  <div
+                    class="progress-bar bg-danger"
+                    role="progressbar"
+                    style="width: 75%"
+                    aria-valuenow="75"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  >
+                    75%
+                  </div>
+                </div>
+                <div class="progress col-5" style="height: 25px">
+                  <div
+                    class="progress-bar bg-danger"
+                    role="progressbar"
+                    style="width: 75%"
+                    aria-valuenow="75"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  >
+                    75%
+                  </div>
+                </div>
+              </div>
+
+              <b>Match facts:</b>
+              <ul class="col-12 list-group fs-6 p-2">
+                <li
+                  class="list-group-item d-flex justify-content-between text-secondary"
+                >
+                  <div>000</div>
+                  <div class="text-white">Significant strikes</div>
+                  <div>000</div>
+                </li>
+                <li
+                  class="list-group-item d-flex justify-content-between text-secondary"
+                >
+                  <div>000</div>
+                  <div class="text-white">Takedowns</div>
+                  <div>000</div>
+                </li>
+                <li
+                  class="list-group-item d-flex justify-content-between text-secondary"
+                >
+                  <div>000</div>
+                  <div class="text-white">Submission attempts</div>
+                  <div>000</div>
+                </li>
+              </ul>
+            </div>
           </div>
 
-          <div class="col-md-4 d-flex flex-column align-items-center text-center rounded border fs-4 text-white">
-
-            <b>Time:</b>
-            <div class="d-flex flex-row col-8 justify-content-between bg-secondary bg-opacity-25 rounded m-2 p-2 text-white">
-              <span>0:00</span>
-              <span>R1</span>
-            </div>
-            <p class="d-flex flex-column bg-secondary bg-opacity-25 rounded p-1 fs-6 text-white">
-              <small>Boxing</small>
-              <small>Middleweight bout</small>
-            </p>
-            <b>Damage:</b>
-            <div class="d-flex justify-content-between col-12 m-2">
-              <div class="progress col-5" style="height:25px;">
-                <div class="progress-bar bg-danger" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">75%</div>
+          <div class="card">
+            <div class="card-header"> 1. Round</div>
+            <div class="card-body">
+              <div class="d-flex flex-row text-white small">
+                <div class="me-4">R1 1'37''</div>
+                <div class=""><img class="img-fluid" src="./src/assets/MMA-Fight-PNG-Image.png" style="max-width:25px"></div>
+                <div class="">Punch</div>
+                <div class="fw-light mx-1 text-secondary">(Jab)</div>
               </div>
-              <div class="progress col-5" style="height:25px;">
-                <div class="progress-bar bg-danger" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">75%</div>
+              <div class="d-flex flex-row text-white small justify-content-end">
+                <div class="ms-4 order-3">R1 2'00''</div>
+                <div class="order-2"><img class="img-fluid" src="./src/assets/MMA-Fight-PNG-Image.png" style="max-width:25px"></div>
+                <div class="order-1">Kick</div>
+                <div class="order-0 fw-light mx-1 text-secondary">(Low-Kick)</div>
               </div>
             </div>
-
-            <b>Match facts:</b>
-            <ul class="col-12 list-group fs-6 p-2">
-              <li class="list-group-item d-flex justify-content-between text-secondary">
-                <div>000</div>
-                <div class="text-white">Significant strikes</div>
-                <div>000</div>
-              </li>
-              <li class="list-group-item d-flex justify-content-between text-secondary">
-                <div>000</div>
-                <div class="text-white">Takedowns</div>
-                <div>000</div>
-              </li>
-              <li class="list-group-item d-flex justify-content-between text-secondary">
-                <div>000</div>
-                <div class="text-white">Submission attempts</div>
-                <div>000</div>
-              </li>
-            </ul>
-
-          </div>
-
+            <div class="card-header"> 2. Round</div>
+            <div class="card-header"> 3. Round</div>
           </div>
 
         </div>
 
         <div
-        class="tab-pane fade"
-        id="card-tab-pane"
-        role="tabpanel"
-        aria-labelledby="card-tab"
-        tabindex="0"
+          class="tab-pane fade"
+          id="card-tab-pane"
+          role="tabpanel"
+          aria-labelledby="card-tab"
+          tabindex="0"
         >
-        sdaasdasdasdasd
+
+         sadasdasasdasdas 
+
         </div>
       </div>
     </div>
-
 
     <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   </body>
