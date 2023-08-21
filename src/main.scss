@@ -1,0 +1,56 @@
+
+// Custom.scss
+// Option A: Include all of Bootstrap
+
+// Include any default variable overrides here (though functions won't be available)
+$body-bg: rgb(27, 27, 27);
+$body-color: rgb(73, 140, 255);
+$primary: rgb(73, 140, 255);
+$emphasis-color: rgb(68, 255, 0);
+$font-family-sans-serif: 'Poppins', sans-serif;
+
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+
+.body {
+    background: black url(/src/assets/3965580.jpg);
+}
+
+// .navbar{
+//     height: 150px;
+// }
+
+.custom-bg{
+    background: black url(../src/assets/banner.jpg);
+    background-size:cover;
+    background-position:0px -100px;
+}
+
+.navbar-collapse{
+    justify-content: flex-end;
+}
+
+.custom-button-width{
+    width: 100px;
+}
+
+@media (min-width: 992px)
+{
+    .navbar-expand-lg .navbar-nav .nav-link {
+        padding-right: 1.5rem;
+        padding-left: 1.5rem;
+    }
+}
+
+@media (max-width: 992px)
+{
+    .custombg {
+        height: 100px;
+        background-position:0px -38px;
+    }
+    .container-fluid.customnav{
+        justify-content: center;
+    }
+}
+
+// Then add additional custom code here
