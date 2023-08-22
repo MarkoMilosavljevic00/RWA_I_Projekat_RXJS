@@ -12185,6 +12185,10 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
+:root {
+  --bs-emphasis-color: rgb(255, 255, 255);
+}
+
 .body {
   background: black url(/src/assets/3965580.jpg);
 }

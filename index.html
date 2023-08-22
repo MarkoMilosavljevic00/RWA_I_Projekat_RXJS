@@ -75,7 +75,7 @@
                   <div class="col-12 col-md-6">
                     <div class="input-group">
                       <select
-                        class="form-select col-12"
+                        class="form-select col-12 text-center"
                         id="inputGroupSelect04"
                         aria-label="Example select with button addon"
                         data-np-intersection-state="visible"
@@ -116,14 +116,14 @@
         </div> -->
 
         <div
-          class="col-6 order-md-1 col-md-2 bg-secondary bg-opacity-25 rounded border d-flex flex-column justify-content-center align-items-center"
+          class="col-6 order-md-1 col-md-2 bg-secondary bg-opacity-25 rounded border text-white d-flex flex-column justify-content-center align-items-center"
         >
           Your points:
           <div class="fw-bold fs-2">0</div>
         </div>
 
         <div
-          class="col-6 order-md-4 col-md-2 bg-secondary bg-opacity-25 rounded border d-flex flex-column justify-content-center align-items-center"
+          class="col-6 order-md-4 col-md-2 bg-secondary bg-opacity-25 rounded border text-white d-flex flex-column justify-content-center align-items-center"
         >
           Opponent points:
           <div class="fw-bold fs-2">0</div>
@@ -209,12 +209,11 @@
                 Select the difficulty level and start picking your fights:
               </p>
               <select
-                class="form-select mx-auto my-2"
+                class="form-select mx-auto my-2 text-center"
                 style="width: 200px"
                 id="inputGroupSelect04"
               >
-                <option selected>Choose difficulty...</option>
-                <option value="1">EASY</option>
+                <option selected value="1">EASY</option>
                 <option value="2">MEDIUM</option>
                 <option value="3">HARD</option>
               </select>
@@ -224,7 +223,7 @@
         </div>
 
         <div
-          class="tab-pane fade"
+          class="tab-pane fade show active"
           id="home-tab-pane"
           role="tabpanel"
           aria-labelledby="home-tab"
@@ -382,11 +381,11 @@
             </div>
 
             <div
-              class="col-md-2 text-center order-md-0 border rounded bg-secondary bg-opacity-10 p-2"
+              class="col-md-2 text-center order-md-0 border rounded bg-secondary bg-opacity-10 p-2 text-white"
             >
               Sport:
               <select
-                class="form-select form-select-sm m-auto fw-light text-primary p-1"
+                class="form-select form-select-sm m-auto fw-light text-white p-1"
                 aria-label="Default select example"
                 style="max-width: 150px"
                 data-np-intersection-state="visible"
@@ -399,7 +398,7 @@
 
               Weightclass:
               <select
-                class="form-select form-select-sm m-auto fw-light text-primary"
+                class="form-select form-select-sm m-auto fw-light text-white"
                 aria-label="Default select example"
                 style="max-width: 150px"
                 data-np-intersection-state="visible"
@@ -411,9 +410,11 @@
               </select>
 
               <hr />
+              <div class="text-white">
 
-              Winner:
-              <div class="row justify-content-between ms-2">
+                
+                Winner:
+                <div class="row justify-content-between ms-2">
                 <div class="col-auto">
                   <div class="form-check form-check-inline">
                     <input
@@ -422,7 +423,7 @@
                       name="inlineRadioOptions"
                       id="inlineRadio1"
                       value="option1"
-                    />
+                      />
                   </div>
                 </div>
                 <div class="col-auto">
@@ -436,178 +437,157 @@
                     />
                   </div>
                 </div>
+                </div>
+
+                Method:
+                <select
+                class="form-select form-select-sm m-auto fw-light text-white"
+                aria-label="Default select example"
+                style="max-width: 150px"
+                data-np-intersection-state="visible"
+              >
+                <option selected="">Open this select menu</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+                </select>
+              
+                Round:
+                <select
+                class="form-select form-select-sm m-auto fw-light text-white"
+                aria-label="Default select example"
+                style="max-width: 150px"
+                data-np-intersection-state="visible"
+                >
+                <option selected="">Open this select menu</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+                </select>
               </div>
-
-              Method:
-              <select
-                class="form-select form-select-sm m-auto fw-light text-primary"
-                aria-label="Default select example"
-                style="max-width: 150px"
-                data-np-intersection-state="visible"
-              >
-                <option selected="">Open this select menu</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-              </select>
-
-              Round:
-              <select
-                class="form-select form-select-sm m-auto fw-light text-primary"
-                aria-label="Default select example"
-                style="max-width: 150px"
-                data-np-intersection-state="visible"
-              >
-                <option selected="">Open this select menu</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-              </select>
             </div>
           </div>
 
           <div class="card bg-secondary bg-opacity-25">
             <div class="card-header fs-2 fw-bold">Card</div>
 
-            <div
-              class="d-flex flex-row m-2 row rounded border border-black bg-black bg-opacity-25 p-2"
-            >
-              <div class="col-md-6 col-12 d-flex">
-                <div
-                  class="text-center align-items-center col-5 fw-bold border border-danger border-2"
-                >
-                  <p class="fw-light"></p>
-                  <img
-                    src="./src/assets/default_fighter.png"
-                    style="max-width: 50px"
-                  />
-                  <div>Ime Prezime</div>
+            <div class="row rounded border border-black bg-black bg-opacity-25 text-white p-2 m-2">
+              <div class="row col-lg-8 d-flex col-12 align-items-center">
+                <img class="col-xxl-2 col-md-1 col-6 order-md-0 img-fluid pe-2" src="./src/assets/default_fighter.png" >
+                <img class="col-xxl-2 col-md-1 col-6 order-md-4 img-fluid ps-2" src="./src/assets/default_fighter.png">
+                <div class="col-xxl-2 col-md-4 col-12 order-md-2 align-self-start text-center">
+                  <div class="small">Boxing</div>
+                  <div class="small">Middleweight bout</div>
+                  <div class="fs-1 fw-bold mt-lg-4">VS</div>
                 </div>
-                <div
-                  class="col-2 d-flex justify-content-center align-items-center fs-2 fw-bold"
-                >
-                  VS
+                <div class="col-md-3 col-6 order-md-1">
+                  <i class="bi bi-star-fill small text-warning">Favourite</i>
+                  <div class="text-danger fs-4">Ime Prezime</div>
+                  <i class="bi bi-trophy-fill text-success">Winner</i>
                 </div>
-                <div class="text-center col-5">
-                  <p class="fw-light text-success">
-                    <i class="bi bi-star-fill"> Fav </i>
-                  </p>
-                  <img
-                    src="./src/assets/default_fighter.png"
-                    style="max-width: 50px"
-                  />
-                  <div>Ime Prezime</div>
+                <div class="col-md-3 col-6 order-md-3 text-end ">
+                  <!-- <i class="bi bi-star small">Underdog</i> -->
+                  <div class="text-primary fs-4">Ime Prezime</div>
                 </div>
               </div>
 
-              <div class="col-md-4 col-12 d-flex flex-column">
-                <div>Sport: <label class="fw-bold">Boxing</label></div>
-                <div>Winner: <label class="fw-bold">Ime Prezime</label></div>
-                <div>Method: <label class="fw-bold">KO/TKO</label></div>
-                <div>Round: <label class="fw-bold">1</label></div>
+
+              <div class="col-lg-3 col-12 d-flex flex-column text-center align-items-center">
+                <div class="fs-4 fw-bold ">Match Prediction</div>
+                <div class="rounded bg-secondary bg-opacity-10 p-2 m-3">
+                  <div>Winner: <label class="fw-bold">Ime Prezime</label></div>
+                  <div>Method: <label class="fw-bold">KO/TKO</label></div>
+                  <div>Round: <label class="fw-bold">1</label></div>
+                </div>
               </div>
 
-              <div class="col-md-2 col-12 align-items-center d-flex">
+              <div class="col-lg-1 col-12 text-center align-self-center">
                 <button class="btn btn-danger">
                   <i class="bi bi-trash"></i> Remove
                 </button>
               </div>
             </div>
 
-            <div
-              class="d-flex flex-row m-2 row rounded border border-black bg-black bg-opacity-25 p-2"
-            >
-              <div class="col-md-6 col-12 d-flex">
-                <div
-                  class="text-center align-items-center col-5 fw-bold border border-danger border-2"
-                >
-                  <p class="fw-light"></p>
-                  <img
-                    src="./src/assets/default_fighter.png"
-                    style="max-width: 50px"
-                  />
-                  <div>Ime Prezime</div>
+            <div class="row rounded border border-black bg-black bg-opacity-25 text-white p-2 m-2">
+              <div class="row col-lg-8 d-flex col-12 align-items-center">
+                <img class="col-xxl-2 col-md-1 col-6 order-md-0 img-fluid pe-2" src="./src/assets/default_fighter.png" >
+                <img class="col-xxl-2 col-md-1 col-6 order-md-4 img-fluid ps-2" src="./src/assets/default_fighter.png">
+                <div class="col-xxl-2 col-md-4 col-12 order-md-2 align-self-start text-center">
+                  <div class="small">Boxing</div>
+                  <div class="small">Middleweight bout</div>
+                  <div class="fs-1 fw-bold mt-lg-4">VS</div>
                 </div>
-                <div
-                  class="col-2 d-flex justify-content-center align-items-center fs-2 fw-bold"
-                >
-                  VS
+                <div class="col-md-3 col-6 order-md-1">
+                  <i class="bi bi-star-fill small text-warning">Favourite</i>
+                  <div class="text-danger fs-4">Ime Prezime</div>
+                  <i class="bi bi-trophy-fill text-success">Winner (2R KO)</i>
                 </div>
-                <div class="text-center col-5">
-                  <p class="fw-light text-success">
-                    <i class="bi bi-star-fill"> Fav </i>
-                  </p>
-                  <img
-                    src="./src/assets/default_fighter.png"
-                    style="max-width: 50px"
-                  />
-                  <div>Ime Prezime</div>
+                <div class="col-md-3 col-6 order-md-3 text-end ">
+                  <!-- <i class="bi bi-star small">Underdog</i> -->
+                  <div class="text-primary fs-4">Ime Prezime</div>
                 </div>
               </div>
 
-              <div class="col-md-4 col-12 d-flex flex-column">
-                <div>Sport: <label class="fw-bold">Boxing</label></div>
-                <div>Winner: <label class="fw-bold">Ime Prezime</label></div>
-                <div>Method: <label class="fw-bold">KO/TKO</label></div>
-                <div>Round: <label class="fw-bold">1</label></div>
+
+              <div class="col-lg-3 col-12 d-flex flex-column text-center align-items-center">
+                <div class="fs-4 fw-bold ">Match Prediction</div>
+                <div class="rounded bg-secondary bg-opacity-10 p-2 m-3">
+                  <div>Winner: <label class="fw-bold">Ime Prezime</label></div>
+                  <div>Method: <label class="fw-bold">KO/TKO</label></div>
+                  <div>Round: <label class="fw-bold">1</label></div>
+                </div>
               </div>
 
-              <div class="col-md-2 col-12 align-items-center d-flex">
+              <div class="col-lg-1 col-12 text-center align-self-center">
                 <button class="btn btn-danger">
                   <i class="bi bi-trash"></i> Remove
                 </button>
               </div>
             </div>
 
-            <div
-              class="d-flex flex-row m-2 row rounded border border-black bg-black bg-opacity-25 p-2"
-            >
-              <div class="col-md-6 col-12 d-flex">
-                <div
-                  class="text-center align-items-center col-5 fw-bold border border-danger border-2"
-                >
-                  <p class="fw-light text-success">
-                    <i class="bi bi-star-fill"> Fav </i>
-                  </p>
-                  <img
-                    src="./src/assets/default_fighter.png"
-                    style="max-width: 50px"
-                  />
-                  <div>Ime Prezime</div>
+            <div class="row rounded border border-black bg-black bg-opacity-25 text-white p-2 m-2">
+              <div class="row col-lg-8 d-flex col-12 align-items-center">
+                <img class="col-xxl-2 col-md-1 col-6 order-md-0 img-fluid pe-2" src="./src/assets/default_fighter.png" >
+                <img class="col-xxl-2 col-md-1 col-6 order-md-4 img-fluid ps-2" src="./src/assets/default_fighter.png">
+                <div class="col-xxl-2 col-md-4 col-12 order-md-2 align-self-start text-center">
+                  <div class="small">Boxing</div>
+                  <div class="small">Middleweight bout</div>
+                  <div class="fs-1 fw-bold mt-lg-4">VS</div>
                 </div>
-                <div
-                  class="col-2 d-flex justify-content-center align-items-center fs-2 fw-bold"
-                >
-                  VS
+                <div class="col-md-3 col-6 order-md-1">
+                  <i class="bi bi-star-fill small text-warning">Favourite</i>
+                  <div class="text-danger fs-4">Ime Prezime</div>
+                  <i class="bi bi-trophy-fill text-success">Winner</i>
                 </div>
-                <div class="text-center col-5">
-                  <p class="fw-light"></p>
-                  <img
-                    src="./src/assets/default_fighter.png"
-                    style="max-width: 50px"
-                  />
-                  <div>Ime Prezime</div>
+                <div class="col-md-3 col-6 order-md-3 text-end ">
+                  <!-- <i class="bi bi-star small">Underdog</i> -->
+                  <div class="text-primary fs-4">Ime Prezime</div>
                 </div>
               </div>
 
-              <div class="col-md-4 col-12 d-flex flex-column">
-                <div>Sport: <label class="fw-bold">Boxing</label></div>
-                <div>Winner: <label class="fw-bold">Ime Prezime</label></div>
-                <div>Method: <label class="fw-bold">KO/TKO</label></div>
-                <div>Round: <label class="fw-bold">1</label></div>
+
+              <div class="col-lg-3 col-12 d-flex flex-column text-center align-items-center">
+                <div class="fs-4 fw-bold ">Match Prediction</div>
+                <div class="rounded bg-secondary bg-opacity-10 p-2 m-3">
+                  <div>Winner: <label class="fw-bold">Ime Prezime</label></div>
+                  <div>Method: <label class="fw-bold">KO/TKO</label></div>
+                  <div>Round: <label class="fw-bold">1</label></div>
+                </div>
               </div>
 
-              <div class="col-md-2 col-12 align-items-center d-flex">
+              <div class="col-lg-1 col-12 text-center align-self-center">
                 <button class="btn btn-danger">
                   <i class="bi bi-trash"></i> Remove
                 </button>
               </div>
+
             </div>
+
           </div>
         </div>
 
         <div
-          class="tab-pane fade show active"
+          class="tab-pane fade"
           id="live-tab-pane"
           role="tabpanel"
           aria-labelledby="live-tab"
