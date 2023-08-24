@@ -181,22 +181,23 @@
         <li class="nav-item" role="presentation">
           <button
             class="nav-link"
-            id="card-tab"
+            id="result-tab"
             data-bs-toggle="tab"
-            data-bs-target="#card-tab-pane"
+            data-bs-target="#result-tab-pane"
             type="button"
             role="tab"
-            aria-controls="card-tab-pane"
+            aria-controls="result-tab-pane"
             aria-selected="false"
-            href="#card"
+            href="#result"
           >
-            Card
+            Result
           </button>
         </li>
       </ul>
+
       <div class="tab-content" id="myTabContent">
         <div
-          class="tab-pane fade"
+          class="tab-pane fade show active"
           id="start-tab-pane"
           role="tabpanel"
           aria-labelledby="start-tab"
@@ -223,15 +224,15 @@
         </div>
 
         <div
-          class="tab-pane fade show active"
+          class="tab-pane fade"
           id="home-tab-pane"
           role="tabpanel"
           aria-labelledby="home-tab"
           tabindex="0"
         >
-          <div class="row d-flex justify-content-center m-2">
+          <div class="row d-flex justify-content-center my-4">
             <div
-              class="col-md-5 d-flex justify-content-center justify-content-md-end"
+              class="col-md-3 col-6 d-flex justify-content-center justify-content-md-end  my-auto"
             >
               <div
                 class="text-center m-2 text-danger border border-danger bg-danger bg-opacity-25"
@@ -306,7 +307,7 @@
             </div>
 
             <div
-              class="col-md-5 d-flex justify-content-center justify-content-md-start order-md-1"
+              class="col-md-3 col-6 d-flex justify-content-center justify-content-md-start order-md-1 my-auto"
             >
               <div
                 class="text-center m-2 text-primary border border-primary bg-primary bg-opacity-25"
@@ -381,11 +382,11 @@
             </div>
 
             <div
-              class="col-md-2 text-center order-md-0 border rounded bg-secondary bg-opacity-10 p-2 text-white"
+              class="col-md-4 col-9 text-center order-md-0 border rounded p-2 text-white fs-4 fw-bold"
             >
               Sport:
               <select
-                class="form-select form-select-sm m-auto fw-light text-white p-1"
+                class="form-select form-select-sm m-auto fw-light text-white p-1 mb-2"
                 aria-label="Default select example"
                 style="max-width: 150px"
                 data-np-intersection-state="visible"
@@ -398,7 +399,7 @@
 
               Weightclass:
               <select
-                class="form-select form-select-sm m-auto fw-light text-white"
+                class="form-select form-select-sm m-auto fw-light text-white mb-2"
                 aria-label="Default select example"
                 style="max-width: 150px"
                 data-np-intersection-state="visible"
@@ -414,34 +415,19 @@
 
                 
                 Winner:
-                <div class="row justify-content-between ms-2">
-                <div class="col-auto">
-                  <div class="form-check form-check-inline">
-                    <input
-                      class="form-check-input bg-danger"
-                      type="radio"
-                      name="inlineRadioOptions"
-                      id="inlineRadio1"
-                      value="option1"
-                      />
+                <div class="row justify-content-center mb-2">
+                  <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                    <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+                    <label class="btn btn-outline-danger" for="btnradio1">Ime Prezime</label>
+                  
+                    <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="btnradio2">Ime Prezime</label>
                   </div>
-                </div>
-                <div class="col-auto">
-                  <div class="form-check form-check-inline">
-                    <input
-                      class="form-check-input bg-primary"
-                      type="radio"
-                      name="inlineRadioOptions"
-                      id="inlineRadio2"
-                      value="option2"
-                    />
-                  </div>
-                </div>
                 </div>
 
                 Method:
                 <select
-                class="form-select form-select-sm m-auto fw-light text-white"
+                class="form-select form-select-sm m-auto fw-light text-white mb-2"
                 aria-label="Default select example"
                 style="max-width: 150px"
                 data-np-intersection-state="visible"
@@ -454,7 +440,7 @@
               
                 Round:
                 <select
-                class="form-select form-select-sm m-auto fw-light text-white"
+                class="form-select form-select-sm m-auto fw-light text-white mb-2"
                 aria-label="Default select example"
                 style="max-width: 150px"
                 data-np-intersection-state="visible"
@@ -464,22 +450,32 @@
                 <option value="2">Two</option>
                 <option value="3">Three</option>
                 </select>
+
+                <hr>
+
+                <div class="btn-group-vertical mb-2" role="group" aria-label="Vertical button group">
+                  <button type="button" class="btn btn-outline-secondary">Add Fight</button>
+                  <button type="button" class="btn btn-primary">Start Fights</button>
+                </div>  
+
+
               </div>
             </div>
+
           </div>
 
-          <div class="card bg-secondary bg-opacity-25">
-            <div class="card-header fs-2 fw-bold">Card</div>
+          <div class="card bg-secondary bg-opacity-25 my-5">
+            <div class="card-header fs-2 fw-bold">Fight Card</div>
 
             <div class="row rounded border border-black bg-black bg-opacity-25 text-white p-2 m-2">
-              <div class="row col-lg-8 d-flex col-12 align-items-center">
-                <img class="col-xxl-2 col-md-1 col-6 order-md-0 img-fluid pe-2" src="./src/assets/default_fighter.png" >
-                <img class="col-xxl-2 col-md-1 col-6 order-md-4 img-fluid ps-2" src="./src/assets/default_fighter.png">
-                <div class="col-xxl-2 col-md-4 col-12 order-md-2 align-self-start text-center">
+              <div class="row col-lg-8 d-flex col-12 align-items-center justify-content-center mx-auto">
+                <img class="col-xxl-2 col-md-1 col-3 order-md-4 img-fluid ps-2 me-auto" src="./src/assets/default_fighter.png"  style="max-width: 135px;">
+                <div class="col-xxl-2 col-md-4 col-6 order-md-2 align-self-start text-center">
                   <div class="small">Boxing</div>
                   <div class="small">Middleweight bout</div>
                   <div class="fs-1 fw-bold mt-lg-4">VS</div>
                 </div>
+                <img class="col-xxl-2 col-md-1 col-3 order-md-0 img-fluid pe-2 ms-auto" src="./src/assets/default_fighter.png" style="max-width: 135px;">
                 <div class="col-md-3 col-6 order-md-1">
                   <i class="bi bi-star-fill small text-warning">Favourite</i>
                   <div class="text-danger fs-4">Ime Prezime</div>
@@ -493,7 +489,7 @@
 
 
               <div class="col-lg-3 col-12 d-flex flex-column text-center align-items-center">
-                <div class="fs-4 fw-bold ">Match Prediction</div>
+                <div class="fs-5 ">Match Prediction</div>
                 <div class="rounded bg-secondary bg-opacity-10 p-2 m-3">
                   <div>Winner: <label class="fw-bold">Ime Prezime</label></div>
                   <div>Method: <label class="fw-bold">KO/TKO</label></div>
@@ -509,51 +505,14 @@
             </div>
 
             <div class="row rounded border border-black bg-black bg-opacity-25 text-white p-2 m-2">
-              <div class="row col-lg-8 d-flex col-12 align-items-center">
-                <img class="col-xxl-2 col-md-1 col-6 order-md-0 img-fluid pe-2" src="./src/assets/default_fighter.png" >
-                <img class="col-xxl-2 col-md-1 col-6 order-md-4 img-fluid ps-2" src="./src/assets/default_fighter.png">
-                <div class="col-xxl-2 col-md-4 col-12 order-md-2 align-self-start text-center">
+              <div class="row col-lg-8 d-flex col-12 align-items-center justify-content-center mx-auto">
+                <img class="col-xxl-2 col-md-1 col-3 order-md-4 img-fluid ps-2 me-auto" src="./src/assets/default_fighter.png"  style="max-width: 135px;">
+                <div class="col-xxl-2 col-md-4 col-6 order-md-2 align-self-start text-center">
                   <div class="small">Boxing</div>
                   <div class="small">Middleweight bout</div>
                   <div class="fs-1 fw-bold mt-lg-4">VS</div>
                 </div>
-                <div class="col-md-3 col-6 order-md-1">
-                  <i class="bi bi-star-fill small text-warning">Favourite</i>
-                  <div class="text-danger fs-4">Ime Prezime</div>
-                  <i class="bi bi-trophy-fill text-success">Winner (2R KO)</i>
-                </div>
-                <div class="col-md-3 col-6 order-md-3 text-end ">
-                  <!-- <i class="bi bi-star small">Underdog</i> -->
-                  <div class="text-primary fs-4">Ime Prezime</div>
-                </div>
-              </div>
-
-
-              <div class="col-lg-3 col-12 d-flex flex-column text-center align-items-center">
-                <div class="fs-4 fw-bold ">Match Prediction</div>
-                <div class="rounded bg-secondary bg-opacity-10 p-2 m-3">
-                  <div>Winner: <label class="fw-bold">Ime Prezime</label></div>
-                  <div>Method: <label class="fw-bold">KO/TKO</label></div>
-                  <div>Round: <label class="fw-bold">1</label></div>
-                </div>
-              </div>
-
-              <div class="col-lg-1 col-12 text-center align-self-center">
-                <button class="btn btn-danger">
-                  <i class="bi bi-trash"></i> Remove
-                </button>
-              </div>
-            </div>
-
-            <div class="row rounded border border-black bg-black bg-opacity-25 text-white p-2 m-2">
-              <div class="row col-lg-8 d-flex col-12 align-items-center">
-                <img class="col-xxl-2 col-md-1 col-6 order-md-0 img-fluid pe-2" src="./src/assets/default_fighter.png" >
-                <img class="col-xxl-2 col-md-1 col-6 order-md-4 img-fluid ps-2" src="./src/assets/default_fighter.png">
-                <div class="col-xxl-2 col-md-4 col-12 order-md-2 align-self-start text-center">
-                  <div class="small">Boxing</div>
-                  <div class="small">Middleweight bout</div>
-                  <div class="fs-1 fw-bold mt-lg-4">VS</div>
-                </div>
+                <img class="col-xxl-2 col-md-1 col-3 order-md-0 img-fluid pe-2 ms-auto" src="./src/assets/default_fighter.png" style="max-width: 135px;">
                 <div class="col-md-3 col-6 order-md-1">
                   <i class="bi bi-star-fill small text-warning">Favourite</i>
                   <div class="text-danger fs-4">Ime Prezime</div>
@@ -567,7 +526,7 @@
 
 
               <div class="col-lg-3 col-12 d-flex flex-column text-center align-items-center">
-                <div class="fs-4 fw-bold ">Match Prediction</div>
+                <div class="fs-5 ">Match Prediction</div>
                 <div class="rounded bg-secondary bg-opacity-10 p-2 m-3">
                   <div>Winner: <label class="fw-bold">Ime Prezime</label></div>
                   <div>Method: <label class="fw-bold">KO/TKO</label></div>
@@ -580,25 +539,62 @@
                   <i class="bi bi-trash"></i> Remove
                 </button>
               </div>
+            </div>
 
+            <div class="row rounded border border-black bg-black bg-opacity-25 text-white p-2 m-2">
+              <div class="row col-lg-8 d-flex col-12 align-items-center justify-content-center mx-auto">
+                <img class="col-xxl-2 col-md-1 col-3 order-md-4 img-fluid ps-2 me-auto" src="./src/assets/default_fighter.png"  style="max-width: 135px;">
+                <div class="col-xxl-2 col-md-4 col-6 order-md-2 align-self-start text-center">
+                  <div class="small">Boxing</div>
+                  <div class="small">Middleweight bout</div>
+                  <div class="fs-1 fw-bold mt-lg-4">VS</div>
+                </div>
+                <img class="col-xxl-2 col-md-1 col-3 order-md-0 img-fluid pe-2 ms-auto" src="./src/assets/default_fighter.png" style="max-width: 135px;">
+                <div class="col-md-3 col-6 order-md-1">
+                  <i class="bi bi-star-fill small text-warning">Favourite</i>
+                  <div class="text-danger fs-4">Ime Prezime</div>
+                  <i class="bi bi-trophy-fill text-success">Winner</i>
+                </div>
+                <div class="col-md-3 col-6 order-md-3 text-end ">
+                  <!-- <i class="bi bi-star small">Underdog</i> -->
+                  <div class="text-primary fs-4">Ime Prezime</div>
+                </div>
+              </div>
+
+
+              <div class="col-lg-3 col-12 d-flex flex-column text-center align-items-center">
+                <div class="fs-5 ">Match Prediction</div>
+                <div class="rounded bg-secondary bg-opacity-10 p-2 m-3">
+                  <div>Winner: <label class="fw-bold">Ime Prezime</label></div>
+                  <div>Method: <label class="fw-bold">KO/TKO</label></div>
+                  <div>Round: <label class="fw-bold">1</label></div>
+                </div>
+              </div>
+
+              <div class="col-lg-1 col-12 text-center align-self-center">
+                <button class="btn btn-danger">
+                  <i class="bi bi-trash"></i> Remove
+                </button>
+              </div>
             </div>
 
           </div>
+
         </div>
 
         <div
-          class="tab-pane fade"
+          class="tab-pane fade "
           id="live-tab-pane"
           role="tabpanel"
           aria-labelledby="live-tab"
           tabindex="0"
         >
-          <div class="row d-flex justify-content-center m-2">
+          <div class="row d-flex justify-content-center my-4">
             <div
               class="col-md-4 col-6 d-flex justify-content-center justify-content-md-end align-items-center"
             >
               <div
-                class="text-center text-danger border border-secondary bg-secondary bg-opacity-25 align-items-center"
+                class="text-center text-danger border border-danger bg-danger bg-opacity-25 align-items-center"
                 style="width: 18rem"
               >
                 <h4 class="fw-bold">Red corner</h4>
@@ -664,7 +660,7 @@
               class="col-md-4 col-6 d-flex justify-content-center justify-content-md-start order-md-1 align-items-center"
             >
               <div
-                class="text-center text-primary border border-secondary bg-secondary bg-opacity-25 align-items-center"
+                class="text-center text-primary border border-primary bg-primary bg-opacity-25 align-items-center"
                 style="width: 18rem"
               >
                 <h4 class="fw-bold">Blue corner</h4>
@@ -727,7 +723,7 @@
             </div>
 
             <div
-              class="col-md-4 d-flex flex-column align-items-center text-center rounded border fs-4 text-white"
+              class="col-md-4 col-11 d-flex flex-column align-items-center text-center rounded border fs-4 text-white mt-3"
             >
               <b>Time:</b>
               <div
@@ -737,7 +733,7 @@
                 <span>R1</span>
               </div>
               <p
-                class="d-flex flex-column bg-secondary bg-opacity-25 rounded p-1 fs-6 text-white"
+                class="d-flex flex-column bg-secondary bg-opacity-25 rounded p-1 fs-6 text-white custom-font"
               >
                 <small>Boxing</small>
                 <small>Middleweight bout</small>
@@ -771,23 +767,23 @@
               </div>
 
               <b>Match facts:</b>
-              <ul class="col-12 list-group fs-6 p-2">
+              <ul class="col-12 list-group  fs-6 p-2">
                 <li
-                  class="list-group-item d-flex justify-content-between text-secondary"
+                  class="list-group-item d-flex justify-content-between text-secondary custom-font"
                 >
                   <div>000</div>
                   <div class="text-white">Significant strikes</div>
                   <div>000</div>
                 </li>
                 <li
-                  class="list-group-item d-flex justify-content-between text-secondary"
+                  class="list-group-item d-flex justify-content-between text-secondary custom-font"
                 >
                   <div>000</div>
                   <div class="text-white">Takedowns</div>
                   <div>000</div>
                 </li>
                 <li
-                  class="list-group-item d-flex justify-content-between text-secondary"
+                  class="list-group-item d-flex justify-content-between text-secondary custom-font"
                 >
                   <div>000</div>
                   <div class="text-white">Submission attempts</div>
@@ -796,22 +792,62 @@
               </ul>
             </div>
           </div>
-
-          <div class="card">
+          
+          <div class="card mt-5 col-md-8 col-12 mx-auto">
             <div class="card-header"> 1. Round</div>
             <div class="card-body">
-              <div class="d-flex flex-row text-white small">
-                <div class="me-4">R1 1'37''</div>
-                <div class=""><img class="img-fluid" src="./src/assets/MMA-Fight-PNG-Image.png" style="max-width:25px"></div>
-                <div class="">Punch</div>
-                <div class="fw-light mx-1 text-secondary">(Jab)</div>
+              <div class="d-flex flex-row text-white custom-font justify-content-between bg-secondary bg-opacity-10">
+                <i class="bi bi-arrow-up"></i><div>Position: <span class="ms-1">Stand-up</span></div><i class="bi bi-arrow-up"></i>
               </div>
-              <div class="d-flex flex-row text-white small justify-content-end">
-                <div class="ms-4 order-3">R1 2'00''</div>
-                <div class="order-2"><img class="img-fluid" src="./src/assets/MMA-Fight-PNG-Image.png" style="max-width:25px"></div>
-                <div class="order-1">Kick</div>
-                <div class="order-0 fw-light mx-1 text-secondary">(Low-Kick)</div>
+
+              <!-- Levi ugao -->
+              <div class="d-flex flex-row text-white custom-font ">
+                <div class="d-flex col-md-1 col-2">0' 13"</div>
+                <div class="d-flex mx-2">
+                  <img class="img-fluid" src="./src/assets/punch-w.png" style="max-width:25px">
+                </div>
+                <div class="mx-1">Punch</div>
+                <div class="mx-1 fw-light text-secondary">(Jab)</div>
               </div>
+
+               <!-- Levi ugao - sa damage -->
+              <div class="d-flex flex-row text-white custom-font align-items-center py-1">
+                <div class="d-flex col-md-1 col-2">0' 13"</div>
+                <div class="d-flex border border-dark rounded p-1">
+                  <img class="img-fluid" src="./src/assets/punch-w.png" style="max-width:25px">
+                  <div class="mx-1 text-small">
+                    <div class="text-danger"><label>4</label>% Damage</div> <div class="text-primary"><label>1</label>% Energy</div>
+                  </div>
+                </div>
+                <div class="mx-1">Punch</div>
+                <div class="mx-1 fw-light text-secondary">(Jab)</div>
+              </div>
+
+              <!-- Desni ugao -->
+              <div class="d-flex flex-row-reverse text-white custom-font">
+                <div class="d-flex col-md-1 col-2 justify-content-end">0' 20"</div>
+                <div class="mx-1"><img class="img-fluid" src="./src/assets/punch-w.png" style="max-width:25px"></div>
+                <div class="mx-1">Punch</div>
+                <div class="mx-1 fw-light text-secondary">(Cross)</div>
+              </div>
+
+              <!-- Desni ugao - sa damage -->
+              <div class="d-flex flex-row-reverse text-white custom-font align-items-center py-1">
+                <div class="d-flex col-md-1 col-2 justify-content-end">0' 13"</div>
+                <div class="d-flex flex-row-reverse border border-dark rounded p-1">
+                  <img class="img-fluid" src="./src/assets/submission-w.png" style="max-width:25px">
+                  <div class="mx-1 text-small">
+                    <div class="text-danger"><label>4</label>% Damage</div> <div class="text-primary"><label>1</label>% Energy</div>
+                  </div>
+                </div>
+                <div class="mx-1">Punch</div>
+                <div class="mx-1 fw-light text-secondary">(Jab)</div>
+              </div>         
+
+              <div class="d-flex flex-row text-white custom-font justify-content-between bg-secondary bg-opacity-10">
+                <i class="bi bi-arrow-down"></i><div>Position: <span class="ms-1">Ground</span></div><i class="bi bi-arrow-down"></i>
+              </div>
+              
             </div>
             <div class="card-header"> 2. Round</div>
             <div class="card-header"> 3. Round</div>
@@ -821,16 +857,107 @@
 
         <div
           class="tab-pane fade"
-          id="card-tab-pane"
+          id="result-tab-pane"
           role="tabpanel"
-          aria-labelledby="card-tab"
+          aria-labelledby="result-tab"
           tabindex="0"
         >
 
-         sadasdasasdasdas 
+          <div class="card bg-secondary bg-opacity-25">
+
+            <div class="d-flex justify-content-between text-white fs-2 fw-bold text-center">
+              <div class="col-2 p-2 m-4 rounded border border-black bg-black bg-opacity-25 ">0</div>
+              <div class="text-center align-self-center">Total Points</div>
+              <div class="col-2 p-2 m-4  rounded border border-black bg-black bg-opacity-25">0</div>
+            </div>
+
+            <div class="row p-2 m-4 text-white rounded border border-black bg-black bg-opacity-25 mb-2">
+            
+            <div class="col-lg-12 col-12 order-md-0 mb-2">
+              <div class="d-flex row align-items-center justify-content-center">
+                <img class="col-md-1 col-6 order-md-0 img-fluid pe-2" src="./src/assets/default_fighter.png" >
+                <img class="col-md-1 col-6 order-md-4 img-fluid ps-2" src="./src/assets/default_fighter.png">
+                <div class="col-md-2 col-12 order-md-2 align-self-start text-center">
+                  <div class="small">Boxing</div>
+                  <div class="small">Middleweight bout</div>
+                  <div class="fs-1 fw-bold mt-lg-4">VS</div>
+                </div>
+                <div class="col-md-4 col-6 d-flex row order-md-1">
+                  <div class="col-lg-6 col-12">
+                    <i class="bi bi-star-fill small text-warning">Favourite</i>
+                    <div class="text-danger fs-4">Ime Prezime</div>
+                  </div>
+                  <div class="col-lg-6 col-12">
+                    <div><i class="bi bi-trophy-fill text-success px-2">Winner</i></div>
+                    <div class="fst-italic text-success"><img src="./src/assets/punch-g.png" class="img-fluid text-success" style="max-width: 20px;"> KO/TKO</div>
+                    <div><i class="bi bi-clock-fill text-success">1st Round</i></div>
+                  </div>
+                </div>
+                <div class="col-md-4 col-6 d-flex row order-md-3 text-end ">
+                  <!-- <i class="bi bi-star small">Underdog</i> -->
+                  <div class="col-lg-6 col-12 order-lg-1">
+                    <div class="text-primary fs-4">Ime Prezime</div>
+                  </div>
+                  <div class="col-lg-6 col-12 order-lg-0">
+                    <div><i class="bi bi-trophy-fill text-success px-2">Winner</i></div>
+                    <div class="fst-italic text-success"><img src="./src/assets/punch-g.png" class="img-fluid text-success" style="max-width: 20px;"> KO/TKO</div>
+                    <div><i class="bi bi-clock-fill text-success">1st Round</i></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <hr>
+            
+            <div class="col-12">
+
+              <div class="col-12 d-flex text-center my-2">
+                <div class="fs-5 col-5">Your Pick</div>
+                <div class="fs-2 col-2 bg-secondary bg-opacity-25 rounded">Picks</div>
+                <div class="fs-5 col-5">Opponent's Pick</div>
+              </div>
+
+              <div class="row small mx-auto bg-secondary bg-opacity-25">
+                <div class="col-sm-4 col-12 order-0 order-sm-2 text-center">Winner</div>
+                <div class="col-sm-1 col-2 order-sm-0"><i class="bi bi-check2-square text-success">+5</i></div>
+                <div class="col-sm-3 col-4 order-sm-1 text-end">Ime Prezime</div>
+                <div class="col-sm-3 col-4 order-sm-3 text-start">Ime Prezime</div>
+                <div class="col-sm-1 col-2 order-sm-4 text-end d-flex flex-row-reverse"><i class="bi bi-check2-square text-success">+5</i></div>
+              </div>
+
+              <div class="row small mx-auto">
+                <div class="col-sm-4 col-12 order-0 order-sm-2 text-center">Method</div>
+                <div class="col-sm-1 col-2 order-sm-0"><i class="bi bi-check2-square text-success">+5</i></div>
+                <div class="col-sm-3 col-4 order-sm-1 text-end">KO/TKO</div>
+                <div class="col-sm-3 col-4 order-sm-3 text-start">KO/TKO</div>
+                <div class="col-sm-1 col-2 order-sm-4 text-end d-flex flex-row-reverse"><i class="bi bi-check2-square text-success">+5</i></div>
+              </div>
+
+              <div class="row small mx-auto bg-secondary bg-opacity-25">
+                <div class="col-sm-4 col-12 order-0 order-sm-2 text-center">Round</div>
+                <div class="col-sm-1 col-2 order-sm-0"><i class="bi bi-check2-square text-success">+5</i></div>
+                <div class="col-sm-3 col-4 order-sm-1 text-end">1</div>
+                <div class="col-sm-3 col-4 order-sm-3 text-start">1</div>
+                <div class="col-sm-1 col-2 order-sm-4 text-end d-flex flex-row-reverse"><i class="bi bi-check2-square text-success">+5</i></div>
+              </div>
+
+              <div class="row mx-auto fw-bold">
+                <div class="col-sm-4 col-12 order-0 order-sm-2 text-center">Points</div>
+                <div class="col-sm-1 col-2 order-sm-0">25</div>
+                <div class="col-sm-3 col-4 order-sm-1 text-end"></div>
+                <div class="col-sm-3 col-4 order-sm-3 text-start"></div>
+                <div class="col-sm-1 col-2 order-sm-4 text-end d-flex flex-row-reverse">25</div>
+              </div>
+
+            </div>
+
+            </div>
+
+          </div>
 
         </div>
       </div>
+
     </div>
 
     <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

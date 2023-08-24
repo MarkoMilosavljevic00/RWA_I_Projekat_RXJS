@@ -20,10 +20,6 @@ $font-family-sans-serif: 'Poppins', sans-serif;
     background: black url(/src/assets/3965580.jpg);
 }
 
-// .navbar{
-//     height: 150px;
-// }
-
 .custom-bg{
     background: black url(../src/assets/banner.jpg);
     background-size:cover;
@@ -36,6 +32,10 @@ $font-family-sans-serif: 'Poppins', sans-serif;
 
 .custom-button-width{
     width: 100px;
+}
+
+.text-small{
+    font-size:8px;
 }
 
 @media (min-width: 992px)
@@ -56,5 +56,29 @@ $font-family-sans-serif: 'Poppins', sans-serif;
         justify-content: center;
     }
 }
+
+@media (max-width: 575.98px) {
+    .custom-font {
+      font-size: 12px; 
+    }
+  }
+
+@media (min-width: 576px) {
+    .custom-font {
+      font-size: 14px; 
+    }
+  }
+
+  @media (min-width: 768) {
+    .custom-font {
+      font-size: 16px;
+    }
+  }
+
+//   @media (min-width: 992px) {
+//     .custom-font {
+//       font-size: 16px; 
+//   }
+// }
 
 // Then add additional custom code here

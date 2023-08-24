@@ -12207,6 +12207,10 @@ textarea.form-control-lg {
   width: 100px;
 }
 
+.text-small {
+  font-size: 8px;
+}
+
 @media (min-width: 992px) {
   .navbar-expand-lg .navbar-nav .nav-link {
     padding-right: 1.5rem;
@@ -12220,5 +12224,20 @@ textarea.form-control-lg {
   }
   .container-fluid.customnav, .customnav.container-sm, .customnav.container-md, .customnav.container-lg, .customnav.container-xl, .customnav.container-xxl {
     justify-content: center;
+  }
+}
+@media (max-width: 575.98px) {
+  .custom-font {
+    font-size: 12px;
+  }
+}
+@media (min-width: 576px) {
+  .custom-font {
+    font-size: 14px;
+  }
+}
+@media (min-width: 768) {
+  .custom-font {
+    font-size: 16px;
   }
 }/*# sourceMappingURL=main.css.map */
