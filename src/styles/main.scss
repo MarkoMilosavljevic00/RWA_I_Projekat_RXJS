@@ -10,7 +10,7 @@ $primary: rgb(73, 140, 255);
 // $primary: rgb(255,255,255);
 $font-family-sans-serif: 'Poppins', sans-serif;
 
-@import "../node_modules/bootstrap/scss/bootstrap";
+@import "../../node_modules/bootstrap/scss/bootstrap";
 
 :root {
     --bs-emphasis-color: rgb(255, 255, 255);
