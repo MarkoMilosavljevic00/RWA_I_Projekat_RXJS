@@ -99,6 +99,72 @@ let zoki: Fighter = {
     overall:52
 }
 
+let pesa: Fighter = {
+    id: 7,
+    name: "Pesa Konj",
+    pictureSrc: "https://a.espncdn.com/combiner/i?img=/i/headshots/mma/players/full/3088812.png&w=350&h=254",
+    rule: Rules.MMA,
+    weightclass: Weightclass.Featherweight,
+    striking:16,
+    grappling:11,
+    overall:99
+}
+
+let riki: Fighter = {
+    id: 8,
+    name: "Diki Riki",
+    pictureSrc: "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcRwLeJuu2Zk5adv0jP7HDLtFUK8s4MfbTpzDSYoPaE3Ez97bVQ5gCTeigzP3KNh2JhsuaEdcNJp6y05LG0",
+    rule: Rules.MMA,
+    weightclass: Weightclass.Featherweight,
+    striking:92,
+    grappling:71,
+    overall:52
+}
+
+let siki: Fighter = {
+    id: 9,
+    name: "Slavko Stimac",
+    pictureSrc: "https://a.espncdn.com/combiner/i?img=/i/headshots/mma/players/full/3088812.png&w=350&h=254",
+    rule: Rules.MMA,
+    weightclass: Weightclass.Featherweight,
+    striking:16,
+    grappling:11,
+    overall:99
+}
+
+let kiki: Fighter = {
+    id: 10,
+    name: "Diki Riki",
+    pictureSrc: "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcRwLeJuu2Zk5adv0jP7HDLtFUK8s4MfbTpzDSYoPaE3Ez97bVQ5gCTeigzP3KNh2JhsuaEdcNJp6y05LG0",
+    rule: Rules.MMA,
+    weightclass: Weightclass.Featherweight,
+    striking:92,
+    grappling:71,
+    overall:52
+}
+
+let dziki: Fighter = {
+    id: 11,
+    name: "Pesa Konj",
+    pictureSrc: "https://a.espncdn.com/combiner/i?img=/i/headshots/mma/players/full/3088812.png&w=350&h=254",
+    rule: Rules.MMA,
+    weightclass: Weightclass.Featherweight,
+    striking:16,
+    grappling:11,
+    overall:99
+}
+
+let tiki: Fighter = {
+    id: 12,
+    name: "Diki Riki",
+    pictureSrc: "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcRwLeJuu2Zk5adv0jP7HDLtFUK8s4MfbTpzDSYoPaE3Ez97bVQ5gCTeigzP3KNh2JhsuaEdcNJp6y05LG0",
+    rule: Rules.MMA,
+    weightclass: Weightclass.Featherweight,
+    striking:92,
+    grappling:71,
+    overall:52
+}
+
 app.setSelectFromValues(CLASS_NAMES.WEIGHTCLASS_SELECT, Weightclass)
 app.setSelectFromValues(CLASS_NAMES.DIFF_LEVEL_SELECT, DifficultyLevel)
 app.setSelectFromValues(CLASS_NAMES.RULES_SELECT, Rules)
@@ -107,21 +173,34 @@ app.setSelectForRounds(CLASS_NAMES.ROUND_SELECT, Rules.Boxing)
 
 picker.setFighter(mirko, Corner.BlueCorner)
 picker.setFighter(nenad, Corner.RedCorner)
-let fight = picker.getFight();
-picker.getFightPredict(fight);
+let fight = picker.getFightInfo();
 picker.addFight(fight);
 
 picker.setFighter(zarko, Corner.BlueCorner)
 picker.setFighter(srzentic, Corner.RedCorner)
-fight = picker.getFight();
-picker.getFightPredict(fight);
+fight = picker.getFightInfo();
 picker.addFight(fight);
 
 picker.setFighter(nesa, Corner.BlueCorner)
 picker.setFighter(zoki, Corner.RedCorner)
-fight = picker.getFight();
-picker.getFightPredict(fight);
+fight = picker.getFightInfo();
 picker.addFight(fight);
 
-picker.removeFight(0);
+picker.setFighter(pesa, Corner.BlueCorner)
+picker.setFighter(riki, Corner.RedCorner)
+fight = picker.getFightInfo();
+picker.addFight(fight);
+
+picker.setFighter(siki, Corner.BlueCorner)
+picker.setFighter(kiki, Corner.RedCorner)
+fight = picker.getFightInfo();
+picker.addFight(fight);
+
+picker.setFighter(dziki, Corner.BlueCorner)
+picker.setFighter(tiki, Corner.RedCorner)
+fight = picker.getFightInfo();
+picker.addFight(fight);
+
+picker.removeFight(1);
+picker.removeFight(3);
 

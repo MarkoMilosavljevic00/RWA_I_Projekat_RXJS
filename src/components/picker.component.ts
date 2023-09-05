@@ -7,7 +7,7 @@ import { FightCard } from "../models/fightCard";
 import { Fighter } from "../models/fighter";
 import { Result } from "../models/result";
 import { CLASS_NAMES, TYPE_OF_ELEMENTS } from "../utilities/constants";
-import { getCheckedRadioValue, getSelectedValue, mapStringToEnum, selectElementByClass, selectElementByClassAndType, selectElementsByBeginOfClass, selectElementsByClass, showError } from "../utilities/helpers";
+import { getCheckedRadioValue, getSelectedValue, mapStringToEnum, selectElementByClass, selectElementByClassAndType, selectElementsByBeginOfClass, selectElementsByClass, selectElementsByPartialClass, showError } from "../utilities/helpers";
 
 export class PickerComponent{
     fightCard: FightCard;
@@ -50,20 +50,17 @@ export class PickerComponent{
         skillBars[2].innerHTML = fighter.overall.toString();
     }
 
-    getFightPredict(fight: Fight) : Fight{
+    getFightInfo(): Fight{
+        let fight: Fight = new Fight();
+        fight.rules = mapStringToEnum<Rules>(getSelectedValue(this.container as HTMLDivElement, CLASS_NAMES.RULES_SELECT), Rules);
+        fight.redCorner = this.currentRedCorner;
+        fight.blueCorner = this.currentBlueCorner;
+
         let pick: Result = new Result();
         pick.winner = mapStringToEnum<Corner>(getCheckedRadioValue(CLASS_NAMES.WINNER_RADIO), Corner);
         pick.method = mapStringToEnum<Method>(getSelectedValue(this.container as HTMLDivElement, CLASS_NAMES.METHOD_SELECT), Method);
         pick.round = parseInt(getSelectedValue(this.container as HTMLDivElement, CLASS_NAMES.ROUND_SELECT));
         fight.yourPick = pick;
-        return fight;
-    }
-
-    getFight(): Fight{
-        let fight: Fight = new Fight();
-        fight.rules = mapStringToEnum<Rules>(getSelectedValue(this.container as HTMLDivElement, CLASS_NAMES.RULES_SELECT), Rules);
-        fight.redCorner = this.currentRedCorner;
-        fight.blueCorner = this.currentBlueCorner;
         return fight
     }
 
@@ -77,6 +74,13 @@ export class PickerComponent{
         let fightTempDiv = selectElementByClass(this.container, CLASS_NAMES.FIGHT_TEMPLATE);
         let fightDiv = fightTempDiv.cloneNode(true) as HTMLElement;
 
+        this.renderFightInformation(fightDiv, newFight);
+
+        this.fightNumber++;
+        fightCardDiv.appendChild(fightDiv);
+    }
+
+    private renderFightInformation(fightDiv: HTMLElement, newFight: Fight) {
         let rulesLabel = selectElementByClass(fightDiv, CLASS_NAMES.RULES_LABEL);
         let weightclassLabel = selectElementByClass(fightDiv, CLASS_NAMES.WEIGHTCLASS_LABEL);
         let redCornerImg = selectElementByClass(fightDiv, CLASS_NAMES.RED_CORNER_IMG) as HTMLImageElement;
@@ -88,7 +92,6 @@ export class PickerComponent{
         let roundLabel = selectElementByClass(fightDiv, CLASS_NAMES.ROUND_LABEL);
         let redCornerOddLabel = selectElementByClass(fightDiv, CLASS_NAMES.RED_CORNER_ODD_LABEL);
         let blueCornerOddLabel = selectElementByClass(fightDiv, CLASS_NAMES.BLUE_CORNER_ODD_LABEL);
-        let removeButton = selectElementByClass(fightDiv, CLASS_NAMES.PICK_DIV);
         let pickDiv = selectElementByClass(fightDiv, CLASS_NAMES.PICK_DIV);
 
         rulesLabel.innerHTML = newFight.rules;
@@ -101,50 +104,50 @@ export class PickerComponent{
         methodLabel.innerHTML = newFight.yourPick.method;
         roundLabel.innerHTML = newFight.yourPick.round.toString();
 
-        if(newFight.favourite === Corner.RedCorner){
+        if (newFight.favourite === Corner.RedCorner) {
             redCornerOddLabel.innerHTML = "Favourite";
             redCornerOddLabel.classList.add(CLASS_NAMES.ICONS.STAR_FILL);
             blueCornerOddLabel.innerHTML = "Underdog";
             blueCornerOddLabel.classList.add(CLASS_NAMES.ICONS.STAR);
         }
-        else{
+        else {
             blueCornerOddLabel.innerHTML = "Favourite";
             blueCornerOddLabel.classList.add(CLASS_NAMES.ICONS.STAR_FILL);
             redCornerOddLabel.innerHTML = "Underdog";
             redCornerOddLabel.classList.add(CLASS_NAMES.ICONS.STAR);
         }
-        if(newFight.yourPick.winner === Corner.RedCorner)
+        if (newFight.yourPick.winner === Corner.RedCorner)
             pickDiv.classList.add(CLASS_NAMES.STYLES.RED_TEXT);
+
         else
             pickDiv.classList.add(CLASS_NAMES.STYLES.BLUE_TEXT);
 
         fightDiv.classList.remove(CLASS_NAMES.STYLES.COLLAPSE);
         fightDiv.classList.remove(CLASS_NAMES.FIGHT_TEMPLATE);
         fightDiv.classList.add(`${CLASS_NAMES.FIGHT_DIV + this.fightNumber}`);
-        removeButton.id = this.fightNumber.toString();
-
-        this.fightNumber++;
-        fightCardDiv.appendChild(fightDiv);
     }
 
     removeFight(fightIndex: number){
         this.fightCard.removeFight(fightIndex);
         let fightDiv = selectElementByClass(this.container, CLASS_NAMES.FIGHT_DIV + fightIndex);
         fightDiv.remove();
-
-        // let otherFightDivs = selectElementsByBeginOfClass(this.container, CLASS_NAMES.FIGHT_DIV);
-        let otherFightDivs = this.container.querySelectorAll(`div[class^="${CLASS_NAMES.FIGHT_DIV}"]`);
-        console.log(otherFightDivs);
-        otherFightDivs.forEach(fightDiv => {
-            let removeButton = selectElementByClass(fightDiv as HTMLDivElement, CLASS_NAMES.REMOVE_BUTTON);
-            console.log(removeButton);
-            let previousId = parseInt(removeButton.id);
-            if(previousId > fightIndex){
-                fightDiv.classList.remove(CLASS_NAMES.FIGHT_DIV + previousId);
-                fightDiv.classList.add(CLASS_NAMES.FIGHT_DIV + (previousId-1));
-                removeButton.id = (previousId-1).toString();
-            }
-        })
+        this.updateFightDivsIds(fightIndex, CLASS_NAMES.FIGHT_DIV);
     }
+
+    updateFightDivsIds(fightIndex: number, partOfClassName: string) {
+        let fightDivs = selectElementsByPartialClass(this.container, partOfClassName)
+        fightDivs.forEach(div => {
+          const classes = div.className.split(' ');
+          const fightClasses = classes.filter(className => className.startsWith(partOfClassName));
+          if (fightClasses.length === 1) {
+            const currentFightIndex = parseInt(fightClasses[0].substring(partOfClassName.length), 10);
+            if (currentFightIndex >= fightIndex) {
+              div.classList.remove(`${partOfClassName}${currentFightIndex}`);
+              const newFightIndex = currentFightIndex - 1;
+              div.classList.add(`${partOfClassName}${newFightIndex}`);
+            }
+          }
+        });
+      }
 }
 

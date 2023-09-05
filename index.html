@@ -417,13 +417,17 @@
 
               <div class="fight-template collapse row rounded border border-black bg-black bg-opacity-25 text-white p-2 m-2">
                 <div class="row col-lg-8 d-flex col-12 align-items-center justify-content-center mx-auto">
-                  <img class="blue-corner-img col-xxl-2 col-md-1 col-3 order-md-4 img-fluid ps-2 me-auto" src="./src/assets/fighters/default_fighter.png"  style="max-width: 135px;">
+                  <div class="col-xxl-2 col-md-1 col-3 order-md-0 d-flex justify-content-center align-items-center" style="height: 110px;">
+                    <img class="red-corner-img img-fluid" src="./src/assets/fighters/default_fighter.png" style="max-width: 80px;">
+                  </div>                  
                   <div class="col-xxl-2 col-md-4 col-6 order-md-2 align-self-start text-center">
                     <div class="rules-label small">Boxing</div>
                     <div class="small"><small class="weightclass-label">Middleweight</small> bout</div>
-                    <div class="fs-1 fw-bold mt-lg-4">VS</div>
+                    <div class="fs-1 fw-bold">VS</div>
                   </div>
-                  <img class="red-corner-img col-xxl-2 col-md-1 col-3 order-md-0 img-fluid pe-2 ms-auto" src="./src/assets/fighters/default_fighter.png" style="max-width: 135px;">
+                  <div class="col-xxl-2 col-md-1 col-3 order-md-4 d-flex justify-content-center align-items-center" style="height: 110px;">
+                    <img class="blue-corner-img img-fluid" src="./src/assets/fighters/default_fighter.png" style="max-width: 80px;">
+                  </div>                     
                   <div class="col-md-3 col-6 order-md-1">
                     <i class="red-corner-odd-label bi text-warning small">Favourite</i>
                     <div class="red-corner-label text-danger fs-4">Ime Prezime</div>
@@ -836,8 +840,8 @@
 
     </div>
 
-    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="dist/bundle.js"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     
   </body>
 </html>

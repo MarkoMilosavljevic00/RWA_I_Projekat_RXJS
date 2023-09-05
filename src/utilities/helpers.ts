@@ -13,10 +13,10 @@ export function selectElementsByClass(
     placeHolder: HTMLElement,
     className: string
 ): NodeListOf<HTMLElement> {
-    let element: NodeListOf<HTMLElement> = placeHolder.querySelectorAll(
+    let elements: NodeListOf<HTMLElement> = placeHolder.querySelectorAll(
         `.${className}`
     );
-    return element;
+    return elements;
 }
 
 export function selectElementByClassAndType(
@@ -45,10 +45,18 @@ export function selectElementsByBeginOfClass(
     placeHolder: HTMLElement,
     className: string
 ): NodeListOf<HTMLElement> {
-    let element: NodeListOf<HTMLElement> = placeHolder.querySelectorAll(
+    let elements: NodeListOf<HTMLElement> = placeHolder.querySelectorAll(
         `div[class^="${className}"]`
     );
-    return element;
+    return elements;
+}
+
+export function selectElementsByPartialClass(
+    placeHolder: HTMLElement,
+    partOfClassName: string
+): NodeListOf<HTMLElement> {
+    let elements: NodeListOf<HTMLElement> = placeHolder.querySelectorAll(`[class*="${partOfClassName}"]`);
+    return elements;
 }
 
 export function setSelectOptions(
