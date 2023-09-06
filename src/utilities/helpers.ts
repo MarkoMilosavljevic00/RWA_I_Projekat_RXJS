@@ -1,5 +1,4 @@
 import Swal from "sweetalert2";
-import { CLASS_NAMES } from "./constants";
 
 export function selectElementByClass(
     placeHolder: HTMLElement,
@@ -70,6 +69,21 @@ export function setSelectOptions(
         option.innerHTML = optionNames[index];
         className.appendChild(option);
     });
+}
+
+export function setSelectsOptionsFromValues(container: HTMLElement, className: string, value: Object){
+    const values = Object.values(value);
+    let selects = selectElementsByClass(container, className);
+    console.log(selects);
+    selects.forEach(select => setSelectOptions(select as HTMLSelectElement, values, values));
+}
+
+export function setSelectOptionsToNumber(container: HTMLElement, className: string, num: Number){
+    let selects = selectElementsByClass(container, className);
+    let values: string[] = [];
+    for(let i = 1; i<= num; i++)
+        values.push(i.toString());
+    selects.forEach(select => setSelectOptions(select as HTMLSelectElement, values, values));
 }
 
 export function getSelectedValue(

@@ -1,7 +1,12 @@
 import { Opponent } from "./opponent";
 
-export interface GameStats{
-    yourScore: number;
-    opponentScore: number;
+export class GameStats{
+    yourPoints: number;
+    opponentPoints: number;
     opponent: Opponent;
+
+    constructor(){
+        this.yourPoints = 0;
+        this.opponentPoints = 0;
+    }
 }

@@ -4,203 +4,90 @@ import { AppComponent } from "./components/app.component";
 import { PickerComponent } from "./components/picker.component";
 import { Corner } from "./enums/corner.enum";
 import { DifficultyLevel } from "./enums/difficulty-level.enum";
-import { Method } from "./enums/method.enum";
 import { Rules } from "./enums/rules.enum";
 import { Weightclass } from "./enums/weightclass.enum";
 import { FightCard } from "./models/fightCard";
 import { Fighter } from "./models/fighter";
-import { CLASS_NAMES, RULES } from "./utilities/constants";
-import { getCheckedRadioValue, mapStringToEnum, selectElementByClass } from "./utilities/helpers";
-
-// let startButton = document.querySelector(".start-button")
-// let findNewOpponentButton = document.querySelector(".find-new-opp-button")
-
-// console.log(findNewOpponentButton);
-
-
-// const klik1$ = fromEvent(startButton, 'click');
-// const klik2$ = fromEvent(findNewOpponentButton, 'click');
-
-// merge(klik1$, klik2$)
-//     .subscribe(() => {
-//         alert("Sve ok");
-//     })
+import { Opponent } from "./models/opponent";
 
 let fightCard: FightCard = new FightCard();
-let picker :PickerComponent = new PickerComponent(fightCard);
-let app = new AppComponent();
+let picker: PickerComponent = new PickerComponent(fightCard);
+let app: AppComponent = new AppComponent();
 
+app.setSelectOptionsForRounds(Rules.Boxing);
+app.setSelects();
 
+app.setYourPoints(500);
+app.addToYourPoints(40);
+app.addToOpponentPoints(75);
 
-
-let mirko: Fighter = {
-    id: 1,
-    name: "Mirko",
-    pictureSrc: "https://a.espncdn.com/combiner/i?img=/i/headshots/mma/players/full/3088812.png&w=350&h=254",
-    rule: Rules.MMA,
-    weightclass: Weightclass.Featherweight,
-    striking:64,
-    grappling:50,
-    overall:0
+let opponent1: Opponent = {
+    id: 0,
+    name: "Mirko Klisura",
+    difficulty: DifficultyLevel.Easy,
+    pictureSrc: "nenad-jezdic.jpg",
 }
 
-let nenad: Fighter = {
-    id: 2,
-    name: "Nenad Jezdic",
-    pictureSrc: "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcRwLeJuu2Zk5adv0jP7HDLtFUK8s4MfbTpzDSYoPaE3Ez97bVQ5gCTeigzP3KNh2JhsuaEdcNJp6y05LG0",
-    rule: Rules.MMA,
-    weightclass: Weightclass.Featherweight,
-    striking:89,
-    grappling:71,
-    overall:1
-}
+app.setOpponent(opponent1);
 
-let zarko: Fighter = {
-    id: 3,
-    name: "Zarko",
-    pictureSrc: "https://a.espncdn.com/combiner/i?img=/i/headshots/mma/players/full/3088812.png&w=350&h=254",
-    rule: Rules.MMA,
-    weightclass: Weightclass.Featherweight,
-    striking:12,
-    grappling:44,
-    overall:5
-}
+//app.disableTabs(CLASS_NAMES.TABS.PICKER_TAB, CLASS_NAMES.TABS.RESULT_TAB);
 
-let srzentic: Fighter = {
-    id: 4,
-    name: "Nenad Srzentic",
-    pictureSrc: "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcRwLeJuu2Zk5adv0jP7HDLtFUK8s4MfbTpzDSYoPaE3Ez97bVQ5gCTeigzP3KNh2JhsuaEdcNJp6y05LG0",
-    rule: Rules.MMA,
-    weightclass: Weightclass.Featherweight,
-    striking:11,
-    grappling:14,
-    overall:15
-}
+let fighter1: Fighter = new Fighter(1, "Conor McGregor", "mcgregor.png", Rules.MMA, Weightclass.Featherweight, 86, 72);
+let fighter2: Fighter = new Fighter(2, "Max Holloway", "holloway.png", Rules.MMA, Weightclass.Featherweight, 90, 72);
+let fighter3: Fighter = new Fighter(3, "Khabib Nurmagomedov", "nurmagomedov.png", Rules.MMA, Weightclass.Lightweight, 70, 100);
+let fighter4: Fighter = new Fighter(4, "Tony Ferguson", "ferguson.png", Rules.MMA, Weightclass.Lightweight, 80, 85);
+let fighter5: Fighter = new Fighter(5, "Tyron Woodley", "woodley.png", Rules.MMA, Weightclass.Welterweight, 85, 80);
+let fighter6: Fighter = new Fighter(6, "Colby Covington", "covington.png", Rules.MMA, Weightclass.Welterweight, 75, 85);
+let fighter7: Fighter = new Fighter(7, "Israel Adesanya", "adesanya.jpg", Rules.MMA, Weightclass.Middleweight, 95, 75);
+let fighter8: Fighter = new Fighter(8, "Robert Whittaker", "whittaker.jpg", Rules.MMA, Weightclass.Middleweight, 85, 83);
+let fighter9: Fighter = new Fighter(9, "Stipe Miocic", "miocic.jpg", Rules.MMA, Weightclass.Heavyweight, 85, 80);
+let fighter10: Fighter = new Fighter(10, "Francis Ngannou", "ngannou.jpg", Rules.MMA, Weightclass.Heavyweight, 95, 75);
+let fighter11: Fighter = new Fighter(11, "Floyd Mayweather Jr.", "mayweather.jpg", Rules.Boxing, Weightclass.Welterweight, 95, 0);
+let fighter12: Fighter = new Fighter(12, "Manny Pacquiao", "pacquiao.jpg", Rules.Boxing, Weightclass.Welterweight, 90, 0);
+let fighter13: Fighter = new Fighter(13, "Canelo Alvarez", "alvarez.jpg", Rules.Boxing, Weightclass.Middleweight, 90, 0);
+let fighter14: Fighter = new Fighter(14, "Gennady Golovkin", "golovkin.jpg", Rules.Boxing, Weightclass.Middleweight, 85, 0);
+let fighter15: Fighter = new Fighter(15, "Anthony Joshua", "joshua.jpg", Rules.Boxing, Weightclass.Heavyweight, 85, 0);
+let fighter16: Fighter = new Fighter(16, "Tyson Fury", "fury.jpg", Rules.Boxing, Weightclass.Heavyweight, 80, 0);
+let fighter17: Fighter = new Fighter(17, "Giorgio Petrosyan", "petrosyan.jpg", Rules.Kickboxing, Weightclass.Middleweight, 95, 0);
+let fighter18: Fighter = new Fighter(18, "Buakaw Banchamek", "buakaw.jpg", Rules.Kickboxing, Weightclass.Middleweight, 90, 0);
 
-let nesa: Fighter = {
-    id: 5,
-    name: "Nesa Bridzis",
-    pictureSrc: "https://a.espncdn.com/combiner/i?img=/i/headshots/mma/players/full/3088812.png&w=350&h=254",
-    rule: Rules.MMA,
-    weightclass: Weightclass.Featherweight,
-    striking:16,
-    grappling:11,
-    overall:99
-}
 
-let zoki: Fighter = {
-    id: 6,
-    name: "Zoki i Nena",
-    pictureSrc: "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcRwLeJuu2Zk5adv0jP7HDLtFUK8s4MfbTpzDSYoPaE3Ez97bVQ5gCTeigzP3KNh2JhsuaEdcNJp6y05LG0",
-    rule: Rules.MMA,
-    weightclass: Weightclass.Featherweight,
-    striking:92,
-    grappling:71,
-    overall:52
-}
 
-let pesa: Fighter = {
-    id: 7,
-    name: "Pesa Konj",
-    pictureSrc: "https://a.espncdn.com/combiner/i?img=/i/headshots/mma/players/full/3088812.png&w=350&h=254",
-    rule: Rules.MMA,
-    weightclass: Weightclass.Featherweight,
-    striking:16,
-    grappling:11,
-    overall:99
-}
-
-let riki: Fighter = {
-    id: 8,
-    name: "Diki Riki",
-    pictureSrc: "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcRwLeJuu2Zk5adv0jP7HDLtFUK8s4MfbTpzDSYoPaE3Ez97bVQ5gCTeigzP3KNh2JhsuaEdcNJp6y05LG0",
-    rule: Rules.MMA,
-    weightclass: Weightclass.Featherweight,
-    striking:92,
-    grappling:71,
-    overall:52
-}
-
-let siki: Fighter = {
-    id: 9,
-    name: "Slavko Stimac",
-    pictureSrc: "https://a.espncdn.com/combiner/i?img=/i/headshots/mma/players/full/3088812.png&w=350&h=254",
-    rule: Rules.MMA,
-    weightclass: Weightclass.Featherweight,
-    striking:16,
-    grappling:11,
-    overall:99
-}
-
-let kiki: Fighter = {
-    id: 10,
-    name: "Diki Riki",
-    pictureSrc: "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcRwLeJuu2Zk5adv0jP7HDLtFUK8s4MfbTpzDSYoPaE3Ez97bVQ5gCTeigzP3KNh2JhsuaEdcNJp6y05LG0",
-    rule: Rules.MMA,
-    weightclass: Weightclass.Featherweight,
-    striking:92,
-    grappling:71,
-    overall:52
-}
-
-let dziki: Fighter = {
-    id: 11,
-    name: "Pesa Konj",
-    pictureSrc: "https://a.espncdn.com/combiner/i?img=/i/headshots/mma/players/full/3088812.png&w=350&h=254",
-    rule: Rules.MMA,
-    weightclass: Weightclass.Featherweight,
-    striking:16,
-    grappling:11,
-    overall:99
-}
-
-let tiki: Fighter = {
-    id: 12,
-    name: "Diki Riki",
-    pictureSrc: "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcRwLeJuu2Zk5adv0jP7HDLtFUK8s4MfbTpzDSYoPaE3Ez97bVQ5gCTeigzP3KNh2JhsuaEdcNJp6y05LG0",
-    rule: Rules.MMA,
-    weightclass: Weightclass.Featherweight,
-    striking:92,
-    grappling:71,
-    overall:52
-}
-
-app.setSelectFromValues(CLASS_NAMES.WEIGHTCLASS_SELECT, Weightclass)
-app.setSelectFromValues(CLASS_NAMES.DIFF_LEVEL_SELECT, DifficultyLevel)
-app.setSelectFromValues(CLASS_NAMES.RULES_SELECT, Rules)
-app.setSelectFromValues(CLASS_NAMES.METHOD_SELECT, Method)
-app.setSelectForRounds(CLASS_NAMES.ROUND_SELECT, Rules.Boxing)
-
-picker.setFighter(mirko, Corner.BlueCorner)
-picker.setFighter(nenad, Corner.RedCorner)
+picker.setFighter(fighter1, Corner.BlueCorner)
+picker.setFighter(fighter2, Corner.RedCorner)
 let fight = picker.getFightInfo();
 picker.addFight(fight);
-
-picker.setFighter(zarko, Corner.BlueCorner)
-picker.setFighter(srzentic, Corner.RedCorner)
-fight = picker.getFightInfo();
+picker.setFighter(fighter3, Corner.BlueCorner)
+picker.setFighter(fighter4, Corner.RedCorner)
+ fight = picker.getFightInfo();
+picker.addFight(fight);
+picker.setFighter(fighter5, Corner.BlueCorner)
+picker.setFighter(fighter6, Corner.RedCorner)
+ fight = picker.getFightInfo();
+picker.addFight(fight);
+picker.setFighter(fighter7, Corner.BlueCorner)
+picker.setFighter(fighter8, Corner.RedCorner)
+ fight = picker.getFightInfo();
+picker.addFight(fight);
+picker.setFighter(fighter9, Corner.BlueCorner)
+picker.setFighter(fighter10, Corner.RedCorner)
+ fight = picker.getFightInfo();
+picker.addFight(fight);
+picker.setFighter(fighter11, Corner.BlueCorner)
+picker.setFighter(fighter12, Corner.RedCorner)
+ fight = picker.getFightInfo();
+picker.addFight(fight);
+picker.setFighter(fighter13, Corner.BlueCorner)
+picker.setFighter(fighter14, Corner.RedCorner)
+ fight = picker.getFightInfo();
+picker.addFight(fight);
+picker.setFighter(fighter15, Corner.BlueCorner)
+picker.setFighter(fighter16, Corner.RedCorner)
+ fight = picker.getFightInfo();
+picker.addFight(fight);
+picker.setFighter(fighter17, Corner.BlueCorner)
+picker.setFighter(fighter18, Corner.RedCorner)
+ fight = picker.getFightInfo();
 picker.addFight(fight);
 
-picker.setFighter(nesa, Corner.BlueCorner)
-picker.setFighter(zoki, Corner.RedCorner)
-fight = picker.getFightInfo();
-picker.addFight(fight);
-
-picker.setFighter(pesa, Corner.BlueCorner)
-picker.setFighter(riki, Corner.RedCorner)
-fight = picker.getFightInfo();
-picker.addFight(fight);
-
-picker.setFighter(siki, Corner.BlueCorner)
-picker.setFighter(kiki, Corner.RedCorner)
-fight = picker.getFightInfo();
-picker.addFight(fight);
-
-picker.setFighter(dziki, Corner.BlueCorner)
-picker.setFighter(tiki, Corner.RedCorner)
-fight = picker.getFightInfo();
-picker.addFight(fight);
-
-picker.removeFight(1);
-picker.removeFight(3);
 

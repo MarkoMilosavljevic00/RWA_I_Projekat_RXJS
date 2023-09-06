@@ -1,34 +1,30 @@
 export const CLASS_NAMES = {
-    APP_CONTAINER: "app-container",
-    PICKER_CONTAINER: "picker-container",
-    RED_CORNER_IMG: "red-corner-img",
-    BLUE_CORNER_IMG: "blue-corner-img",
-    RED_CORNER_SKILL_BARS: "red-corner-skill-bars",
-    BLUE_CORNER_SKILL_BARS: "blue-corner-skill-bars",
-    RED_CORNER_WINNER_LABEL: "red-corner-winner-label",
-    BLUE_CORNER_WINNER_LABEL: "blue-corner-winner-label",
-    RED_CORNER_RADIO: "red-corner-radio",
-    BLUE_CORNER_RADIO: "blue-corner-radio",
-    DIFF_LEVEL_SELECT: "dl-select",
-    RULES_SELECT: "rules-select",
-    WEIGHTCLASS_SELECT: "weightclass-select",
-    METHOD_SELECT: "method-select",
-    ROUND_SELECT: "round-select",
-    WINNER_RADIO: "winner-radio",
-    FIGHT_CARD: "fight-card",
-    FIGHT_TEMPLATE: "fight-template",
-    FIGHT_DIV: "fight-div-",
-    RULES_LABEL: "rules-label",
-    WEIGHTCLASS_LABEL: "weightclass-label",
-    RED_CORNER_ODD_LABEL: "red-corner-odd-label",
-    BLUE_CORNER_ODD_LABEL: "blue-corner-odd-label",
-    RED_CORNER_LABEL: "red-corner-label",
-    BLUE_CORNER_LABEL: "blue-corner-label",
-    WINNER_LABEL: "winner-label",
-    METHOD_LABEL: "method-label",
-    ROUND_LABEL: "round-label",
-    REMOVE_BUTTON: "remove-button",
-    PICK_DIV:"pick-div",
+    CONTAINERS:{
+        APP: "app-container",
+        PICKER: "picker-container",
+    },
+    TABS:{
+        START_TAB: "start-tab",
+        PICKER_TAB: "picker-tab",
+        LIVE_TAB: "live-tab",
+        RESULT_TAB: "result-tab"
+    },
+    IMAGES:{
+        RED_CORNER: "red-corner-img",
+        BLUE_CORNER: "blue-corner-img",
+        OPPONENT: "opponent-img",
+    },
+    SKILL_BARS:{
+        RED_CORNER: "red-corner-skill-bars",
+        BLUE_CORNER: "blue-corner-skill-bars",
+    },
+    SELECTS:{
+        DIFF_LEVEL: "difficulty-level-select",
+        RULES: "rules-select",
+        WEIGHTCLASS: "weightclass-select",
+        METHOD: "method-select",
+        ROUND: "round-select",
+    },
     ICONS: {
         STAR: "bi-star",
         STAR_FILL: "bi-star-fill",
@@ -36,8 +32,38 @@ export const CLASS_NAMES = {
     STYLES: {
         RED_TEXT: "text-danger",
         BLUE_TEXT: "text-primary",
+        DARK_TEXT: "text-black",
+    },
+    STATES:{
+        DISABLED:"disabled",
+        ACTIVE:"active",
         COLLAPSE: "collapse",
-    }
+    },
+    LABELS:{
+        YOUR_POINTS: "your-points-label",
+        OPPONENT_POINTS: "opponent-points-label",
+        OPPONENT_NAME: "opponent-name-label",
+        OPPONENT_DIFFICULTY: "opponent-difficulty-label",
+        RED_CORNER_WINNER: "red-corner-winner-label",
+        BLUE_CORNER_WINNER: "blue-corner-winner-label",
+        RULES: "rules-label",
+        WEIGHTCLASS: "weightclass-label",
+        RED_CORNER_ODD: "red-corner-odd-label",
+        BLUE_CORNER_ODD: "blue-corner-odd-label",
+        RED_CORNER: "red-corner-label",
+        BLUE_CORNER: "blue-corner-label",
+        WINNER: "winner-label",
+        METHOD: "method-label",
+        ROUND: "round-label",
+    },
+    RED_CORNER_RADIO: "red-corner-radio",
+    BLUE_CORNER_RADIO: "blue-corner-radio",
+    WINNER_RADIO: "winner-radio",
+    FIGHT_CARD: "fight-card",
+    FIGHT_TEMPLATE: "fight-template",
+    FIGHT_DIV: "fight-div-",
+    REMOVE_BUTTON: "remove-button",
+    PICK_DIV:"pick-div",
 };
 
 export const TYPE_OF_ELEMENTS = {
@@ -59,3 +85,10 @@ export const RULES = {
         KICKBOXING: 5
     }
 };
+
+export const PATHS = {
+    IMAGES:{
+        FIGHTERS: "./src/assets/fighters/",
+        OPPONENTS: "./src/assets/opponents/"
+    }
+}
