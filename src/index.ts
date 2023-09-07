@@ -1,6 +1,7 @@
 // import { fromEvent, merge } from "rxjs";
 
 import { AppComponent } from "./components/app.component";
+import { LiveComponent } from "./components/live.component";
 import { PickerComponent } from "./components/picker.component";
 import { Corner } from "./enums/corner.enum";
 import { DifficultyLevel } from "./enums/difficulty-level.enum";
@@ -13,6 +14,7 @@ import { Opponent } from "./models/opponent";
 let fightCard: FightCard = new FightCard();
 let picker: PickerComponent = new PickerComponent(fightCard);
 let app: AppComponent = new AppComponent();
+let live: LiveComponent = new LiveComponent();
 
 app.setSelectOptionsForRounds(Rules.Boxing);
 app.setSelects();
@@ -25,7 +27,7 @@ let opponent1: Opponent = {
     id: 0,
     name: "Mirko Klisura",
     difficulty: DifficultyLevel.Easy,
-    pictureSrc: "nenad-jezdic.jpg",
+    pictureSrc: "img1.jpg",
 }
 
 app.setOpponent(opponent1);
@@ -57,6 +59,7 @@ picker.setFighter(fighter1, Corner.BlueCorner)
 picker.setFighter(fighter2, Corner.RedCorner)
 let fight = picker.getFightInfo();
 picker.addFight(fight);
+live.setNewFight(fight);
 picker.setFighter(fighter3, Corner.BlueCorner)
 picker.setFighter(fighter4, Corner.RedCorner)
  fight = picker.getFightInfo();
@@ -89,5 +92,8 @@ picker.setFighter(fighter17, Corner.BlueCorner)
 picker.setFighter(fighter18, Corner.RedCorner)
  fight = picker.getFightInfo();
 picker.addFight(fight);
+picker.setFighter(fighter1, Corner.BlueCorner)
+picker.setFighter(fighter2, Corner.RedCorner)
 
-
+live.addSecond();
+live.addRound();

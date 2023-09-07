@@ -59,7 +59,7 @@ export function selectElementsByPartialClass(
 }
 
 export function setSelectOptions(
-    className: HTMLSelectElement,
+    select: HTMLSelectElement,
     optionNames: string[],
     optionValues: string[]
 ): void {
@@ -67,14 +67,13 @@ export function setSelectOptions(
         let option = document.createElement("option");
         option.value = optionValue;
         option.innerHTML = optionNames[index];
-        className.appendChild(option);
+        select.appendChild(option);
     });
 }
 
 export function setSelectsOptionsFromValues(container: HTMLElement, className: string, value: Object){
     const values = Object.values(value);
     let selects = selectElementsByClass(container, className);
-    console.log(selects);
     selects.forEach(select => setSelectOptions(select as HTMLSelectElement, values, values));
 }
 
@@ -84,6 +83,15 @@ export function setSelectOptionsToNumber(container: HTMLElement, className: stri
     for(let i = 1; i<= num; i++)
         values.push(i.toString());
     selects.forEach(select => setSelectOptions(select as HTMLSelectElement, values, values));
+}
+
+export function fillProgressBars(container: HTMLElement, className: string, ...percentageValues: number[]) {
+    let progressBars = selectElementsByClass(container, className);
+    let percentageStrings = getPercentageStrings(...percentageValues);
+    progressBars.forEach((bar, index) => {
+        bar.style.width = percentageStrings[index];
+        bar.innerHTML = percentageStrings[index];
+    });
 }
 
 export function getSelectedValue(
@@ -104,6 +112,14 @@ export function getCheckedRadioValue(className: string): string {
     );
     let value = selectedRadio.value;
     return value;
+}
+
+export function getPercentageStrings(...percentages: number[]): string[]{
+    let percentageStrings: string[] = [];
+    percentages.forEach(percent => {
+        percentageStrings.push(`${percent}%`)
+    });
+    return percentageStrings;
 }
 
 export function mapStringToEnum<T>(value: string, enumObject: Object): T {

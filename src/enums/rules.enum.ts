@@ -19,3 +19,16 @@ export function mapRulesToNumberOfRounds(rule: Rules): number {
       return RULES.NUMBER_OF_ROUNDS.GRAPPLING;
   }
 }
+
+export function mapRulesToRoundDuration(rule: Rules): number {
+  switch (rule) {
+    case Rules.MMA:
+      return RULES.DURATION_OF_ROUND.MMA;
+    case Rules.Boxing:
+      return RULES.DURATION_OF_ROUND.BOXING;
+    case Rules.Kickboxing:
+      return RULES.DURATION_OF_ROUND.KICKBOXING;
+    case Rules.Grappling:
+      return RULES.DURATION_OF_ROUND.GRAPPLING;
+  }
+}

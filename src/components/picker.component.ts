@@ -1,4 +1,4 @@
-import { Corner, mapStringToCorner } from "../enums/corner.enum";
+import { Corner } from "../enums/corner.enum";
 import { Message } from "../enums/message.enum";
 import { Method } from "../enums/method.enum";
 import { Rules } from "../enums/rules.enum";
@@ -8,7 +8,7 @@ import { Fighter } from "../models/fighter";
 import { Result } from "../models/result";
 import { CLASS_NAMES, TYPE_OF_ELEMENTS } from "../utilities/constants";
 import { PATHS } from "../utilities/constants";
-import { getCheckedRadioValue, getSelectedValue, mapStringToEnum, selectElementByClass, selectElementByClassAndType, selectElementsByBeginOfClass, selectElementsByClass, selectElementsByPartialClass, showError } from "../utilities/helpers";
+import { fillProgressBars, getCheckedRadioValue, getPercentageStrings, getSelectedValue, mapStringToEnum, selectElementByClass, selectElementByClassAndType, selectElementsByBeginOfClass, selectElementsByClass, selectElementsByPartialClass, showError } from "../utilities/helpers";
 
 export class PickerComponent{
     fightCard: FightCard;
@@ -24,29 +24,25 @@ export class PickerComponent{
 
     setFighter(fighter: Fighter, corner: Corner){
         let cornerImg: HTMLImageElement;
-        let skillBars: NodeListOf<HTMLElement>;
         let winnerLabel: HTMLLabelElement; 
+        let skillBarsClassName: string;
 
         if(corner == Corner.RedCorner){
             this.currentRedCorner = fighter;
             cornerImg = selectElementByClass(this.container, CLASS_NAMES.IMAGES.RED_CORNER) as HTMLImageElement
-            skillBars = selectElementsByClass(this.container, CLASS_NAMES.SKILL_BARS.RED_CORNER);
             winnerLabel = selectElementByClass(this.container, CLASS_NAMES.LABELS.RED_CORNER_WINNER) as HTMLLabelElement;
+            skillBarsClassName = CLASS_NAMES.PROGRESS_BARS.RED_CORNER_SKILLS;
         }
         else{
             this.currentBlueCorner = fighter;
             cornerImg = selectElementByClass(this.container, CLASS_NAMES.IMAGES.BLUE_CORNER) as HTMLImageElement
-            skillBars = selectElementsByClass(this.container, CLASS_NAMES.SKILL_BARS.BLUE_CORNER);
             winnerLabel = selectElementByClass(this.container, CLASS_NAMES.LABELS.BLUE_CORNER_WINNER) as HTMLLabelElement;
+            skillBarsClassName = CLASS_NAMES.PROGRESS_BARS.BLUE_CORNER_SKILLS;
         }
         cornerImg.src =`${PATHS.IMAGES.FIGHTERS + fighter.pictureSrc}` ;
         winnerLabel.innerHTML = fighter.name;
 
-        let skills = fighter.getSkillsStrings();
-        skills.forEach((skill, i) => {
-            skillBars[i].style.width = skill;
-            skillBars[i].innerHTML = skill;
-        })
+        fillProgressBars(this.container, skillBarsClassName, fighter.striking, fighter.grappling, fighter.overall);
     }
 
     getFightInfo(): Fight{
@@ -73,14 +69,18 @@ export class PickerComponent{
         if(message !== Message.Success)
             return showError(message);
 
-        let fightCardDiv = selectElementByClass(this.container, CLASS_NAMES.FIGHT_CARD); 
-        let fightTempDiv = selectElementByClass(this.container, CLASS_NAMES.FIGHT_TEMPLATE);
+        let fightListDiv = selectElementByClass(this.container, CLASS_NAMES.LISTS.FIGHT); 
+        let fightTempDiv = selectElementByClass(this.container, CLASS_NAMES.TEMPLATES.FIGHT);
         let fightDiv = fightTempDiv.cloneNode(true) as HTMLElement;
+
+        fightDiv.classList.remove(CLASS_NAMES.STATES.COLLAPSE);
+        fightDiv.classList.remove(CLASS_NAMES.TEMPLATES.FIGHT);
+        fightDiv.classList.add(`${CLASS_NAMES.CARDS.ROUND + this.numberOfFights}`);
 
         this.renderFightInformation(fightDiv, newFight);
 
         this.numberOfFights++;
-        fightCardDiv.appendChild(fightDiv);
+        fightListDiv.appendChild(fightDiv);
     }
 
     private renderFightInformation(fightDiv: HTMLElement, newFight: Fight) {
@@ -124,17 +124,13 @@ export class PickerComponent{
 
         else
             pickDiv.classList.add(CLASS_NAMES.STYLES.BLUE_TEXT);
-
-        fightDiv.classList.remove(CLASS_NAMES.STATES.COLLAPSE);
-        fightDiv.classList.remove(CLASS_NAMES.FIGHT_TEMPLATE);
-        fightDiv.classList.add(`${CLASS_NAMES.FIGHT_DIV + this.numberOfFights}`);
     }
 
     removeFight(fightIndex: number){
         this.fightCard.removeFight(fightIndex);
-        let fightDiv = selectElementByClass(this.container, CLASS_NAMES.FIGHT_DIV + fightIndex);
+        let fightDiv = selectElementByClass(this.container, CLASS_NAMES.CARDS.FIGHT + fightIndex);
         fightDiv.remove();
-        this.updateFightDivsIds(fightIndex, CLASS_NAMES.FIGHT_DIV);
+        this.updateFightDivsIds(fightIndex, CLASS_NAMES.CARDS.FIGHT);
     }
 
     updateFightDivsIds(fightIndex: number, partOfClassName: string) {
@@ -153,6 +149,4 @@ export class PickerComponent{
         });
       }
 }
-
-
 

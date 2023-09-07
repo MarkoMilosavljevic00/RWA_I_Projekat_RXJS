@@ -37,13 +37,4 @@ export class Fighter {
         this.striking = striking;
         this.grappling = grappling;
     }
-
-    getSkillsStrings():string[] {
-      let skills = [this.striking, this.grappling, this.overall];
-      let skillsString: string[] = [];
-      skills.forEach((skill, index) => {
-          skillsString.push(`${skill}%`)
-      })
-      return skillsString;
-  }
 }

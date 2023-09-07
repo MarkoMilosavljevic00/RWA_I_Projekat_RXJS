@@ -2,6 +2,7 @@ export const CLASS_NAMES = {
     CONTAINERS:{
         APP: "app-container",
         PICKER: "picker-container",
+        LIVE: "live-container"
     },
     TABS:{
         START_TAB: "start-tab",
@@ -14,9 +15,10 @@ export const CLASS_NAMES = {
         BLUE_CORNER: "blue-corner-img",
         OPPONENT: "opponent-img",
     },
-    SKILL_BARS:{
-        RED_CORNER: "red-corner-skill-bars",
-        BLUE_CORNER: "blue-corner-skill-bars",
+    PROGRESS_BARS:{
+        RED_CORNER_SKILLS: "red-corner-skill-bars",
+        BLUE_CORNER_SKILLS: "blue-corner-skill-bars",
+        DAMAGE: "damage-bar",
     },
     SELECTS:{
         DIFF_LEVEL: "difficulty-level-select",
@@ -55,13 +57,26 @@ export const CLASS_NAMES = {
         WINNER: "winner-label",
         METHOD: "method-label",
         ROUND: "round-label",
+        TIME: "time-label",
+        SIGNIFICIANT_STRIKES: "significiant-strikes-label",
+        TAKEDOWNS: "takedowns-label",
+        SUBMISSION: "submission-label"
+    },
+    LISTS:{
+        FIGHT: "fight-list",
+        LIVE:"live-list",
+    },
+    TEMPLATES:{
+        FIGHT: "fight-template",
+        ROUND: "round-template",
+    },
+    CARDS:{
+        FIGHT: "fight-card-",
+        ROUND: "round-card-",
     },
     RED_CORNER_RADIO: "red-corner-radio",
     BLUE_CORNER_RADIO: "blue-corner-radio",
     WINNER_RADIO: "winner-radio",
-    FIGHT_CARD: "fight-card",
-    FIGHT_TEMPLATE: "fight-template",
-    FIGHT_DIV: "fight-div-",
     REMOVE_BUTTON: "remove-button",
     PICK_DIV:"pick-div",
 };
@@ -83,6 +98,12 @@ export const RULES = {
         BOXING: 12,
         GRAPPLING: 1,
         KICKBOXING: 5
+    },
+    DURATION_OF_ROUND:{
+        MMA:5,
+        BOXING:3,
+        GRAPPLING: 10,
+        KICKBOXING: 3,
     }
 };
 
@@ -91,4 +112,13 @@ export const PATHS = {
         FIGHTERS: "./src/assets/fighters/",
         OPPONENTS: "./src/assets/opponents/"
     }
+}
+
+export const TIME = {
+    SECONDS_IN_MINUTE: 60,
+}
+
+export const INDEXES = {
+    RED_CORNER: 0,
+    BLUE_CORNER: 1,
 }

@@ -12,7 +12,11 @@ export class AppComponent{
     stats: GameStats;
 
     constructor(){
-        this.stats = new GameStats();
+        this.stats ={
+            yourPoints: 0,
+            opponentPoints: 0,
+            opponent: undefined
+        };
         this.container = selectElementByClass(document.body, CLASS_NAMES.CONTAINERS.APP);
     }
 
