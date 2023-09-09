@@ -651,47 +651,50 @@
               </div>
               
               <div class="live-list card mt-5 col-md-8 col-12 mx-auto">
-                <div class="round-template collapse">
-                  <div class="round-header card-header"> 1. Round</div>
-                  <div class="round-body card-body">
-                    <div class="d-flex flex-row text-white custom-font justify-content-between bg-secondary bg-opacity-10">
-                      <i class="bi bi-arrow-up"></i><div>Position: <span class="ms-1">Stand-up</span></div><i class="bi bi-arrow-up"></i>
-                    </div>
-  
-                    <!-- Levi ugao - sa damage -->
-                    <div class="d-flex flex-row text-white custom-font align-items-center py-1">
-                      <div class="d-flex col-md-1 col-2">0' 13"</div>
-                      <div class="d-flex border border-dark rounded p-1">
-                        <img class="img-fluid" src="./src/assets/punch-w.png" style="max-width:25px">
-                        <div class="mx-1 text-small">
-                          <div class="text-danger"><label>4</label>% Damage</div> <div class="text-primary"><label>1</label>% Energy</div>
-                        </div>
+                <div class="collapse">
+                  <div class="info-standup-event-template collapse d-flex flex-row text-white custom-font justify-content-between bg-secondary bg-opacity-10">
+                    <i class="bi bi-arrow-up"></i><div>Position: <span class="ms-1">Stand-up</span></div><i class="bi bi-arrow-up"></i>
+                  </div>
+
+                  <!-- Levi ugao - sa damage -->
+                  <div class="red-corner-event-template collapse d-flex flex-row text-white custom-font align-items-center py-1">
+                    <div class="event-time-label d-flex col-md-1 col-2">0'00''</div>
+                    <div class="d-flex border border-dark rounded p-1">
+                      <img class="event-img img-fluid" src="./src/assets/icons/punch-w.png" style="max-width:25px">
+                      <div class="mx-1 text-small">
+                        <div class="text-danger"><label class="event-damage-label">4</label>% Damage</div> <div class="text-primary"><label class="event-energy-label">1</label>% Energy</div>
                       </div>
-                      <div class="mx-1">Punch</div>
-                      <div class="mx-1 fw-light text-secondary">(Jab)</div>
                     </div>
-  
-                    <!-- Desni ugao - sa damage -->
-                    <div class="d-flex flex-row-reverse text-white custom-font align-items-center py-1">
-                      <div class="d-flex col-md-1 col-2 justify-content-end">0' 13"</div>
-                      <div class="d-flex flex-row-reverse border border-dark rounded p-1">
-                        <img class="img-fluid" src="./src/assets/submission-w.png" style="max-width:25px">
-                        <div class="mx-1 text-small">
-                          <div class="text-danger"><label>4</label>% Damage</div> <div class="text-primary"><label>1</label>% Energy</div>
-                        </div>
+                    <div class="event-type-label mx-1">Punch</div>
+                    <div class="event-subtype-label mx-1 fw-light text-secondary">(Jab)</div>
+                  </div>
+
+                  <div class="info-ground-event-template collapse d-flex flex-row text-white custom-font justify-content-between bg-secondary bg-opacity-10">
+                    <i class="bi bi-arrow-down"></i><div>Position: <span class="ms-1">Ground</span></div><i class="bi bi-arrow-down"></i>
+                  </div>
+
+                  <!-- Desni ugao - sa damage -->
+                  <div class="blue-corner-event-template collapse d-flex flex-row-reverse text-white custom-font align-items-center py-1">
+                    <div class="event-time-label d-flex col-md-1 col-2 justify-content-end">0' 13"</div>
+                    <div class="d-flex flex-row-reverse border border-dark rounded p-1">
+                      <img class="event-img img-fluid" src="./src/assets/submission-w.png" style="max-width:25px">
+                      <div class="mx-1 text-small">
+                        <div class="text-danger"><label class="event-damage-label">4</label>% Damage</div> <div class="text-primary"><label class="event-energy-label">1</label>% Energy</div>
                       </div>
-                      <div class="mx-1">Punch</div>
-                      <div class="mx-1 fw-light text-secondary">(Jab)</div>
-                    </div>         
-  
-                    <div class="d-flex flex-row text-white custom-font justify-content-between bg-secondary bg-opacity-10">
-                      <i class="bi bi-arrow-down"></i><div>Position: <span class="ms-1">Ground</span></div><i class="bi bi-arrow-down"></i>
                     </div>
-                    
+                    <div class="event-type-label mx-1">Punch</div>
+                    <div class="event-subtype-label mx-1 fw-light text-secondary">(Jab)</div>
+                  </div>         
+
+                  <div class="info-round-winner-event-template collapse d-flex flex-column text-white custom-font justify-content-center align-items-center bg-secondary bg-opacity-10">
+                    <div class="fw-bold">Winner: <span class="winner-label ms-1">Red Corner</span></div>
+                    <div><i class="win-info-label">10 - 9</i></div>
                   </div>
                 </div>
-                <!-- <div class="card-header"> 2. Round</div>
-                <div class="card-header"> 3. Round</div> -->
+                <div class="round-template collapse">
+                  <div class="round-header card-header"> 1. Round</div>
+                  <div class="round-body card-body"></div>
+                </div>
               </div>
             </div>
 

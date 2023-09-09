@@ -75,7 +75,7 @@ export class PickerComponent{
 
         fightDiv.classList.remove(CLASS_NAMES.STATES.COLLAPSE);
         fightDiv.classList.remove(CLASS_NAMES.TEMPLATES.FIGHT);
-        fightDiv.classList.add(`${CLASS_NAMES.CARDS.ROUND + this.numberOfFights}`);
+        fightDiv.classList.add(`${CLASS_NAMES.ITEMS.ROUND + this.numberOfFights}`);
 
         this.renderFightInformation(fightDiv, newFight);
 
@@ -128,9 +128,9 @@ export class PickerComponent{
 
     removeFight(fightIndex: number){
         this.fightCard.removeFight(fightIndex);
-        let fightDiv = selectElementByClass(this.container, CLASS_NAMES.CARDS.FIGHT + fightIndex);
+        let fightDiv = selectElementByClass(this.container, CLASS_NAMES.ITEMS.FIGHT + fightIndex);
         fightDiv.remove();
-        this.updateFightDivsIds(fightIndex, CLASS_NAMES.CARDS.FIGHT);
+        this.updateFightDivsIds(fightIndex, CLASS_NAMES.ITEMS.FIGHT);
     }
 
     updateFightDivsIds(fightIndex: number, partOfClassName: string) {

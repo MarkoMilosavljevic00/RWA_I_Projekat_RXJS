@@ -14,6 +14,7 @@ export const CLASS_NAMES = {
         RED_CORNER: "red-corner-img",
         BLUE_CORNER: "blue-corner-img",
         OPPONENT: "opponent-img",
+        EVENT: "event-img"
     },
     PROGRESS_BARS:{
         RED_CORNER_SKILLS: "red-corner-skill-bars",
@@ -60,7 +61,13 @@ export const CLASS_NAMES = {
         TIME: "time-label",
         SIGNIFICIANT_STRIKES: "significiant-strikes-label",
         TAKEDOWNS: "takedowns-label",
-        SUBMISSION: "submission-label"
+        SUBMISSION: "submission-label",
+        EVENT_DAMAGE: "event-damage-label",
+        EVENT_ENERGY: "event-energy-label",
+        EVENT_TYPE: "event-type-label",
+        EVENT_SUBTYPE: "event-subtype-label",
+        EVENT_TIME_LABEL: "event-time-label",
+        WIN_INFO_LABEL: "win-info-label",
     },
     LISTS:{
         FIGHT: "fight-list",
@@ -68,11 +75,18 @@ export const CLASS_NAMES = {
     },
     TEMPLATES:{
         FIGHT: "fight-template",
-        ROUND: "round-template",
+        LIVE:{
+            ROUND: "round-template",
+            RED_CORNER_EVENT: "red-corner-event-template",
+            BLUE_CORNER_EVENT: "blue-corner-event-template",
+            INFO_STANDUP_EVENT: "info-standup-event-template",
+            INFO_GROUND_EVENT: "info-ground-event-template",
+            INFO_ROUND_WINNER_EVENT: "info-round-winner-event-template",
+        }
     },
-    CARDS:{
-        FIGHT: "fight-card-",
-        ROUND: "round-card-",
+    ITEMS:{
+        FIGHT: "fight-item-",
+        ROUND: "round-item-",
     },
     RED_CORNER_RADIO: "red-corner-radio",
     BLUE_CORNER_RADIO: "blue-corner-radio",
@@ -109,9 +123,18 @@ export const RULES = {
 
 export const PATHS = {
     IMAGES:{
+        ICONS: "./src/assets/icons/",
         FIGHTERS: "./src/assets/fighters/",
         OPPONENTS: "./src/assets/opponents/"
     }
+}
+
+export const IMAGES = {
+    PUNCH: "punch-w.png",
+    KICK: "kick-w.png",
+    TAKEDOWN: "takedown-w.png",
+    SUBMISSION: "submission-w.png",
+    GETTING_UP: "getting-up-w.png",
 }
 
 export const TIME = {
@@ -121,4 +144,24 @@ export const TIME = {
 export const INDEXES = {
     RED_CORNER: 0,
     BLUE_CORNER: 1,
+}
+
+export const KEYS = {
+    FIGHT_STATS:{
+        RED_CORNER: "redCorner",
+        BLUE_CORNER: "blueCorner",
+        DAMAGE: "damage",
+        SIGNIFICIANT_STRIKES: "significiantStrikes",
+        TAKEDOWNS: "takedowns",
+        SUBMISSION_ATTEMPTS: "submissionAttempts",
+        ROUND_STATS:{
+            WINNER: "winner",
+        }
+    }
+}
+
+export const ROUND_POINTS = {
+    WINNER: 10,
+    LOSER: 9,
+    CONVICING_LOSER: 8,
 }

@@ -5,10 +5,14 @@ import { LiveComponent } from "./components/live.component";
 import { PickerComponent } from "./components/picker.component";
 import { Corner } from "./enums/corner.enum";
 import { DifficultyLevel } from "./enums/difficulty-level.enum";
+import { FightEventType, KickType, SubmissionType } from "./enums/fight-event-type.enum";
+import { Method } from "./enums/method.enum";
+import { Position } from "./enums/position.enum";
 import { Rules } from "./enums/rules.enum";
 import { Weightclass } from "./enums/weightclass.enum";
 import { FightCard } from "./models/fightCard";
 import { Fighter } from "./models/fighter";
+import { FightEvent } from "./models/fightEvent";
 import { Opponent } from "./models/opponent";
 
 let fightCard: FightCard = new FightCard();
@@ -95,5 +99,15 @@ picker.addFight(fight);
 picker.setFighter(fighter1, Corner.BlueCorner)
 picker.setFighter(fighter2, Corner.RedCorner)
 
-live.addSecond();
 live.addRound();
+live.addSecond(82);
+let event: FightEvent = {
+    attacker: Corner.BlueCorner,
+    eventType: FightEventType.GettingUp,
+    eventSubType: KickType.RundhouseKick,
+    damage: 10,
+    energySpent: 1,
+}
+live.addFightEvent(event, 3);
+live.changePosition(Position.Standup);
+live.renderWinner(Method.Submission, 1);

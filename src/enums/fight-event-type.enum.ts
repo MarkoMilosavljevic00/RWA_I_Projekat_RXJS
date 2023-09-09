@@ -2,7 +2,8 @@ export enum FightEventType {
     Punch = "Punch",
     Kick = "Kick",
     Takedown = "Takedown",
-    Submission = "Submission",
+    SubmissionAttempt = "Submission Attempt",
+    GettingUp = "Getting Up"
 }
 
 export enum PunchType {
