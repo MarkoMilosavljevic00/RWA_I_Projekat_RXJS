@@ -3,7 +3,7 @@ export interface FightStats{
     blueCorner: FighterStats;
 }
 
-export interface RoundStats{
+export interface Scorecard{
     redCorner: FighterRoundStats;
     blueCorner: FighterRoundStats;
 }

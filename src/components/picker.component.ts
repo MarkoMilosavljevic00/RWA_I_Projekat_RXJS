@@ -54,6 +54,8 @@ export class PickerComponent{
         let winner = mapStringToEnum<Corner>(getCheckedRadioValue(CLASS_NAMES.WINNER_RADIO), Corner);
         let method = mapStringToEnum<Method>(getSelectedValue(this.container as HTMLDivElement, CLASS_NAMES.SELECTS.METHOD), Method);
         let round = parseInt(getSelectedValue(this.container as HTMLDivElement, CLASS_NAMES.SELECTS.ROUND));
+        if(method === Method.Decision)
+            round = 0;
         let pick: Result = {
             winner,
             method,
@@ -71,19 +73,19 @@ export class PickerComponent{
 
         let fightListDiv = selectElementByClass(this.container, CLASS_NAMES.LISTS.FIGHT); 
         let fightTempDiv = selectElementByClass(this.container, CLASS_NAMES.TEMPLATES.FIGHT);
-        let fightDiv = fightTempDiv.cloneNode(true) as HTMLElement;
+        let fightItem = fightTempDiv.cloneNode(true) as HTMLElement;
 
-        fightDiv.classList.remove(CLASS_NAMES.STATES.COLLAPSE);
-        fightDiv.classList.remove(CLASS_NAMES.TEMPLATES.FIGHT);
-        fightDiv.classList.add(`${CLASS_NAMES.ITEMS.ROUND + this.numberOfFights}`);
+        fightItem.classList.remove(CLASS_NAMES.STATES.COLLAPSE);
+        fightItem.classList.remove(CLASS_NAMES.TEMPLATES.FIGHT);
+        fightItem.classList.add(`${CLASS_NAMES.ITEMS.FIGHT + this.numberOfFights}`);
 
-        this.renderFightInformation(fightDiv, newFight);
+        this.renderFightInformation(fightItem, newFight);
 
         this.numberOfFights++;
-        fightListDiv.appendChild(fightDiv);
+        fightListDiv.appendChild(fightItem);
     }
 
-    private renderFightInformation(fightDiv: HTMLElement, newFight: Fight) {
+    renderFightInformation(fightDiv: HTMLElement, newFight: Fight) {
         let rulesLabel = selectElementByClass(fightDiv, CLASS_NAMES.LABELS.RULES);
         let weightclassLabel = selectElementByClass(fightDiv, CLASS_NAMES.LABELS.WEIGHTCLASS);
         let redCornerImg = selectElementByClass(fightDiv, CLASS_NAMES.IMAGES.RED_CORNER) as HTMLImageElement;

@@ -402,7 +402,7 @@
                     </div>                  
                     <div class="col-xxl-2 col-md-4 col-6 order-md-2 align-self-start text-center">
                       <div class="rules-label small">Boxing</div>
-                      <div class="small"><small class="weightclass-label">Middleweight</small> bout</div>
+                      <div class="small"><div class="weightclass-label d-inline">Middleweight</div> bout</div>
                       <div class="fs-1 fw-bold">VS</div>
                     </div>
                     <div class="col-xxl-2 col-md-1 col-3 order-md-4 d-flex justify-content-center align-items-center" style="height: 110px;">
@@ -708,93 +708,106 @@
             tabindex="0"
           >
 
-            <div class="card bg-secondary bg-opacity-25">
+            <div class="result-container card bg-secondary bg-opacity-25">
 
               <div class="d-flex justify-content-between text-white fs-2 fw-bold text-center">
-                <div class="col-2 p-2 m-4 rounded border border-black bg-black bg-opacity-25 ">0</div>
+                <div class="your-fightcard-points-label col-2 p-2 m-4 rounded border border-black bg-black bg-opacity-25 ">0</div>
                 <div class="text-center align-self-center">Total Points</div>
-                <div class="col-2 p-2 m-4  rounded border border-black bg-black bg-opacity-25">0</div>
+                <div class="opponent-fightcard-points-label col-2 p-2 m-4  rounded border border-black bg-black bg-opacity-25">0</div>
               </div>
 
-              <div class="row p-2 m-4 text-white rounded border border-black bg-black bg-opacity-25 mb-2">
-              
-              <div class="col-lg-12 col-12 order-md-0 mb-2">
-                <div class="d-flex row align-items-center justify-content-center">
-                  <img class="col-md-1 col-6 order-md-0 img-fluid pe-2" src="./src/assets/fighters/default_fighter.png" >
-                  <img class="col-md-1 col-6 order-md-4 img-fluid ps-2" src="./src/assets/fighters/default_fighter.png">
-                  <div class="col-md-2 col-12 order-md-2 align-self-start text-center">
-                    <div class="small">Boxing</div>
-                    <div class="small">Middleweight bout</div>
-                    <div class="fs-1 fw-bold mt-lg-4">VS</div>
+              <div class="result-list row p-2 m-4 text-white">
+        
+                <div class="result-template collapse rounded border border-black bg-black bg-opacity-25 mb-4 p-2">
+                  <div class="result-fight-div col-lg-12 col-12 order-md-0 mb-2">
+                    <div class="d-flex row align-items-center justify-content-center">
+                      <img class="red-corner-img col-md-1 col-6 order-md-0 img-fluid pe-2" src="./src/assets/fighters/default_fighter.png" >
+                      <img class="blue-corner-img col-md-1 col-6 order-md-4 img-fluid ps-2" src="./src/assets/fighters/default_fighter.png">
+                      <div class="col-md-2 col-12 order-md-2 align-self-start text-center">
+                        <div class="rules-label small">Boxing</div>
+                        <div class="small"><div class="weightclass-label d-inline">Middleweight</div> bout</div>
+                        <div class="fs-1 fw-bold mt-lg-4">VS</div>
+                      </div>
+                      <div class="col-md-4 col-6 d-flex row order-md-1">
+                        <div class="col-lg-6 col-12">
+                          <i class="red-corner-odd-label bi text-warning small">Favourite</i>
+                          <div class="red-corner-label text-danger fs-4">Ime Prezime</div>
+                        </div>
+                        <div class="red-corner-winner-list collapse col-lg-6 col-12 order-lg-0">
+                          <div class="fst-italic text-success"><img src="./src/assets/icons/winner-g.png" class="winner-img img-fluid text-success" style="max-width: 20px;"> Winner</div>
+                          <div class="fst-italic text-success"><img src="./src/assets/icons/ko-g.png" class="method-img img-fluid text-success" style="max-width: 20px;"> <label class="method-label">KO/TKO</label></div>
+                          <div class="round-div fst-italic text-success"><img src="./src/assets/icons/round-g.png" class="round-img img-fluid text-success" style="max-width: 20px;"> <label class="round-label">1</label>. Round</div>
+                        </div>
+                      </div>
+                      <div class="col-md-4 col-6 d-flex row order-md-3 text-end justify-content-end">
+                        <!-- <i class="bi bi-star small">Underdog</i> -->
+                        <div class="col-lg-6 col-12 order-lg-1">
+                          <i class="blue-corner-odd-label bi text-warning small">Favourite</i>
+                          <div class="blue-corner-label text-primary fs-4">Ime Prezime</div>
+                        </div>
+                        <div class="blue-corner-winner-list collapse col-lg-6 col-12 order-lg-0">
+                          <div class="fst-italic text-success"><img src="./src/assets/icons/winner-g.png" class="winner-img img-fluid text-success" style="max-width: 20px;"> Winner</div>
+                          <div class="fst-italic text-success"><img src="./src/assets/icons/ko-g.png" class="method-img img-fluid text-success" style="max-width: 20px;"> <label class="method-label">KO/TKO</label></div>
+                          <div class="round-div fst-italic text-success"><img src="./src/assets/icons/round-g.png" class="round-img img-fluid text-success" style="max-width: 20px;"> <label class="round-label">1</label>. Round</div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div class="col-md-4 col-6 d-flex row order-md-1">
-                    <div class="col-lg-6 col-12">
-                      <i class="bi bi-star-fill small text-warning">Favourite</i>
-                      <div class="text-danger fs-4">Ime Prezime</div>
+                  <hr>
+                  <div class="result-pick-div col-12">
+
+                    <div class="col-12 d-flex text-center my-2">
+                      <div class="fs-5 col-5">Your Pick</div>
+                      <div class="fs-2 col-2 bg-secondary bg-opacity-25 rounded">Picks</div>
+                      <div class="fs-5 col-5">Opponent's Pick</div>
                     </div>
-                    <div class="col-lg-6 col-12">
-                      <div><i class="bi bi-trophy-fill text-success px-2">Winner</i></div>
-                      <div class="fst-italic text-success"><img src="./src/assets/punch-g.png" class="img-fluid text-success" style="max-width: 20px;"> KO/TKO</div>
-                      <div><i class="bi bi-clock-fill text-success">1st Round</i></div>
+
+                    <div class="row small mx-auto bg-secondary bg-opacity-25">
+                      <div class="col-sm-4 col-12 order-0 order-sm-2 text-center">Winner</div>
+                      <div class="col-sm-1 col-2 order-sm-0">
+                        <i class="your-winner-points-label bi">+5</i>
+                      </div>
+                      <div class="winner-label col-sm-3 col-4 order-sm-1 text-end">Ime Prezime</div>
+                      <div class="winner-label col-sm-3 col-4 order-sm-3 text-start">Ime Prezime</div>
+                      <div class="col-sm-1 col-2 order-sm-4 text-end d-flex flex-row-reverse">
+                        <i class="opponent-winner-points-label bi">+5</i>
+                      </div>
                     </div>
+
+                    <div class="row small mx-auto">
+                      <div class="col-sm-4 col-12 order-0 order-sm-2 text-center">Method</div>
+                      <div class="col-sm-1 col-2 order-sm-0">
+                        <i class="your-method-points-label bi">+5</i>
+                      </div>
+                      <div class="method-label col-sm-3 col-4 order-sm-1 text-end">KO/TKO</div>
+                      <div class="method-label col-sm-3 col-4 order-sm-3 text-start">KO/TKO</div>
+                      <div class="col-sm-1 col-2 order-sm-4 text-end d-flex flex-row-reverse">
+                        <i class="opponent-method-points-label bi">+5</i>
+                      </div>
+                    </div>
+
+                    <div class="row small mx-auto bg-secondary bg-opacity-25">
+                      <div class="col-sm-4 col-12 order-0 order-sm-2 text-center">Round</div>
+                      <div class="col-sm-1 col-2 order-sm-0">
+                        <i class="your-round-points-label bi">+5</i>
+                      </div>
+                      <div class="round-label col-sm-3 col-4 order-sm-1 text-end">1</div>
+                      <div class="round-label col-sm-3 col-4 order-sm-3 text-start">1</div>
+                      <div class="col-sm-1 col-2 order-sm-4 text-end d-flex flex-row-reverse">
+                        <i class="opponent-round-points-label bi">+5</i>
+                      </div>
+                    </div>
+
+                    <div class="row mx-auto fw-bold">
+                      <div class="col-sm-4 col-12 order-0 order-sm-2 text-center">Points</div>
+                      <div class="total-points-label col-sm-1 col-2 order-sm-0">25</div>
+                      <div class="col-sm-3 col-4 order-sm-1 text-end"></div>
+                      <div class="col-sm-3 col-4 order-sm-3 text-start"></div>
+                      <div class="total-points-label col-sm-1 col-2 order-sm-4 text-end d-flex flex-row-reverse">25</div>
+                    </div>
+
                   </div>
-                  <div class="col-md-4 col-6 d-flex row order-md-3 text-end ">
-                    <!-- <i class="bi bi-star small">Underdog</i> -->
-                    <div class="col-lg-6 col-12 order-lg-1">
-                      <div class="text-primary fs-4">Ime Prezime</div>
-                    </div>
-                    <div class="col-lg-6 col-12 order-lg-0">
-                      <div><i class="bi bi-trophy-fill text-success px-2">Winner</i></div>
-                      <div class="fst-italic text-success"><img src="./src/assets/punch-g.png" class="img-fluid text-success" style="max-width: 20px;"> KO/TKO</div>
-                      <div><i class="bi bi-clock-fill text-success">1st Round</i></div>
-                    </div>
-                  </div>
                 </div>
-              </div>
-
-              <hr>
-              
-              <div class="col-12">
-
-                <div class="col-12 d-flex text-center my-2">
-                  <div class="fs-5 col-5">Your Pick</div>
-                  <div class="fs-2 col-2 bg-secondary bg-opacity-25 rounded">Picks</div>
-                  <div class="fs-5 col-5">Opponent's Pick</div>
-                </div>
-
-                <div class="row small mx-auto bg-secondary bg-opacity-25">
-                  <div class="col-sm-4 col-12 order-0 order-sm-2 text-center">Winner</div>
-                  <div class="col-sm-1 col-2 order-sm-0"><i class="bi bi-check2-square text-success">+5</i></div>
-                  <div class="col-sm-3 col-4 order-sm-1 text-end">Ime Prezime</div>
-                  <div class="col-sm-3 col-4 order-sm-3 text-start">Ime Prezime</div>
-                  <div class="col-sm-1 col-2 order-sm-4 text-end d-flex flex-row-reverse"><i class="bi bi-check2-square text-success">+5</i></div>
-                </div>
-
-                <div class="row small mx-auto">
-                  <div class="col-sm-4 col-12 order-0 order-sm-2 text-center">Method</div>
-                  <div class="col-sm-1 col-2 order-sm-0"><i class="bi bi-check2-square text-success">+5</i></div>
-                  <div class="col-sm-3 col-4 order-sm-1 text-end">KO/TKO</div>
-                  <div class="col-sm-3 col-4 order-sm-3 text-start">KO/TKO</div>
-                  <div class="col-sm-1 col-2 order-sm-4 text-end d-flex flex-row-reverse"><i class="bi bi-check2-square text-success">+5</i></div>
-                </div>
-
-                <div class="row small mx-auto bg-secondary bg-opacity-25">
-                  <div class="col-sm-4 col-12 order-0 order-sm-2 text-center">Round</div>
-                  <div class="col-sm-1 col-2 order-sm-0"><i class="bi bi-check2-square text-success">+5</i></div>
-                  <div class="col-sm-3 col-4 order-sm-1 text-end">1</div>
-                  <div class="col-sm-3 col-4 order-sm-3 text-start">1</div>
-                  <div class="col-sm-1 col-2 order-sm-4 text-end d-flex flex-row-reverse"><i class="bi bi-check2-square text-success">+5</i></div>
-                </div>
-
-                <div class="row mx-auto fw-bold">
-                  <div class="col-sm-4 col-12 order-0 order-sm-2 text-center">Points</div>
-                  <div class="col-sm-1 col-2 order-sm-0">25</div>
-                  <div class="col-sm-3 col-4 order-sm-1 text-end"></div>
-                  <div class="col-sm-3 col-4 order-sm-3 text-start"></div>
-                  <div class="col-sm-1 col-2 order-sm-4 text-end d-flex flex-row-reverse">25</div>
-                </div>
-
-              </div>
 
               </div>
 

@@ -1,4 +1,6 @@
 import Swal from "sweetalert2";
+import { ValueProbability } from "../models/valueProbability";
+import { CLASS_NAMES } from "./constants";
 
 export function selectElementByClass(
     placeHolder: HTMLElement,
@@ -50,11 +52,22 @@ export function selectElementsByBeginOfClass(
     return elements;
 }
 
+export function selectElementsByTwoClasses(
+    placeHolder: HTMLElement,
+    firstClassName: string,
+    secondClassName: string
+): NodeListOf<HTMLElement> {
+    let elements: NodeListOf<HTMLElement>  = placeHolder.querySelectorAll(`.${firstClassName}.${secondClassName}`);
+    return elements;
+}
+
 export function selectElementsByPartialClass(
     placeHolder: HTMLElement,
     partOfClassName: string
 ): NodeListOf<HTMLElement> {
-    let elements: NodeListOf<HTMLElement> = placeHolder.querySelectorAll(`[class*="${partOfClassName}"]`);
+    let elements: NodeListOf<HTMLElement> = placeHolder.querySelectorAll(
+        `[class*="${partOfClassName}"]`
+    );
     return elements;
 }
 
@@ -71,21 +84,54 @@ export function setSelectOptions(
     });
 }
 
-export function setSelectsOptionsFromValues(container: HTMLElement, className: string, value: Object){
+export function setSelectsOptionsFromValues(
+    container: HTMLElement,
+    className: string,
+    value: Object
+) {
     const values = Object.values(value);
     let selects = selectElementsByClass(container, className);
-    selects.forEach(select => setSelectOptions(select as HTMLSelectElement, values, values));
+    selects.forEach((select) =>
+        setSelectOptions(select as HTMLSelectElement, values, values)
+    );
 }
 
-export function setSelectOptionsToNumber(container: HTMLElement, className: string, num: Number){
+export function setSelectOptionsToNumber(
+    container: HTMLElement,
+    className: string,
+    num: Number
+) {
     let selects = selectElementsByClass(container, className);
     let values: string[] = [];
-    for(let i = 1; i<= num; i++)
-        values.push(i.toString());
-    selects.forEach(select => setSelectOptions(select as HTMLSelectElement, values, values));
+    for (let i = 1; i <= num; i++) values.push(i.toString());
+    selects.forEach((select) =>
+        setSelectOptions(select as HTMLSelectElement, values, values)
+    );
 }
 
-export function fillProgressBars(container: HTMLElement, className: string, ...percentageValues: number[]) {
+export function appendItemToList(
+    container: HTMLElement,
+    numberOfItem: number,
+    itemClassName: string,
+    listClassName: string,
+    templateClassName: string
+): HTMLElement {
+    let listDiv = selectElementByClass(container, listClassName);
+    let tempDiv = selectElementByClass(container, templateClassName);
+    let item = tempDiv.cloneNode(true) as HTMLElement;
+
+    item.classList.remove(CLASS_NAMES.STATES.COLLAPSE);
+    item.classList.remove(templateClassName);
+    item.classList.add(`${itemClassName + numberOfItem}`);
+    listDiv.appendChild(item);
+    return item;
+}
+
+export function fillProgressBars(
+    container: HTMLElement,
+    className: string,
+    ...percentageValues: number[]
+) {
     let progressBars = selectElementsByClass(container, className);
     let percentageStrings = getPercentageStrings(...percentageValues);
     progressBars.forEach((bar, index) => {
@@ -114,12 +160,49 @@ export function getCheckedRadioValue(className: string): string {
     return value;
 }
 
-export function getPercentageStrings(...percentages: number[]): string[]{
+export function getPercentageStrings(...percentages: number[]): string[] {
     let percentageStrings: string[] = [];
-    percentages.forEach(percent => {
-        percentageStrings.push(`${percent}%`)
+    percentages.forEach((percent) => {
+        percentageStrings.push(`${percent}%`);
     });
     return percentageStrings;
+}
+
+export function getRandomValueWithWeightedProbabilities<T>(
+    values: ValueProbability<T>[]
+): T {
+    const totalProbability = values.reduce(
+        (sum, vp) => sum + vp.probability,
+        0
+    );
+    let random = Math.random() * totalProbability;
+
+    for (const vp of values) {
+        if (random < vp.probability) {
+            return vp.value;
+        }
+        random -= vp.probability;
+    }
+
+    return values[0].value;
+}
+
+export function getRandomValueWithProbability<T>(
+    values: T[],
+    finalValue: T,
+    probability: number
+): T {
+    let random = Math.random();
+    console.log(random)
+    if (random < probability) {
+        console.log("uso u dobro")
+        return finalValue;
+    } else {
+        console.log("uso u lose")
+        let otherValues = values.filter((value) => value !== finalValue);
+        let index = Math.floor(Math.random() * otherValues.length);
+        return otherValues[index];
+    }
 }
 
 export function mapStringToEnum<T>(value: string, enumObject: Object): T {
@@ -128,6 +211,16 @@ export function mapStringToEnum<T>(value: string, enumObject: Object): T {
         return enumValues.find((enumValue) => enumValue === value);
     }
     return undefined;
+}
+
+export function showElement(element: HTMLElement) {
+    if (element.classList.contains(CLASS_NAMES.STATES.COLLAPSE))
+        element.classList.remove(CLASS_NAMES.STATES.COLLAPSE);
+}
+
+export function hideElement(element: HTMLElement) {
+    if (!element.classList.contains(CLASS_NAMES.STATES.COLLAPSE))
+        element.classList.add(CLASS_NAMES.STATES.COLLAPSE);
 }
 
 export function showError(text: string): boolean {

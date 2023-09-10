@@ -6,8 +6,8 @@ import { mapRulesToNumberOfRounds } from "../enums/rules.enum";
 import { Fight } from "../models/fight";
 import { Fighter } from "../models/fighter";
 import { FightEvent } from "../models/fightEvent";
-import { FightStats, RoundStats } from "../models/fightStats";
-import {  CLASS_NAMES, IMAGES, INDEXES, PATHS, ROUND_POINTS, TIME } from "../utilities/constants";
+import { FightStats, Scorecard } from "../models/fightStats";
+import {  CLASS_NAMES, IMAGES, INDEXES, PATHS, POINTS, TIME } from "../utilities/constants";
 import { fillProgressBars, getPercentageStrings, selectElementByClass, selectElementsByClass } from "../utilities/helpers";
 
 export class LiveComponent{
@@ -17,7 +17,7 @@ export class LiveComponent{
     currentRound: number;
     secondsElapsed: number;
     fightStats: FightStats;
-    roundStats: RoundStats[];
+    roundStats: Scorecard[];
 
     get minutes(): string{
         return Math.floor(this.secondsElapsed / TIME.SECONDS_IN_MINUTE).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false});
@@ -160,42 +160,42 @@ export class LiveComponent{
         blueCornerTakedowns = this.roundStats[round].blueCorner.takedowns;
 
         if(redCornerDamage < blueCornerDamage){
-            this.roundStats[round].redCorner.roundPoints = ROUND_POINTS.WINNER;
+            this.roundStats[round].redCorner.roundPoints = POINTS.ROUND.WINNER;
             if(blueCornerDamage > 20 && redCornerDamage < 2*blueCornerDamage)
-                this.roundStats[round].blueCorner.roundPoints = ROUND_POINTS.CONVICING_LOSER;
+                this.roundStats[round].blueCorner.roundPoints = POINTS.ROUND.CONVICING_LOSER;
             else
-                this.roundStats[round].blueCorner.roundPoints = ROUND_POINTS.LOSER;
+                this.roundStats[round].blueCorner.roundPoints = POINTS.ROUND.LOSER;
         }
         else if(blueCornerDamage < redCornerDamage){
-            this.roundStats[round].blueCorner.roundPoints = ROUND_POINTS.WINNER;
+            this.roundStats[round].blueCorner.roundPoints = POINTS.ROUND.WINNER;
             if(redCornerDamage > 20 && blueCornerDamage < 2*redCornerDamage)
-                this.roundStats[round].redCorner.roundPoints = ROUND_POINTS.CONVICING_LOSER;
+                this.roundStats[round].redCorner.roundPoints = POINTS.ROUND.CONVICING_LOSER;
             else
-                this.roundStats[round].redCorner.roundPoints = ROUND_POINTS.LOSER;
+                this.roundStats[round].redCorner.roundPoints = POINTS.ROUND.LOSER;
         }
         else if(redCornerSignificantStrikes > blueCornerSignificantStrikes){
-                this.roundStats[round].redCorner.roundPoints = ROUND_POINTS.WINNER;
-                this.roundStats[round].blueCorner.roundPoints = ROUND_POINTS.LOSER;
+                this.roundStats[round].redCorner.roundPoints = POINTS.ROUND.WINNER;
+                this.roundStats[round].blueCorner.roundPoints = POINTS.ROUND.LOSER;
         }
         else if(redCornerSignificantStrikes < blueCornerSignificantStrikes){
-            this.roundStats[round].redCorner.roundPoints = ROUND_POINTS.LOSER;
-            this.roundStats[round].blueCorner.roundPoints = ROUND_POINTS.WINNER;
+            this.roundStats[round].redCorner.roundPoints = POINTS.ROUND.LOSER;
+            this.roundStats[round].blueCorner.roundPoints = POINTS.ROUND.WINNER;
         }
         else if(redCornerSubmissionAttempts > blueCornerSubmissionAttempts){
-            this.roundStats[round].redCorner.roundPoints = ROUND_POINTS.WINNER;
-            this.roundStats[round].blueCorner.roundPoints = ROUND_POINTS.LOSER;
+            this.roundStats[round].redCorner.roundPoints = POINTS.ROUND.WINNER;
+            this.roundStats[round].blueCorner.roundPoints = POINTS.ROUND.LOSER;
         }
         else if(redCornerSubmissionAttempts < blueCornerSubmissionAttempts){
-            this.roundStats[round].redCorner.roundPoints = ROUND_POINTS.LOSER;
-            this.roundStats[round].blueCorner.roundPoints = ROUND_POINTS.WINNER;
+            this.roundStats[round].redCorner.roundPoints = POINTS.ROUND.LOSER;
+            this.roundStats[round].blueCorner.roundPoints = POINTS.ROUND.WINNER;
         }
         else if(redCornerTakedowns > blueCornerTakedowns){
-            this.roundStats[round].redCorner.roundPoints = ROUND_POINTS.WINNER;
-            this.roundStats[round].blueCorner.roundPoints = ROUND_POINTS.LOSER;
+            this.roundStats[round].redCorner.roundPoints = POINTS.ROUND.WINNER;
+            this.roundStats[round].blueCorner.roundPoints = POINTS.ROUND.LOSER;
         }
         else if(redCornerTakedowns < blueCornerTakedowns){
-            this.roundStats[round].redCorner.roundPoints = ROUND_POINTS.LOSER;
-            this.roundStats[round].blueCorner.roundPoints = ROUND_POINTS.WINNER;
+            this.roundStats[round].redCorner.roundPoints = POINTS.ROUND.LOSER;
+            this.roundStats[round].blueCorner.roundPoints = POINTS.ROUND.WINNER;
         }
         this.renderWinner(Method.Decision, round)
     }
@@ -218,7 +218,7 @@ export class LiveComponent{
         this.renderFightStats();
 
         this.roundStats = [];
-        this.roundStats.push(this.fightStats);
+        this.roundStats.push(null);
         for(let i=0; i < numberOfRounds; i++){
             let round = {
                 redCorner: {
@@ -336,7 +336,7 @@ export class LiveComponent{
                 eventImg.src = `${PATHS.IMAGES.ICONS + IMAGES.TAKEDOWN}`
                 break;
             case FightEventType.SubmissionAttempt:
-                eventImg.src = `${PATHS.IMAGES.ICONS + IMAGES.SUBMISSION}`
+                eventImg.src = `${PATHS.IMAGES.ICONS + IMAGES.SUBMISSION_ATTEMPT}`
                 break;
             case FightEventType.GettingUp:
                 eventImg.src = `${PATHS.IMAGES.ICONS + IMAGES.GETTING_UP}`
@@ -374,20 +374,20 @@ export class LiveComponent{
 
     private renderSignificantStrikes() {
         let significantStrikesLabels = selectElementsByClass(this.container, CLASS_NAMES.LABELS.SIGNIFICIANT_STRIKES);
-        significantStrikesLabels[INDEXES.RED_CORNER].innerHTML = this.fightStats.redCorner.significantStrikes.toLocaleString('en-US', { minimumIntegerDigits: 3, useGrouping: false });
-        significantStrikesLabels[INDEXES.BLUE_CORNER].innerHTML = this.fightStats.blueCorner.significantStrikes.toLocaleString('en-US', { minimumIntegerDigits: 3, useGrouping: false });
+        significantStrikesLabels[INDEXES.FIGHTERS.RED_CORNER].innerHTML = this.fightStats.redCorner.significantStrikes.toLocaleString('en-US', { minimumIntegerDigits: 3, useGrouping: false });
+        significantStrikesLabels[INDEXES.FIGHTERS.BLUE_CORNER].innerHTML = this.fightStats.blueCorner.significantStrikes.toLocaleString('en-US', { minimumIntegerDigits: 3, useGrouping: false });
     }
 
     private renderSubmissionAttempts() {
         let submissionLabels = selectElementsByClass(this.container, CLASS_NAMES.LABELS.SUBMISSION);
-        submissionLabels[INDEXES.RED_CORNER].innerHTML = this.fightStats.redCorner.submissionAttempts.toLocaleString('en-US', { minimumIntegerDigits: 3, useGrouping: false });
-        submissionLabels[INDEXES.BLUE_CORNER].innerHTML = this.fightStats.blueCorner.submissionAttempts.toLocaleString('en-US', { minimumIntegerDigits: 3, useGrouping: false });
+        submissionLabels[INDEXES.FIGHTERS.RED_CORNER].innerHTML = this.fightStats.redCorner.submissionAttempts.toLocaleString('en-US', { minimumIntegerDigits: 3, useGrouping: false });
+        submissionLabels[INDEXES.FIGHTERS.BLUE_CORNER].innerHTML = this.fightStats.blueCorner.submissionAttempts.toLocaleString('en-US', { minimumIntegerDigits: 3, useGrouping: false });
     }
     
     private renderTakedowns() {
         let takedownsLabels = selectElementsByClass(this.container, CLASS_NAMES.LABELS.TAKEDOWNS);
-        takedownsLabels[INDEXES.RED_CORNER].innerHTML = this.fightStats.redCorner.takedowns.toLocaleString('en-US', { minimumIntegerDigits: 3, useGrouping: false });
-        takedownsLabels[INDEXES.BLUE_CORNER].innerHTML = this.fightStats.blueCorner.takedowns.toLocaleString('en-US', { minimumIntegerDigits: 3, useGrouping: false });
+        takedownsLabels[INDEXES.FIGHTERS.RED_CORNER].innerHTML = this.fightStats.redCorner.takedowns.toLocaleString('en-US', { minimumIntegerDigits: 3, useGrouping: false });
+        takedownsLabels[INDEXES.FIGHTERS.BLUE_CORNER].innerHTML = this.fightStats.blueCorner.takedowns.toLocaleString('en-US', { minimumIntegerDigits: 3, useGrouping: false });
     }
     
     private renderDamage() {

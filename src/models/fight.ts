@@ -10,8 +10,8 @@ export class Fight {
     yourPick: Result;
     finalResult: Result;
     opponentPick: Result;
-    yourScore: number;
-    opponentScore: number;
+    yourPoints: number;
+    opponentPoints: number;
 
     get favourite(): Corner {
         if (this.redCorner.overall > this.blueCorner.overall)

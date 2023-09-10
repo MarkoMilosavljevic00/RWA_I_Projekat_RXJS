@@ -4,8 +4,8 @@ import { Fight } from "./fight";
 
 export class FightCard{
     fights: Fight[];
-    yourTotalScore: number;
-    opponentTotalScore: number;
+    yourTotalPoints: number = 0;
+    opponentTotalPoints: number = 0;
     currentFightIndex: number | undefined;
 
     constructor(){

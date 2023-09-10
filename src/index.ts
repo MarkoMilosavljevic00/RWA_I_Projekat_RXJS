@@ -3,6 +3,7 @@
 import { AppComponent } from "./components/app.component";
 import { LiveComponent } from "./components/live.component";
 import { PickerComponent } from "./components/picker.component";
+import { ResultComponent } from "./components/result.component";
 import { Corner } from "./enums/corner.enum";
 import { DifficultyLevel } from "./enums/difficulty-level.enum";
 import { FightEventType, KickType, SubmissionType } from "./enums/fight-event-type.enum";
@@ -14,11 +15,13 @@ import { FightCard } from "./models/fightCard";
 import { Fighter } from "./models/fighter";
 import { FightEvent } from "./models/fightEvent";
 import { Opponent } from "./models/opponent";
+import { Result } from "./models/result";
 
 let fightCard: FightCard = new FightCard();
 let picker: PickerComponent = new PickerComponent(fightCard);
 let app: AppComponent = new AppComponent();
 let live: LiveComponent = new LiveComponent();
+let result: ResultComponent = new ResultComponent(fightCard);
 
 app.setSelectOptionsForRounds(Rules.Boxing);
 app.setSelects();
@@ -27,12 +30,7 @@ app.setYourPoints(500);
 app.addToYourPoints(40);
 app.addToOpponentPoints(75);
 
-let opponent1: Opponent = {
-    id: 0,
-    name: "Mirko Klisura",
-    difficulty: DifficultyLevel.Easy,
-    pictureSrc: "img1.jpg",
-}
+let opponent1: Opponent = new Opponent(0,"Mirko Klisura",DifficultyLevel.Easy,"img1.jpg")
 
 app.setOpponent(opponent1);
 
@@ -111,3 +109,12 @@ let event: FightEvent = {
 live.addFightEvent(event, 3);
 live.changePosition(Position.Standup);
 live.renderWinner(Method.Submission, 1);
+
+let r = result.getResultFromScorecards(live.roundStats);
+let r1: Result = {
+    winner:Corner.RedCorner,
+    round: 3,
+    method: Method.KO_TKO  
+}
+result.addResult(r1, 0, opponent1);
+result.addResult(r1, 1, opponent1);

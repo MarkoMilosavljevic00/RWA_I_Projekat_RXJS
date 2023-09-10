@@ -2,7 +2,8 @@ export const CLASS_NAMES = {
     CONTAINERS:{
         APP: "app-container",
         PICKER: "picker-container",
-        LIVE: "live-container"
+        LIVE: "live-container",
+        RESULT: "result-container",
     },
     TABS:{
         START_TAB: "start-tab",
@@ -14,7 +15,10 @@ export const CLASS_NAMES = {
         RED_CORNER: "red-corner-img",
         BLUE_CORNER: "blue-corner-img",
         OPPONENT: "opponent-img",
-        EVENT: "event-img"
+        EVENT: "event-img",
+        WINNER: "winner-img",
+        METHOD: "method-img",
+        ROUND: "round-img",
     },
     PROGRESS_BARS:{
         RED_CORNER_SKILLS: "red-corner-skill-bars",
@@ -31,11 +35,14 @@ export const CLASS_NAMES = {
     ICONS: {
         STAR: "bi-star",
         STAR_FILL: "bi-star-fill",
+        CHECK_SQUARE: 'bi-check2-square',
+        X_SQUARE: 'bi-x-square',
     },
     STYLES: {
         RED_TEXT: "text-danger",
         BLUE_TEXT: "text-primary",
         DARK_TEXT: "text-black",
+        GREEN_TEXT: "text-success",
     },
     STATES:{
         DISABLED:"disabled",
@@ -68,13 +75,26 @@ export const CLASS_NAMES = {
         EVENT_SUBTYPE: "event-subtype-label",
         EVENT_TIME_LABEL: "event-time-label",
         WIN_INFO_LABEL: "win-info-label",
+        YOUR_WINNER_POINTS: "your-winner-points-label",
+        OPPONENT_WINNER_POINTS: "opponent-winner-points-label",
+        YOUR_METHOD_POINTS: "your-method-points-label",
+        OPPONENT_METHOD_POINTS: "opponent-method-points-label",
+        YOUR_ROUND_POINTS: "your-round-points-label",
+        OPPONENT_ROUND_POINTS: "opponent-round-points-label",
+        TOTAL_POINTS: "total-points-label",
+        YOUR_FIGHCARD_POINTS: "your-fightcard-points-label",
+        OPPONENT_FIGHCARD_POINTS: "opponent-fightcard-points-label",
     },
     LISTS:{
         FIGHT: "fight-list",
         LIVE:"live-list",
+        RESULT:"result-list",
+        RED_CORNER_WINNER: "red-corner-winner-list",
+        BLUE_CORNER_WINNER: "blue-corner-winner-list",
     },
     TEMPLATES:{
         FIGHT: "fight-template",
+        RESULT: "result-template",
         LIVE:{
             ROUND: "round-template",
             RED_CORNER_EVENT: "red-corner-event-template",
@@ -87,12 +107,16 @@ export const CLASS_NAMES = {
     ITEMS:{
         FIGHT: "fight-item-",
         ROUND: "round-item-",
+        RESULT:"result-item-",
     },
     RED_CORNER_RADIO: "red-corner-radio",
     BLUE_CORNER_RADIO: "blue-corner-radio",
     WINNER_RADIO: "winner-radio",
     REMOVE_BUTTON: "remove-button",
     PICK_DIV:"pick-div",
+    RESULT_FIGHT_DIV: "result-fight-div",
+    RESULT_PICK_DIV: "result-pick-div",
+    ROUND_DIV: "round-div",
 };
 
 export const TYPE_OF_ELEMENTS = {
@@ -133,8 +157,13 @@ export const IMAGES = {
     PUNCH: "punch-w.png",
     KICK: "kick-w.png",
     TAKEDOWN: "takedown-w.png",
-    SUBMISSION: "submission-w.png",
+    SUBMISSION_ATTEMPT: "submission-w.png",
     GETTING_UP: "getting-up-w.png",
+    WINNER: "winner-g.png",
+    DECISION: "decision-g.png",
+    KO: "ko-g.png",
+    SUBMISSION: "submission-g.png",
+    ROUND: "round-g.png",
 }
 
 export const TIME = {
@@ -142,8 +171,19 @@ export const TIME = {
 }
 
 export const INDEXES = {
-    RED_CORNER: 0,
-    BLUE_CORNER: 1,
+    FIGHTERS:{
+        RED_CORNER: 0,
+        BLUE_CORNER: 1,
+    },
+    PLAYERS:{
+        YOUR: 0,
+        OPPONENT: 1,
+    },
+    HITS:{
+        WINNER:0,
+        METHOD:1,
+        ROUND:2,
+    }
 }
 
 export const KEYS = {
@@ -160,8 +200,23 @@ export const KEYS = {
     }
 }
 
-export const ROUND_POINTS = {
-    WINNER: 10,
-    LOSER: 9,
-    CONVICING_LOSER: 8,
+export const POINTS = {
+    ROUND:{
+        WINNER: 10,
+        LOSER: 9,
+        CONVICING_LOSER: 8,
+    },
+    HITS:{
+        WINNER: 10,
+        METHOD: 5,
+        ROUND: 5,
+    }
+}
+
+export const PROBABILITY = {
+    DIFFICULTY: {
+        EASY: 0.5,
+        MEDIUM: 0.7,
+        HARD: 0.9,
+    }
 }
