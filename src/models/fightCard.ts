@@ -1,8 +1,10 @@
 import { Message } from "../enums/message.enum";
+import { DEFAULT, POINTS } from "../utilities/constants";
 import { showError } from "../utilities/helpers";
 import { Fight } from "./fight";
 
 export class FightCard{
+
     fights: Fight[];
     yourTotalPoints: number = 0;
     opponentTotalPoints: number = 0;
@@ -21,6 +23,9 @@ export class FightCard{
             console.log(newFight.redCorner.id, newFight.blueCorner.id);
             return Message.SameFighters;
         }
+
+        if(newFight.redCorner.id === DEFAULT.FIGHTER.ID || newFight.blueCorner.id === DEFAULT.FIGHTER.ID)
+          return Message.NoFighterSelected
 
         let duplicate: boolean;
         this.fights.forEach((fight) => {
@@ -46,5 +51,12 @@ export class FightCard{
 
     removeFight(fightIndex: number) {
         this.fights.splice(fightIndex, 1);
+    }
+
+    reset(){
+      this.fights = [];
+      this.currentFightIndex = undefined;
+      this.yourTotalPoints = POINTS.INITIAL;
+      this.opponentTotalPoints = POINTS.INITIAL;
     }
 }

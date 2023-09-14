@@ -64,6 +64,18 @@ export class ResultComponent{
         this.renderTotalPoints(this.fightCard.yourTotalPoints, this.fightCard.opponentTotalPoints);
     }
 
+    getPointsByHits(finalResult: Result, pick: Result) {
+        let points: number[] = [0,0,0];
+        if(finalResult.winner === pick.winner){
+            points[0] = 10;
+            if(finalResult.method === pick.method)
+                points[1] = 5;
+            if((finalResult.method !== Method.Decision) && (finalResult.round === pick.round))
+                points[2] = 5;
+        }          
+        return points;
+    }
+
     renderTotalPoints(yourPoints: number, opponentPoints: number) {
         let yourFightCardPointsLabel = selectElementByClass(this.container, CLASS_NAMES.LABELS.YOUR_FIGHCARD_POINTS);
         let opponentFightCardPointsLabel = selectElementByClass(this.container, CLASS_NAMES.LABELS.OPPONENT_FIGHCARD_POINTS);
@@ -128,18 +140,6 @@ export class ResultComponent{
             pointsLabel.classList.add(CLASS_NAMES.STYLES.RED_TEXT);
             textLabel.classList.add(CLASS_NAMES.STYLES.RED_TEXT);
         }
-    }
-
-    getPointsByHits(finalResult: Result, pick: Result) {
-        let points: number[] = [0,0,0];
-        if(finalResult.winner === pick.winner){
-            points[0] = 10;
-            if(finalResult.method === pick.method)
-                points[1] = 5;
-            if((finalResult.method !== Method.Decision) && (finalResult.round === pick.round))
-                points[2] = 5;
-        }          
-        return points;
     }
 
     private renderFightInformation(fightItem: HTMLElement, fight: Fight) {

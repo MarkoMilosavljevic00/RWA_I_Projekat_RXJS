@@ -6,10 +6,20 @@ export const CLASS_NAMES = {
         RESULT: "result-container",
     },
     TABS:{
-        START_TAB: "start-tab",
-        PICKER_TAB: "picker-tab",
-        LIVE_TAB: "live-tab",
-        RESULT_TAB: "result-tab"
+        NAV_LINKS:{
+            START: "start-tab-nav-link",
+            PICKER: "picker-tab-nav-link",
+            LIVE: "live-tab-nav-link",
+            RESULT: "result-tab-nav-link",
+            NAV_LINK: "nav-link",
+        },
+        PANES:{
+            START: "start-tab-pane",
+            PICKER: "picker-tab-pane",
+            LIVE: "live-tab-pane",
+            RESULT: "result-tab-pane",
+            TAB_PANE: "tab-pane"
+        }
     },
     IMAGES:{
         RED_CORNER: "red-corner-img",
@@ -26,11 +36,21 @@ export const CLASS_NAMES = {
         DAMAGE: "damage-bar",
     },
     SELECTS:{
-        DIFF_LEVEL: "difficulty-level-select",
+        DIFFICULTY: "difficulty-level-select",
         RULES: "rules-select",
         WEIGHTCLASS: "weightclass-select",
         METHOD: "method-select",
         ROUND: "round-select",
+        RED_CORNER: "red-corner-select",
+        BLUE_CORNER: "blue-corner-select",
+    },
+    OPTIONS:{
+        DIFFICULTY: "difficulty-level-option",
+        RULES: "rules-option",
+        WEIGHTCLASS: "weightclass-option",
+        METHOD: "method-option",
+        ROUND: "round-option",
+        FIGHTER: "fighter-option",
     },
     ICONS: {
         STAR: "bi-star",
@@ -43,11 +63,13 @@ export const CLASS_NAMES = {
         BLUE_TEXT: "text-primary",
         DARK_TEXT: "text-black",
         GREEN_TEXT: "text-success",
+        GRAY_TEXT: "text-secondary",
     },
     STATES:{
         DISABLED:"disabled",
         ACTIVE:"active",
         COLLAPSE: "collapse",
+        SHOW: "show",
     },
     LABELS:{
         YOUR_POINTS: "your-points-label",
@@ -109,6 +131,12 @@ export const CLASS_NAMES = {
         ROUND: "round-item-",
         RESULT:"result-item-",
     },
+    BUTTONS:{
+        START: "start-button",
+        FIND_NEW_OPPONENT: "find-new-opponent-button",
+        RESTART_SCORE: "restart-score-button",
+        PLAY_AGAIN: "play-again-button",
+    },
     RED_CORNER_RADIO: "red-corner-radio",
     BLUE_CORNER_RADIO: "blue-corner-radio",
     WINNER_RADIO: "winner-radio",
@@ -117,6 +145,7 @@ export const CLASS_NAMES = {
     RESULT_FIGHT_DIV: "result-fight-div",
     RESULT_PICK_DIV: "result-pick-div",
     ROUND_DIV: "round-div",
+    MAIN_SCOREBOARD: "main-scoreboard",
 };
 
 export const TYPE_OF_ELEMENTS = {
@@ -201,6 +230,7 @@ export const KEYS = {
 }
 
 export const POINTS = {
+    INITIAL: 0,
     ROUND:{
         WINNER: 10,
         LOSER: 9,
@@ -218,5 +248,16 @@ export const PROBABILITY = {
         EASY: 0.5,
         MEDIUM: 0.7,
         HARD: 0.9,
+    }
+}
+
+export const DEFAULT = {
+    FIGHTER: {
+        ID: 0,
+        NAME: "Fighter",
+        PICTURE_SRC: "default-fighter.png",
+        STRIKING: 50,
+        GRAPPLING: 50,
+
     }
 }

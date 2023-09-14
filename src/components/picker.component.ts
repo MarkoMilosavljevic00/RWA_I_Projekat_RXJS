@@ -1,16 +1,18 @@
 import { Corner } from "../enums/corner.enum";
 import { Message } from "../enums/message.enum";
 import { Method } from "../enums/method.enum";
-import { Rules } from "../enums/rules.enum";
+import { mapRulesToNumberOfRounds, Rules } from "../enums/rules.enum";
+import { Weightclass } from "../enums/weightclass.enum";
 import { Fight } from "../models/fight";
 import { FightCard } from "../models/fightCard";
 import { Fighter } from "../models/fighter";
 import { Result } from "../models/result";
 import { CLASS_NAMES, TYPE_OF_ELEMENTS } from "../utilities/constants";
 import { PATHS } from "../utilities/constants";
-import { fillProgressBars, getCheckedRadioValue, getPercentageStrings, getSelectedValue, mapStringToEnum, selectElementByClass, selectElementByClassAndType, selectElementsByBeginOfClass, selectElementsByClass, selectElementsByPartialClass, showError } from "../utilities/helpers";
+import { fillProgressBars, getCheckedRadioValue, getSelectedValue, mapStringToEnum, clearElement, selectElementByClass, selectElementByClassAndType, selectElementsByBeginOfClass, selectElementsByClass, selectElementsByPartialClass, setSelectOptionsToNumber, setSelectsOptionsFromValues, showError } from "../utilities/helpers";
 
 export class PickerComponent{
+
     fightCard: FightCard;
     numberOfFights: number = 0;
     currentRedCorner: Fighter;
@@ -19,7 +21,45 @@ export class PickerComponent{
 
     constructor(fightCard: FightCard){
         this.fightCard = fightCard;
-        this.container = selectElementByClass(document.body, CLASS_NAMES.CONTAINERS.PICKER)
+        this.container = selectElementByClass(document.body, CLASS_NAMES.CONTAINERS.PICKER);
+        setSelectsOptionsFromValues(this.container, CLASS_NAMES.SELECTS.WEIGHTCLASS, CLASS_NAMES.OPTIONS.WEIGHTCLASS, Weightclass);
+        setSelectsOptionsFromValues(this.container, CLASS_NAMES.SELECTS.RULES, CLASS_NAMES.OPTIONS.RULES, Rules);
+        setSelectsOptionsFromValues(this.container, CLASS_NAMES.SELECTS.METHOD, CLASS_NAMES.OPTIONS.METHOD, Method);
+    }
+
+    resetFightCard() {
+        this.fightCard.reset();
+        this.numberOfFights = 0;
+        this.setFighter(new Fighter(), Corner.RedCorner);
+        this.setFighter(new Fighter(), Corner.BlueCorner);
+        clearElement(this.container, CLASS_NAMES.LISTS.FIGHT, CLASS_NAMES.ITEMS.FIGHT);
+    }
+
+    getElement(className: string): HTMLElement{
+        return selectElementByClass(this.container, className);
+    }
+
+    getElements(className: string): NodeListOf<HTMLElement>{
+        return selectElementsByClass(this.container, className);
+    }
+
+    getRules(){
+        return mapStringToEnum<Rules>(
+                getSelectedValue(this.container, CLASS_NAMES.SELECTS.RULES), 
+                Rules
+            );
+    }
+
+    getWeightclass(){
+        return mapStringToEnum<Weightclass>(
+                getSelectedValue(this.container , CLASS_NAMES.SELECTS.WEIGHTCLASS),
+                Weightclass
+            );
+    }
+
+    setSelectOptionsForRounds(rule: Rules){
+        let numberOfRounds = mapRulesToNumberOfRounds(rule);
+        setSelectOptionsToNumber(this.container, CLASS_NAMES.SELECTS.ROUND, CLASS_NAMES.OPTIONS.ROUND, numberOfRounds);
     }
 
     setFighter(fighter: Fighter, corner: Corner){
@@ -47,15 +87,18 @@ export class PickerComponent{
 
     getFightInfo(): Fight{
         let fight: Fight = new Fight();
-        fight.rules = mapStringToEnum<Rules>(getSelectedValue(this.container as HTMLDivElement, CLASS_NAMES.SELECTS.RULES), Rules);
+        fight.rules = this.getRules();
         fight.redCorner = this.currentRedCorner;
         fight.blueCorner = this.currentBlueCorner;
 
         let winner = mapStringToEnum<Corner>(getCheckedRadioValue(CLASS_NAMES.WINNER_RADIO), Corner);
         let method = mapStringToEnum<Method>(getSelectedValue(this.container as HTMLDivElement, CLASS_NAMES.SELECTS.METHOD), Method);
-        let round = parseInt(getSelectedValue(this.container as HTMLDivElement, CLASS_NAMES.SELECTS.ROUND));
+        let round
         if(method === Method.Decision)
             round = 0;
+        else
+            round = parseInt(getSelectedValue(this.container as HTMLDivElement, CLASS_NAMES.SELECTS.ROUND));
+
         let pick: Result = {
             winner,
             method,
@@ -107,7 +150,12 @@ export class PickerComponent{
         blueCornerLabel.innerHTML = newFight.blueCorner.name;
         winnerLabel.innerHTML = newFight.yourPick.winner;
         methodLabel.innerHTML = newFight.yourPick.method;
-        roundLabel.innerHTML = newFight.yourPick.round.toString();
+        console.log(newFight.yourPick.method);
+        if(newFight.yourPick.method === Method.Decision){
+            roundLabel.classList.add(CLASS_NAMES.STATES.COLLAPSE);
+        }
+        else
+            roundLabel.innerHTML = `Round: ${newFight.yourPick.round}`;
 
         if (newFight.favourite === Corner.RedCorner) {
             redCornerOddLabel.innerHTML = "Favourite";

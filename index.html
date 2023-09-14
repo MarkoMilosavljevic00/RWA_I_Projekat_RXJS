@@ -24,16 +24,16 @@
   <body>
     <div class="app-container">
       <div class="container pt-1">
-      <nav class="navbar navbar-expand-lg ps-4" data-bs-theme="dark">
-        <div class="container-fluid customnav">
-          <a class="navbar-brand fw-bold text-primary fs-1" href="#"
-            >RightFight</a
-          >
-        </div>
-      </nav>
+        <nav class="navbar navbar-expand-lg ps-4" data-bs-theme="dark">
+          <div class="container-fluid customnav">
+            <a class="navbar-brand fw-bold text-primary fs-1" href="#"
+              >RightFight</a
+            >
+          </div>
+        </nav>
       </div>
 
-      <div class="container border rounded my-2">
+      <div class="main-scoreboard collapse container border rounded my-2">
         <div class="row">
           <div class="col-12 order-md-2 col-md-8 px-1 card text-center row g-0">
             <div class="card text-center">
@@ -48,12 +48,12 @@
                     <div class="col-12 col-md-6">
                       <div class="input-group">
                         <select class="difficulty-level-select form-select col-12 text-center" id="inputGroupSelect04" aria-label="Example select with button addon" data-np-intersection-state="visible">
-
-                        <option value="Easy">Easy</option><option value="Medium">Medium</option><option value="Hard">Hard</option></select>
-                        <button class="find-new-opp-button btn btn-outline-secondary col-12" type="button">
+                          
+                        </select>
+                        <button class="find-new-opponent-button btn btn-outline-secondary col-12" type="button">
                           Find New Opponent
                         </button>
-                        <button class="btn btn btn-primary col-12" type="button">
+                        <button class="restart-score-button btn btn btn-primary col-12" type="button">
                           Restart Score
                         </button>
                       </div>
@@ -87,7 +87,7 @@
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item" role="presentation">
             <button
-              class="start-tab nav-link active"
+              class="start-tab-nav-link nav-link active"
               id="start-tab"
               data-bs-toggle="tab"
               data-bs-target="#start-tab-pane"
@@ -102,7 +102,7 @@
           </li>
           <li class="nav-item" role="presentation">
             <button
-              class="picker-tab nav-link"
+              class="picker-tab-nav-link nav-link"
               id="picker-tab"
               data-bs-toggle="tab"
               data-bs-target="#picker-tab-pane"
@@ -117,7 +117,7 @@
           </li>
           <li class="nav-item" role="presentation">
             <button
-              class="live-tab nav-link"
+              class="live-tab-nav-link nav-link"
               id="live-tab"
               data-bs-toggle="tab"
               data-bs-target="#live-tab-pane"
@@ -132,7 +132,7 @@
           </li>
           <li class="nav-item" role="presentation">
             <button
-              class="result-tab nav-link"
+              class="result-tab-nav-link nav-link"
               id="result-tab"
               data-bs-toggle="tab"
               data-bs-target="#result-tab-pane"
@@ -149,7 +149,7 @@
 
         <div class="tab-content" id="myTabContent">
           <div
-            class="tab-pane fade show active"
+            class="start-tab-pane tab-pane fade show active"
             id="start-tab-pane"
             role="tabpanel"
             aria-labelledby="start-tab"
@@ -175,7 +175,7 @@
           </div>
 
           <div
-            class="tab-pane fade"
+            class="picker-tab-pane tab-pane fade"
             id="picker-tab-pane"
             role="tabpanel"
             aria-labelledby="picker-tab"
@@ -195,12 +195,12 @@
                     <div class="d-flex justify-content-center align-items-center" style="height: 110px;">
                       <img 
                         class="red-corner-img img-fluid" 
-                        src="./src/assets/fighters/default_fighter.png" 
+                        src="./src/assets/fighters/default-fighter.png" 
                         style="max-width: 80px;">
                     </div>
                     <div class="text-center m-2 justify-content-center">
                       <select
-                        class="rc-f-select form-select form-select-sm m-auto fw-light text-danger"
+                        class="red-corner-select form-select form-select-sm m-auto fw-light text-danger"
                         aria-label="Default select example"
                         style="max-width: 150px"
                       >
@@ -217,12 +217,12 @@
                             <div
                               class="red-corner-skill-bars progress-bar bg-danger"
                               role="progressbar"
-                              style="width: 75%"
-                              aria-valuenow="75"
+                              style="width: 50%"
+                              aria-valuenow="50"
                               aria-valuemin="0"
                               aria-valuemax="100"
                             >
-                              75%
+                              50%
                             </div>
                           </div>
 
@@ -230,12 +230,12 @@
                             <div
                               class="red-corner-skill-bars progress-bar bg-danger"
                               role="progressbar"
-                              style="width: 75%"
-                              aria-valuenow="75"
+                              style="width: 50%"
+                              aria-valuenow="50"
                               aria-valuemin="0"
                               aria-valuemax="100"
                             >
-                              75%
+                              50%
                             </div>
                           </div>
 
@@ -243,12 +243,12 @@
                             <div
                               class="red-corner-skill-bars progress-bar bg-danger"
                               role="progressbar"
-                              style="width: 75%"
-                              aria-valuenow="75"
+                              style="width: 50%"
+                              aria-valuenow="50"
                               aria-valuemin="0"
                               aria-valuemax="100"
                             >
-                              75%
+                              50%
                             </div>
                           </div>
                         </div>
@@ -266,11 +266,11 @@
                   >
                     <h4 class="title fw-bold">Blue corner</h4>
                     <div class="d-flex justify-content-center align-items-center" style="height: 110px;">
-                      <img class="blue-corner-img img-fluid" src="./src/assets/fighters/default_fighter.png" style="max-width: 80px;">
+                      <img class="blue-corner-img img-fluid" src="./src/assets/fighters/default-fighter.png" style="max-width: 80px;">
                     </div>
                     <div class="text-center m-2 justify-content-center">
                       <select
-                        class="bc-f-select form-select form-select-sm m-auto fw-light text-primary"
+                        class="blue-corner-select form-select form-select-sm m-auto fw-light text-primary"
                         aria-label="Default select example"
                         style="max-width: 150px"
                       >
@@ -287,12 +287,12 @@
                             <div
                               class="blue-corner-skill-bars progress-bar bg-primary"
                               role="progressbar"
-                              style="width: 75%"
-                              aria-valuenow="75"
+                              style="width: 50%"
+                              aria-valuenow="50"
                               aria-valuemin="0"
                               aria-valuemax="100"
                             >
-                              75%
+                              50%
                             </div>
                           </div>
 
@@ -300,12 +300,12 @@
                             <div
                               class="blue-corner-skill-bars progress-bar bg-primary"
                               role="progressbar"
-                              style="width: 75%"
-                              aria-valuenow="75"
+                              style="width: 50%"
+                              aria-valuenow="50"
                               aria-valuemin="0"
                               aria-valuemax="100"
                             >
-                              75%
+                              50%
                             </div>
                           </div>
 
@@ -313,12 +313,12 @@
                             <div
                               class="blue-corner-skill-bars progress-bar bg-primary"
                               role="progressbar"
-                              style="width: 75%"
-                              aria-valuenow="75"
+                              style="width: 50%"
+                              aria-valuenow="50"
                               aria-valuemin="0"
                               aria-valuemax="100"
                             >
-                              75%
+                              50%
                             </div>
                           </div>
                         </div>
@@ -337,6 +337,7 @@
                     style="max-width: 150px"
                     data-np-intersection-state="visible"
                   >
+                  <option disabled selected>Choose Rules...</option>
                   </select>
 
                   Weightclass:
@@ -346,6 +347,7 @@
                     style="max-width: 150px"
                     data-np-intersection-state="visible"
                   >
+                  <option disabled selected>Choose Weightclass...</option>
                   </select>
 
                   <hr />
@@ -356,10 +358,10 @@
                     <div class="row justify-content-center mb-2">
                       <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
                         <input value="Red corner" type="radio" class="red-corner-radio btn-check" name="winner-radio" id="btnradio1" autocomplete="off" checked>
-                        <label class="red-corner-winner-label btn btn-outline-danger" for="btnradio1">Ime Prezime</label>
+                        <label class="red-corner-winner-label btn btn-outline-danger col-6" for="btnradio1">Fighter</label>
                       
                         <input value="Blue corner" type="radio" class="blue-corner-radio btn-check" name="winner-radio" id="btnradio2" autocomplete="off">
-                        <label class="blue-corner-winner-label btn btn-outline-primary" for="btnradio2">Ime Prezime</label>
+                        <label class="blue-corner-winner-label btn btn-outline-primary col-6" for="btnradio2">Fighter</label>
                       </div>
                     </div>
 
@@ -378,7 +380,6 @@
                     style="max-width: 150px"
                     data-np-intersection-state="visible"
                     >
-                    dasdasd
                     </select>
                     <hr>
 
@@ -398,7 +399,7 @@
                 <div class="fight-template collapse row rounded border border-black bg-black bg-opacity-25 text-white p-2 m-2">
                   <div class="row col-lg-8 d-flex col-12 align-items-center justify-content-center mx-auto">
                     <div class="col-xxl-2 col-md-1 col-3 order-md-0 d-flex justify-content-center align-items-center" style="height: 110px;">
-                      <img class="red-corner-img img-fluid" src="./src/assets/fighters/default_fighter.png" style="max-width: 80px;">
+                      <img class="red-corner-img img-fluid" src="./src/assets/fighters/default-fighter.png" style="max-width: 80px;">
                     </div>                  
                     <div class="col-xxl-2 col-md-4 col-6 order-md-2 align-self-start text-center">
                       <div class="rules-label small">Boxing</div>
@@ -406,25 +407,25 @@
                       <div class="fs-1 fw-bold">VS</div>
                     </div>
                     <div class="col-xxl-2 col-md-1 col-3 order-md-4 d-flex justify-content-center align-items-center" style="height: 110px;">
-                      <img class="blue-corner-img img-fluid" src="./src/assets/fighters/default_fighter.png" style="max-width: 80px;">
+                      <img class="blue-corner-img img-fluid" src="./src/assets/fighters/default-fighter.png" style="max-width: 80px;">
                     </div>                     
                     <div class="col-md-3 col-6 order-md-1">
                       <i class="red-corner-odd-label bi text-warning small">Favourite</i>
-                      <div class="red-corner-label text-danger fs-4">Ime Prezime</div>
+                      <div class="red-corner-label text-danger fs-4">Fighter</div>
                     </div>
                     <div class="col-md-3 col-6 order-md-3 text-end ">
                       <i class="blue-corner-odd-label bi text-warning small">Favourite</i>
-                      <div class="blue-corner-label text-primary fs-4">Ime Prezime</div>
+                      <div class="blue-corner-label text-primary fs-4">Fighter</div>
                     </div>
                   </div>
 
 
-                  <div class="col-lg-2 col-12 d-flex flex-column text-center align-items-center">
+                  <div class="col-lg-2 col-12 d-flex flex-column align-items-center">
                     <div class="fs-5 ">Match Prediction</div>
                     <div class="pick-div rounded bg-secondary bg-opacity-10 p-1 m-1 text-danger">
                       <div>Winner: <label class="winner-label fw-bold">Red corner</label></div>
                       <div>Method: <label class="method-label fw-bold">Decision</label></div>
-                      <div>Round: <label class="round-label fw-bold">1</label></div>
+                      <div class="round-label">Round: <label class="fw-bold">1</label></div>
                     </div>
                   </div>
 
@@ -441,7 +442,7 @@
           </div>
 
           <div
-            class="tab-pane fade "
+            class="live-tab-pane tab-pane fade "
             id="live-tab-pane"
             role="tabpanel"
             aria-labelledby="live-tab"
@@ -458,10 +459,10 @@
                   >
                     <h4 class="fw-bold">Red corner</h4>
                     <div class="d-flex justify-content-center align-items-center" style="height: 110px;">
-                      <img class="red-corner-img img-fluid" src="./src/assets/fighters/default_fighter.png" style="max-width: 80px;">
+                      <img class="red-corner-img img-fluid" src="./src/assets/fighters/default-fighter.png" style="max-width: 80px;">
                     </div>
                     <div class="text-center m-2 justify-content-center">
-                      <h5 class="red-corner-label fw-bold">Ime Prezime</h5>
+                      <h5 class="red-corner-label fw-bold">Fighter</h5>
                     </div>
                     <div class="text-start bg-secondary bg-opacity-25 p-1">
                       <div class="row">
@@ -474,12 +475,12 @@
                             <div
                               class="red-corner-skill-bars progress-bar bg-danger"
                               role="progressbar"
-                              style="width: 75%"
-                              aria-valuenow="75"
+                              style="width: 50%"
+                              aria-valuenow="50"
                               aria-valuemin="0"
                               aria-valuemax="100"
                             >
-                              75%
+                              50%
                             </div>
                           </div>
 
@@ -487,12 +488,12 @@
                             <div
                               class="red-corner-skill-bars progress-bar bg-danger"
                               role="progressbar"
-                              style="width: 75%"
-                              aria-valuenow="75"
+                              style="width: 50%"
+                              aria-valuenow="50"
                               aria-valuemin="0"
                               aria-valuemax="100"
                             >
-                              75%
+                              50%
                             </div>
                           </div>
 
@@ -500,12 +501,12 @@
                             <div
                               class="red-corner-skill-bars progress-bar bg-danger"
                               role="progressbar"
-                              style="width: 75%"
-                              aria-valuenow="75"
+                              style="width: 50%"
+                              aria-valuenow="50"
                               aria-valuemin="0"
                               aria-valuemax="100"
                             >
-                              75%
+                              50%
                             </div>
                           </div>
                         </div>
@@ -523,10 +524,10 @@
                   >
                     <h4 class="fw-bold">Blue corner</h4>
                     <div class="d-flex justify-content-center align-items-center" style="height: 110px;">
-                      <img class="blue-corner-img img-fluid" src="./src/assets/fighters/default_fighter.png" style="max-width: 80px;">
+                      <img class="blue-corner-img img-fluid" src="./src/assets/fighters/default-fighter.png" style="max-width: 80px;">
                     </div>
                     <div class="text-center m-2 justify-content-center">
-                      <h5 class="blue-corner-label fw-bold">Ime Prezime</h5>
+                      <h5 class="blue-corner-label fw-bold">Fighter</h5>
                     </div>
                     <div class="text-start bg-secondary bg-opacity-25 p-1">
                       <div class="row">
@@ -539,12 +540,12 @@
                             <div
                               class="blue-corner-skill-bars progress-bar bg-primary"
                               role="progressbar"
-                              style="width: 75%"
-                              aria-valuenow="75"
+                              style="width: 50%"
+                              aria-valuenow="50"
                               aria-valuemin="0"
                               aria-valuemax="100"
                             >
-                              75%
+                              50%
                             </div>
                           </div>
 
@@ -552,12 +553,12 @@
                             <div
                               class="blue-corner-skill-bars progress-bar bg-primary"
                               role="progressbar"
-                              style="width: 75%"
-                              aria-valuenow="75"
+                              style="width: 50%"
+                              aria-valuenow="50"
                               aria-valuemin="0"
                               aria-valuemax="100"
                             >
-                              75%
+                              50%
                             </div>
                           </div>
 
@@ -565,12 +566,12 @@
                             <div
                               class="blue-corner-skill-bars progress-bar bg-primary"
                               role="progressbar"
-                              style="width: 75%"
-                              aria-valuenow="75"
+                              style="width: 50%"
+                              aria-valuenow="50"
                               aria-valuemin="0"
                               aria-valuemax="100"
                             >
-                              75%
+                              50%
                             </div>
                           </div>
                         </div>
@@ -601,24 +602,24 @@
                       <div
                         class="damage-bar progress-bar bg-danger"
                         role="progressbar"
-                        style="width: 75%"
-                        aria-valuenow="75"
+                        style="width: 50%"
+                        aria-valuenow="50"
                         aria-valuemin="0"
                         aria-valuemax="100"
                       >
-                        75%
+                        50%
                       </div>
                     </div>
                     <div class="progress col-5" style="height: 25px">
                       <div
                         class="damage-bar progress-bar bg-danger"
                         role="progressbar"
-                        style="width: 75%"
-                        aria-valuenow="75"
+                        style="width: 50%"
+                        aria-valuenow="50"
                         aria-valuemin="0"
                         aria-valuemax="100"
                       >
-                        75%
+                        50%
                       </div>
                     </div>
                   </div>
@@ -677,7 +678,7 @@
                   <div class="blue-corner-event-template collapse d-flex flex-row-reverse text-white custom-font align-items-center py-1">
                     <div class="event-time-label d-flex col-md-1 col-2 justify-content-end">0' 13"</div>
                     <div class="d-flex flex-row-reverse border border-dark rounded p-1">
-                      <img class="event-img img-fluid" src="./src/assets/submission-w.png" style="max-width:25px">
+                      <img class="event-img img-fluid" src="./src/assets/icons/punch-w.png" style="max-width:25px">
                       <div class="mx-1 text-small">
                         <div class="text-danger"><label class="event-damage-label">4</label>% Damage</div> <div class="text-primary"><label class="event-energy-label">1</label>% Energy</div>
                       </div>
@@ -701,14 +702,14 @@
           </div>
 
           <div
-            class="tab-pane fade"
+            class="result-tab-pane tab-pane fade"
             id="result-tab-pane"
             role="tabpanel"
             aria-labelledby="result-tab"
             tabindex="0"
           >
 
-            <div class="result-container card bg-secondary bg-opacity-25">
+            <div class="result-container card bg-secondary bg-opacity-25 mb-3">
 
               <div class="d-flex justify-content-between text-white fs-2 fw-bold text-center">
                 <div class="your-fightcard-points-label col-2 p-2 m-4 rounded border border-black bg-black bg-opacity-25 ">0</div>
@@ -716,13 +717,13 @@
                 <div class="opponent-fightcard-points-label col-2 p-2 m-4  rounded border border-black bg-black bg-opacity-25">0</div>
               </div>
 
-              <div class="result-list row p-2 m-4 text-white">
+              <div class="result-list row p-1 m-1 text-white">
         
                 <div class="result-template collapse rounded border border-black bg-black bg-opacity-25 mb-4 p-2">
                   <div class="result-fight-div col-lg-12 col-12 order-md-0 mb-2">
                     <div class="d-flex row align-items-center justify-content-center">
-                      <img class="red-corner-img col-md-1 col-6 order-md-0 img-fluid pe-2" src="./src/assets/fighters/default_fighter.png" >
-                      <img class="blue-corner-img col-md-1 col-6 order-md-4 img-fluid ps-2" src="./src/assets/fighters/default_fighter.png">
+                      <img class="red-corner-img col-md-1 col-6 order-md-0 img-fluid pe-2" src="./src/assets/fighters/default-fighter.png" >
+                      <img class="blue-corner-img col-md-1 col-6 order-md-4 img-fluid ps-2" src="./src/assets/fighters/default-fighter.png">
                       <div class="col-md-2 col-12 order-md-2 align-self-start text-center">
                         <div class="rules-label small">Boxing</div>
                         <div class="small"><div class="weightclass-label d-inline">Middleweight</div> bout</div>
@@ -731,7 +732,7 @@
                       <div class="col-md-4 col-6 d-flex row order-md-1">
                         <div class="col-lg-6 col-12">
                           <i class="red-corner-odd-label bi text-warning small">Favourite</i>
-                          <div class="red-corner-label text-danger fs-4">Ime Prezime</div>
+                          <div class="red-corner-label text-danger fs-4">Fighter</div>
                         </div>
                         <div class="red-corner-winner-list collapse col-lg-6 col-12 order-lg-0">
                           <div class="fst-italic text-success"><img src="./src/assets/icons/winner-g.png" class="winner-img img-fluid text-success" style="max-width: 20px;"> Winner</div>
@@ -743,7 +744,7 @@
                         <!-- <i class="bi bi-star small">Underdog</i> -->
                         <div class="col-lg-6 col-12 order-lg-1">
                           <i class="blue-corner-odd-label bi text-warning small">Favourite</i>
-                          <div class="blue-corner-label text-primary fs-4">Ime Prezime</div>
+                          <div class="blue-corner-label text-primary fs-4">Fighter</div>
                         </div>
                         <div class="blue-corner-winner-list collapse col-lg-6 col-12 order-lg-0">
                           <div class="fst-italic text-success"><img src="./src/assets/icons/winner-g.png" class="winner-img img-fluid text-success" style="max-width: 20px;"> Winner</div>
@@ -767,8 +768,8 @@
                       <div class="col-sm-1 col-2 order-sm-0">
                         <i class="your-winner-points-label bi">+5</i>
                       </div>
-                      <div class="winner-label col-sm-3 col-4 order-sm-1 text-end">Ime Prezime</div>
-                      <div class="winner-label col-sm-3 col-4 order-sm-3 text-start">Ime Prezime</div>
+                      <div class="winner-label col-sm-3 col-4 order-sm-1 text-end">Fighter</div>
+                      <div class="winner-label col-sm-3 col-4 order-sm-3 text-start">Fighter</div>
                       <div class="col-sm-1 col-2 order-sm-4 text-end d-flex flex-row-reverse">
                         <i class="opponent-winner-points-label bi">+5</i>
                       </div>
@@ -809,6 +810,10 @@
                   </div>
                 </div>
 
+              </div>
+
+              <div class="mb-4 p-2 text-center">
+                <button type="button" class="play-again-button btn btn-outline-primary btn-lg">Play again</button>
               </div>
 
             </div>
