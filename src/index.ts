@@ -9,8 +9,10 @@ import { Weightclass } from "./enums/weightclass.enum";
 import { FightCard } from "./models/fightCard";
 import { Fighter } from "./models/fighter";
 import { Opponent } from "./models/opponent";
-import { changeDifficultyHandler, getOpponentHandler, goToPickerHandler, resetFightCardHandler, resetPointsHandler } from "./observables/app.logic";
-import { getFightersHandler, getWeightclassesAndRoundsHandler } from "./observables/picker.logic";
+import { changeDifficultyHandler, getOpponentHandler, goToPickerHandler, restartPointsHandler } from "./observables/app.logic/app.handlers";
+import { getChangeDifficultyObs, getGoToPickerObs, getRestartPointsObs } from "./observables/app.logic/app.observables";
+import { changeFighterHandler, getFightersByFightInfoHandler, getNumberOfRoundsHandler, resetFightcardHandler } from "./observables/picker.logic/picker.handler";
+import { getChangeRulesObs } from "./observables/picker.logic/picker.observables";
 
 let fightCard: FightCard = new FightCard();
 let picker: PickerComponent = new PickerComponent(fightCard);
@@ -112,18 +114,14 @@ app.setOpponent(opponent1);
 // result.addResult(r1, 0, opponent1);
 // result.addResult(r1, 1, opponent1);
 
-// picker.resetFightCard();
 console.log(fightCard);
 
-
 changeDifficultyHandler(app);
-resetPointsHandler(app);
 goToPickerHandler(app);
+restartPointsHandler(app);
 getOpponentHandler(app);
-resetFightCardHandler(app, picker);
 
-getFightersHandler(picker);
-getWeightclassesAndRoundsHandler(picker);
-
-
-
+resetFightcardHandler(picker, app);// nije testirano
+getNumberOfRoundsHandler(picker);
+getFightersByFightInfoHandler(picker);
+changeFighterHandler(picker);
