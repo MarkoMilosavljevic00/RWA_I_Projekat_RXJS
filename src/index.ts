@@ -1,3 +1,4 @@
+import { Subject } from "rxjs";
 import { AppComponent } from "./components/app.component";
 import { LiveComponent } from "./components/live.component";
 import { PickerComponent } from "./components/picker.component";
@@ -8,15 +9,20 @@ import { Rules } from "./enums/rules.enum";
 import { Weightclass } from "./enums/weightclass.enum";
 import { FightCard } from "./models/fightCard";
 import { Fighter } from "./models/fighter";
+import { FightStats, Scorecard } from "./models/fightStats";
 import { Opponent } from "./models/opponent";
 import { changeDifficultyHandler, getOpponentHandler, goToPickerHandler, restartPointsHandler } from "./observables/app.logic/app.handlers";
 import { getChangeDifficultyObs, getGoToPickerObs, getRestartPointsObs } from "./observables/app.logic/app.observables";
-import { changeFighterHandler, getFightersByFightInfoHandler, getNumberOfRoundsHandler, resetFightcardHandler } from "./observables/picker.logic/picker.handler";
+import { startFightsHandler } from "./observables/live.logic/live.handlers";
+import { changeFighterHandler, getFightersByFightInfoHandler, getChangeRulesHandler, resetFightcardHandler } from "./observables/picker.logic/picker.handlers";
 import { getChangeRulesObs } from "./observables/picker.logic/picker.observables";
+import { getResultsHandler } from "./observables/result.logic/result.handlers";
 
 let fightCard: FightCard = new FightCard();
 let picker: PickerComponent = new PickerComponent(fightCard);
-let app: AppComponent = new AppComponent();
+let app = new AppComponent();
+let live = new LiveComponent();
+let result = new ResultComponent(fightCard);
 
 app.setYourPoints(500);
 app.addToYourPoints(40);
@@ -114,7 +120,7 @@ app.setOpponent(opponent1);
 // result.addResult(r1, 0, opponent1);
 // result.addResult(r1, 1, opponent1);
 
-console.log(fightCard);
+//console.log(fightCard);
 
 changeDifficultyHandler(app);
 goToPickerHandler(app);
@@ -122,6 +128,12 @@ restartPointsHandler(app);
 getOpponentHandler(app);
 
 resetFightcardHandler(picker, app);// nije testirano
-getNumberOfRoundsHandler(picker);
+getChangeRulesHandler(picker);
 getFightersByFightInfoHandler(picker);
 changeFighterHandler(picker);
+
+
+let endOfFight$ = getResultsHandler(result, app.stats.opponent);
+let endOfFightCard$ = new Subject<FightCard>;
+endOfFightCard$.subscribe(() => console.log("end of fight card"));
+startFightsHandler(picker, live, endOfFight$, endOfFightCard$);

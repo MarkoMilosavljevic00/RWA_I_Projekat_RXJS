@@ -19,10 +19,7 @@ export class FightCard{
             return Message.MaxLength;
 
         if(newFight.redCorner.id === newFight.blueCorner.id)
-        {
-            console.log(newFight.redCorner.id, newFight.blueCorner.id);
             return Message.SameFighters;
-        }
 
         if(newFight.redCorner.id === DEFAULT.FIGHTER.ID || newFight.blueCorner.id === DEFAULT.FIGHTER.ID)
           return Message.NoFighterSelected

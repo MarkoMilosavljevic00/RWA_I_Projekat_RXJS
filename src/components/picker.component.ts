@@ -1,7 +1,7 @@
 import { Corner } from "../enums/corner.enum";
 import { Message } from "../enums/message.enum";
 import { Method } from "../enums/method.enum";
-import { mapRulesToNumberOfRounds, Rules } from "../enums/rules.enum";
+import { mapRulesToMethods, mapRulesToNumberOfRounds, Rules } from "../enums/rules.enum";
 import { Weightclass } from "../enums/weightclass.enum";
 import { Fight } from "../models/fight";
 import { FightCard } from "../models/fightCard";
@@ -10,21 +10,20 @@ import { Result } from "../models/result";
 import { CLASS_NAMES, TYPE_OF_ELEMENTS } from "../utilities/constants";
 import { PATHS } from "../utilities/constants";
 import { fillProgressBars, getCheckedRadioValue, getSelectedValue, mapStringToEnum, clearElement, selectElementByClass, selectElementByClassAndType, selectElementsByBeginOfClass, selectElementsByClass, selectElementsByPartialClass, setSelectOptionsToNumber, setSelectsOptionsFromValues, showError } from "../utilities/helpers";
+import { Component } from "./component";
 
-export class PickerComponent{
-
+export class PickerComponent extends Component{
     fightCard: FightCard;
     numberOfFights: number = 0;
     currentRedCorner: Fighter;
     currentBlueCorner: Fighter;
-    container: HTMLElement;
 
     constructor(fightCard: FightCard){
-        this.fightCard = fightCard;
+        super();
         this.container = selectElementByClass(document.body, CLASS_NAMES.CONTAINERS.PICKER);
+        this.fightCard = fightCard;
         setSelectsOptionsFromValues(this.container, CLASS_NAMES.SELECTS.WEIGHTCLASS, CLASS_NAMES.OPTIONS.WEIGHTCLASS, Weightclass);
         setSelectsOptionsFromValues(this.container, CLASS_NAMES.SELECTS.RULES, CLASS_NAMES.OPTIONS.RULES, Rules);
-        setSelectsOptionsFromValues(this.container, CLASS_NAMES.SELECTS.METHOD, CLASS_NAMES.OPTIONS.METHOD, Method);
     }
 
     resetFightCard() {
@@ -33,14 +32,6 @@ export class PickerComponent{
         this.setFighter(new Fighter(), Corner.RedCorner);
         this.setFighter(new Fighter(), Corner.BlueCorner);
         clearElement(this.container, CLASS_NAMES.LISTS.FIGHT, CLASS_NAMES.ITEMS.FIGHT);
-    }
-
-    getElement(className: string): HTMLElement{
-        return selectElementByClass(this.container, className);
-    }
-
-    getElements(className: string): NodeListOf<HTMLElement>{
-        return selectElementsByClass(this.container, className);
     }
 
     getRules(){
@@ -55,34 +46,6 @@ export class PickerComponent{
                 getSelectedValue(this.container , CLASS_NAMES.SELECTS.WEIGHTCLASS),
                 Weightclass
             );
-    }
-
-    setSelectOptionsForRounds(rule: Rules){
-        let numberOfRounds = mapRulesToNumberOfRounds(rule);
-        setSelectOptionsToNumber(this.container, CLASS_NAMES.SELECTS.ROUND, CLASS_NAMES.OPTIONS.ROUND, numberOfRounds);
-    }
-
-    setFighter(fighter: Fighter, corner: Corner){
-        let cornerImg: HTMLImageElement;
-        let winnerLabel: HTMLLabelElement; 
-        let skillBarsClassName: string;
-
-        if(corner == Corner.RedCorner){
-            this.currentRedCorner = fighter;
-            cornerImg = selectElementByClass(this.container, CLASS_NAMES.IMAGES.RED_CORNER) as HTMLImageElement
-            winnerLabel = selectElementByClass(this.container, CLASS_NAMES.LABELS.RED_CORNER_WINNER) as HTMLLabelElement;
-            skillBarsClassName = CLASS_NAMES.PROGRESS_BARS.RED_CORNER_SKILLS;
-        }
-        else{
-            this.currentBlueCorner = fighter;
-            cornerImg = selectElementByClass(this.container, CLASS_NAMES.IMAGES.BLUE_CORNER) as HTMLImageElement
-            winnerLabel = selectElementByClass(this.container, CLASS_NAMES.LABELS.BLUE_CORNER_WINNER) as HTMLLabelElement;
-            skillBarsClassName = CLASS_NAMES.PROGRESS_BARS.BLUE_CORNER_SKILLS;
-        }
-        cornerImg.src =`${PATHS.IMAGES.FIGHTERS + fighter.pictureSrc}` ;
-        winnerLabel.innerHTML = fighter.name;
-
-        fillProgressBars(this.container, skillBarsClassName, fighter.striking, fighter.grappling, fighter.overall);
     }
 
     getFightInfo(): Fight{
@@ -106,6 +69,43 @@ export class PickerComponent{
         }
         fight.yourPick = pick;
         return fight
+    }
+
+    getFightCard(){
+        return this.fightCard;
+    }
+
+    setSelectOptionsForRounds(rule: Rules){
+        let numberOfRounds = mapRulesToNumberOfRounds(rule);
+        setSelectOptionsToNumber(this.container, CLASS_NAMES.SELECTS.ROUND, CLASS_NAMES.OPTIONS.ROUND, numberOfRounds);
+    }
+
+    setSelectOptionsForMethods(rule: Rules){
+        let methods = mapRulesToMethods(rule);
+        setSelectsOptionsFromValues(this.container, CLASS_NAMES.SELECTS.METHOD, CLASS_NAMES.OPTIONS.METHOD, methods);
+    }
+
+    setFighter(fighter: Fighter, corner: Corner){
+        let cornerImg: HTMLImageElement;
+        let winnerLabel: HTMLLabelElement; 
+        let skillBarsClassName: string;
+
+        if(corner == Corner.RedCorner){
+            this.currentRedCorner = fighter;
+            cornerImg = selectElementByClass(this.container, CLASS_NAMES.IMAGES.RED_CORNER) as HTMLImageElement
+            winnerLabel = selectElementByClass(this.container, CLASS_NAMES.LABELS.RED_CORNER_WINNER) as HTMLLabelElement;
+            skillBarsClassName = CLASS_NAMES.PROGRESS_BARS.RED_CORNER_SKILLS;
+        }
+        else{
+            this.currentBlueCorner = fighter;
+            cornerImg = selectElementByClass(this.container, CLASS_NAMES.IMAGES.BLUE_CORNER) as HTMLImageElement
+            winnerLabel = selectElementByClass(this.container, CLASS_NAMES.LABELS.BLUE_CORNER_WINNER) as HTMLLabelElement;
+            skillBarsClassName = CLASS_NAMES.PROGRESS_BARS.BLUE_CORNER_SKILLS;
+        }
+        cornerImg.src =`${PATHS.IMAGES.FIGHTERS + fighter.pictureSrc}` ;
+        winnerLabel.innerHTML = fighter.name;
+
+        fillProgressBars(this.container, skillBarsClassName, fighter.striking, fighter.grappling, fighter.overall);
     }
 
     addFight(newFight: Fight){
@@ -150,7 +150,6 @@ export class PickerComponent{
         blueCornerLabel.innerHTML = newFight.blueCorner.name;
         winnerLabel.innerHTML = newFight.yourPick.winner;
         methodLabel.innerHTML = newFight.yourPick.method;
-        console.log(newFight.yourPick.method);
         if(newFight.yourPick.method === Method.Decision){
             roundLabel.classList.add(CLASS_NAMES.STATES.COLLAPSE);
         }
@@ -169,6 +168,7 @@ export class PickerComponent{
             redCornerOddLabel.innerHTML = "Underdog";
             redCornerOddLabel.classList.add(CLASS_NAMES.ICONS.STAR);
         }
+        // console.log(newFight.yourPick.winner);
         if (newFight.yourPick.winner === Corner.RedCorner)
             pickDiv.classList.add(CLASS_NAMES.STYLES.RED_TEXT);
 
@@ -199,4 +199,3 @@ export class PickerComponent{
         });
       }
 }
-

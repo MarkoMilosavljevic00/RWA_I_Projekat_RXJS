@@ -84,6 +84,7 @@ export function setSelectOptions(
         option.classList.add(optionsClass);
         select.appendChild(option);
     });
+    select.selectedIndex = 0;
 }
 
 export function setSelectsOptionsFromValues(
@@ -222,6 +223,10 @@ export function mapStringToEnum<T>(value: string, enumObject: Object): T {
         return enumValues.find((enumValue) => enumValue === value);
     }
     return undefined;
+}
+
+export function mapNumberToIndex(numberOfItem: number){
+    return numberOfItem - 1;
 }
 
 export function showElement(element: HTMLElement) {

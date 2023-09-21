@@ -3,8 +3,9 @@ import { FightEventType, KickType, PunchType, SubmissionType, TakedownType } fro
 
 export class FightEvent{
     eventType: FightEventType;
-    eventSubType: PunchType | KickType | TakedownType | SubmissionType;
+    eventSubType?: PunchType | KickType | TakedownType | SubmissionType;
     attacker: Corner;
+    defender: Corner;
     damage: number;
     energySpent: number;
 }

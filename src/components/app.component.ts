@@ -8,32 +8,25 @@ import {
     selectElementsByClass,
     selectElementsByPartialClass,
 } from "../utilities/helpers";
+import { Component } from "./component";
 
-export class AppComponent {
-    container: HTMLElement;
+export class AppComponent extends Component {
     stats: GameStats;
 
     constructor() {
+        super();
+        this.container = selectElementByClass(document.body, CLASS_NAMES.CONTAINERS.APP);
         this.stats = {
             yourPoints: 0,
             opponentPoints: 0,
             opponent: undefined,
         };
-        this.container = selectElementByClass(document.body, CLASS_NAMES.CONTAINERS.APP);
         setSelectsOptionsFromValues(
             this.container,
             CLASS_NAMES.SELECTS.DIFFICULTY,
             CLASS_NAMES.OPTIONS.DIFFICULTY,
             DifficultyLevel
         );
-    }
-
-    getElement(className: string) {
-        return selectElementByClass(this.container, className);
-    }
-
-    getElements(className: string) {
-        return selectElementsByClass(this.container, className);
     }
 
     getDifficulty(): DifficultyLevel {

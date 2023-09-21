@@ -1,16 +1,20 @@
-import { combineLatest, fromEvent, map, merge, Observable, startWith, switchMap, withLatestFrom } from "rxjs";
+import { combineLatest, take, concatMap, fromEvent, interval, map, merge, Observable, range, startWith, switchMap, tap, withLatestFrom, zip, takeUntil } from "rxjs";
+import { LiveComponent } from "../../components/live.component";
 import { PickerComponent } from "../../components/picker.component";
 import { Corner } from "../../enums/corner.enum";
+import { FightCard } from "../../models/fightCard";
 import { Fighter } from "../../models/fighter";
+import { FightEvent } from "../../models/fightEvent";
 import { CLASS_NAMES } from "../../utilities/constants";
 import { getFightersByRulesAndWeightclass } from "../api.service";
+import { getFightEndObs, getFightEventObs, getFightTickObs } from "../live.logic/live.observables";
 
 export function getChangeRulesObs(picker: PickerComponent) {
-    return fromEvent(picker.getElement(CLASS_NAMES.SELECTS.RULES), "change")
+    return fromEvent(picker.getElement(CLASS_NAMES.SELECTS.RULES), "change");
 }
 
 export function getChangeFightInfoObs(picker: PickerComponent): Observable<Fighter[]> {
-    let changeRule$ = fromEvent(picker.getElement(CLASS_NAMES.SELECTS.RULES), "change");
+    let changeRule$ = getChangeRulesObs(picker);
     let changeWeightclasse$ = fromEvent(picker.getElement(CLASS_NAMES.SELECTS.WEIGHTCLASS), "change");
 
     return combineLatest([changeRule$, changeWeightclasse$])
@@ -44,4 +48,17 @@ export function getChangeFighterObs(picker: PickerComponent): Observable<[Fighte
                 return [fighter, Corner.BlueCorner];
         })
     );
+}
+
+export function getAddFightObs(picker: PickerComponent): Observable<FightCard> {
+    return fromEvent(picker.getElement(CLASS_NAMES.BUTTONS.ADD_FIGHT), "click")
+        .pipe(
+            map(() => {
+                let fight = picker.getFightInfo();
+                picker.addFight(fight);
+                // console.log(fight);
+                // console.log(picker.getFightCard());
+                return picker.getFightCard();
+            })
+        );
 }

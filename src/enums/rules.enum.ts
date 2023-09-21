@@ -1,4 +1,5 @@
 import { RULES } from "../utilities/constants";
+import { Method } from "./method.enum";
 
 export enum Rules{
   MMA = "MMA",
@@ -12,23 +13,33 @@ export function mapRulesToNumberOfRounds(rule: Rules): number {
     case Rules.MMA:
       return RULES.NUMBER_OF_ROUNDS.MMA;
     case Rules.Boxing:
-      return RULES.NUMBER_OF_ROUNDS.BOXING;
+      return RULES.NUMBER_OF_ROUNDS.Boxing;
     case Rules.Kickboxing:
-      return RULES.NUMBER_OF_ROUNDS.KICKBOXING;
+      return RULES.NUMBER_OF_ROUNDS.Kickboxing;
     case Rules.Grappling:
-      return RULES.NUMBER_OF_ROUNDS.GRAPPLING;
+      return RULES.NUMBER_OF_ROUNDS.Grappling;
   }
 }
 
 export function mapRulesToRoundDuration(rule: Rules): number {
   switch (rule) {
     case Rules.MMA:
-      return RULES.DURATION_OF_ROUND.MMA;
+      return RULES.ROUND_DURATION.MMA;
     case Rules.Boxing:
-      return RULES.DURATION_OF_ROUND.BOXING;
+      return RULES.ROUND_DURATION.Boxing;
     case Rules.Kickboxing:
-      return RULES.DURATION_OF_ROUND.KICKBOXING;
+      return RULES.ROUND_DURATION.Kickboxing;
     case Rules.Grappling:
-      return RULES.DURATION_OF_ROUND.GRAPPLING;
+      return RULES.ROUND_DURATION.Grappling;
   }
+}
+
+
+export function mapRulesToMethods(rule: Rules){
+  const methodsMap = new Map<Rules, Method[]>();
+  methodsMap.set(Rules.MMA, [Method.Decision, Method.KO_TKO, Method.Submission]);
+  methodsMap.set(Rules.Boxing, [Method.Decision, Method.KO_TKO]);
+  methodsMap.set(Rules.Kickboxing, [Method.Decision, Method.KO_TKO]);
+  methodsMap.set(Rules.Grappling, [Method.Decision, Method.Submission]);
+  return methodsMap.get(rule);
 }

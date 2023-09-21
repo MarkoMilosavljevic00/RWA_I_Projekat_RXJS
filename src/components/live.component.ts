@@ -1,5 +1,5 @@
-import { Corner } from "../enums/corner.enum";
-import { FightEventType } from "../enums/fight-event-type.enum";
+import { Corner, CornerKey, mapCornerToKey } from "../enums/corner.enum";
+import { FightEventType, PunchType, TakedownType } from "../enums/fight-event-type.enum";
 import { Method } from "../enums/method.enum";
 import { Position } from "../enums/position.enum";
 import { mapRulesToNumberOfRounds } from "../enums/rules.enum";
@@ -7,45 +7,52 @@ import { Fight } from "../models/fight";
 import { Fighter } from "../models/fighter";
 import { FightEvent } from "../models/fightEvent";
 import { FightStats, Scorecard } from "../models/fightStats";
-import {  CLASS_NAMES, IMAGES, INDEXES, PATHS, POINTS, TIME } from "../utilities/constants";
+import { Result } from "../models/result";
+import {  CLASS_NAMES, DAMAGE, IMAGES, INDEXES, PATHS, POINTS, TIME } from "../utilities/constants";
 import { fillProgressBars, getPercentageStrings, selectElementByClass, selectElementsByClass } from "../utilities/helpers";
+import { Component } from "./component";
 
-export class LiveComponent{
-    container: HTMLElement;
-    currentFight: Fight;
-    currentPosition: Position;
-    currentRound: number;
+export class LiveComponent extends Component{
+    fight: Fight;
+    position: Position;
+    round: number;
     secondsElapsed: number;
     fightStats: FightStats;
-    roundStats: Scorecard[];
+    scorecards: Scorecard[];
 
     get minutes(): string{
-        return Math.floor(this.secondsElapsed / TIME.SECONDS_IN_MINUTE).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false});
+        return Math.floor(this.secondsElapsed / 60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false});
     }
 
     get seconds(): string{
-        return (this.secondsElapsed % TIME.SECONDS_IN_MINUTE).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false});
+        return (this.secondsElapsed % 60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false});
     }
     
     constructor(){
+        super();
         this.container = selectElementByClass(document.body, CLASS_NAMES.CONTAINERS.LIVE);
         this.resetRounds();
         this.resetTime();
     }
 
-    setNewFight(newFight: Fight){
-        let numberOfRounds = mapRulesToNumberOfRounds(newFight.rules);
+    getScorecards(): Scorecard[] {
+        return this.scorecards;
+    }
 
-        this.setFighters(newFight.redCorner, newFight.blueCorner);
+    setFight(fight: Fight){
+        let numberOfRounds = mapRulesToNumberOfRounds(fight.rules);
+
+        this.fight = fight;
+        this.setFighters(fight.redCorner, fight.blueCorner);
         this.resetTime();
         this.resetRounds();
         this.resetFightStats(numberOfRounds);
-        this.currentPosition = Position.Standup;
+        this.position = Position.Standup;
 
         let rulesLabel = selectElementByClass(this.container, CLASS_NAMES.LABELS.RULES);
-        rulesLabel.innerHTML = newFight.rules;
+        rulesLabel.innerHTML = fight.rules;
         let weightclassLabel = selectElementByClass(this.container, CLASS_NAMES.LABELS.WEIGHTCLASS);
-        weightclassLabel.innerHTML = newFight.redCorner.weightclass;
+        weightclassLabel.innerHTML = fight.redCorner.weightclass;
 
         let liveListDiv = selectElementByClass(this.container, CLASS_NAMES.LISTS.LIVE); 
         for(let roundIndex = 1; roundIndex <= numberOfRounds; roundIndex++){
@@ -81,19 +88,12 @@ export class LiveComponent{
         fillProgressBars(this.container, CLASS_NAMES.PROGRESS_BARS.BLUE_CORNER_SKILLS, blueCorner.striking, blueCorner.grappling, blueCorner.overall);
     }
 
-    addFightEvent(event: FightEvent, round: number = this.currentRound){
-        type FighterKey = keyof FightStats;
-        let attackerKey: FighterKey;
-        let defenderKey: FighterKey;
-        if(event.attacker === Corner.RedCorner){
-            attackerKey = "redCorner";
-            defenderKey = "blueCorner";    
-        }
-        else{
-            attackerKey = "blueCorner";    
-            defenderKey = "redCorner";
-        }
+    addFightEvent(event: FightEvent, round: number = this.round){
+        let attackerKey = mapCornerToKey(event.attacker);
+        let defenderKey = mapCornerToKey(event.defender);
 
+        this.fightStats[attackerKey].lastEvent = event;
+        
         this.fightStats[defenderKey].damage += event.damage;
         if(this.fightStats[defenderKey].damage >= 100)
             this.fightStats[defenderKey].damage = 100;
@@ -102,45 +102,95 @@ export class LiveComponent{
         this.fightStats[attackerKey].damage = 100;
         this.renderDamage();
 
-        this.roundStats[round][attackerKey].damage += event.energySpent;
-        if(this.roundStats[round][attackerKey].damage >= 100)
-            this.roundStats[round][attackerKey].damage = 100;
-        this.roundStats[round][defenderKey].damage += event.damage;
-        if(this.roundStats[round][defenderKey].damage >= 100)
-            this.roundStats[round][defenderKey].damage = 100;
+        this.scorecards[round][attackerKey].damage += event.energySpent;
+        if(this.scorecards[round][attackerKey].damage >= 100)
+            this.scorecards[round][attackerKey].damage = 100;
+        this.scorecards[round][defenderKey].damage += event.damage;
+        if(this.scorecards[round][defenderKey].damage >= 100)
+            this.scorecards[round][defenderKey].damage = 100;
 
+        this.renderEvent(event, round);
         switch (event.eventType) {
             case FightEventType.Punch:
             case FightEventType.Kick:
                 this.fightStats[attackerKey].significantStrikes++;
-                this.roundStats[round][attackerKey].significantStrikes++;
+                this.scorecards[round][attackerKey].significantStrikes++;
                 this.renderSignificantStrikes();
                 break;
             case FightEventType.Takedown:
                 this.fightStats[attackerKey].takedowns++;
-                this.roundStats[round][attackerKey].takedowns++;
+                this.scorecards[round][attackerKey].takedowns++;
+                this.changePosition(Position.Ground);
                 this.renderTakedowns();
                 break;
             case FightEventType.SubmissionAttempt:
                 this.fightStats[attackerKey].submissionAttempts++;
-                this.roundStats[round][attackerKey].submissionAttempts++;
+                this.scorecards[round][attackerKey].submissionAttempts++;
                 this.renderSubmissionAttempts();
                 break;
+            case FightEventType.GettingUp:
+                this.changePosition(Position.Standup);
+                break;
         }
-        this.renderEvent(event, round);
     }
 
-    changePosition(position?: Position, round: number = this.currentRound){
+    changePosition(position?: Position, round: number = this.round){
         if(position){
-           this.currentPosition = position 
+           this.position = position 
         }
         else{
-            this.currentPosition = this.currentPosition === Position.Standup ? Position.Ground : Position.Standup;
+            this.position = this.position === Position.Standup ? Position.Ground : Position.Standup;
         }
         this.renderPosition(round);
     }
 
-    getPointsFromRound(round: number = this.currentRound){
+    generateEvent(): FightEvent {
+        if(Math.random() < 0.5)
+            return {
+                attacker: Corner.RedCorner,
+                defender: Corner.BlueCorner,
+                damage: 5,
+                energySpent: 1,
+                eventType: FightEventType.Takedown,
+                eventSubType: TakedownType.Suplex
+            }
+        else
+            return {
+                attacker: Corner.BlueCorner,
+                defender: Corner.RedCorner,
+                damage: 5,
+                energySpent: 1,
+                eventType: FightEventType.GettingUp,
+            }
+    }
+
+    checkForFinish(fightEvent: FightEvent): Result {
+        let result: Result;
+        let keyAttacker = mapCornerToKey(fightEvent.attacker);
+        let keyDefender = mapCornerToKey(fightEvent.defender);
+
+        if(this.fightStats[keyAttacker].damage + fightEvent.energySpent >= DAMAGE.MAX)
+            result.winner = fightEvent.defender;
+        else if(this.fightStats[keyDefender].damage + fightEvent.damage >= DAMAGE.MAX)
+            result.winner = fightEvent.attacker;
+        else
+            return null;
+
+        switch(fightEvent.eventType){
+            case FightEventType.SubmissionAttempt:
+            result.method = Method.Submission;
+                break;
+            default:
+            result.method = Method.KO_TKO;
+                break;
+        }
+
+        result.round = this.round;
+
+        return result;
+    }
+
+    getWinnerOfRound(round: number = this.round){
         let redCornerDamage: number;
         let blueCornerDamage: number;
         let redCornerSignificantStrikes: number;
@@ -150,52 +200,52 @@ export class LiveComponent{
         let redCornerTakedowns: number;
         let blueCornerTakedowns: number;
 
-        redCornerDamage = this.roundStats[round].redCorner.damage;
-        blueCornerDamage = this.roundStats[round].blueCorner.damage;
-        redCornerSignificantStrikes = this.roundStats[round].redCorner.significantStrikes;
-        blueCornerSignificantStrikes = this.roundStats[round].blueCorner.significantStrikes;
-        redCornerSubmissionAttempts = this.roundStats[round].redCorner.submissionAttempts;
-        blueCornerSubmissionAttempts = this.roundStats[round].blueCorner.submissionAttempts;
-        redCornerTakedowns = this.roundStats[round].redCorner.takedowns;
-        blueCornerTakedowns = this.roundStats[round].blueCorner.takedowns;
+        redCornerDamage = this.scorecards[round].redCorner.damage;
+        blueCornerDamage = this.scorecards[round].blueCorner.damage;
+        redCornerSignificantStrikes = this.scorecards[round].redCorner.significantStrikes;
+        blueCornerSignificantStrikes = this.scorecards[round].blueCorner.significantStrikes;
+        redCornerSubmissionAttempts = this.scorecards[round].redCorner.submissionAttempts;
+        blueCornerSubmissionAttempts = this.scorecards[round].blueCorner.submissionAttempts;
+        redCornerTakedowns = this.scorecards[round].redCorner.takedowns;
+        blueCornerTakedowns = this.scorecards[round].blueCorner.takedowns;
 
         if(redCornerDamage < blueCornerDamage){
-            this.roundStats[round].redCorner.roundPoints = POINTS.ROUND.WINNER;
+            this.scorecards[round].redCorner.roundPoints = POINTS.ROUND.WINNER;
             if(blueCornerDamage > 20 && redCornerDamage < 2*blueCornerDamage)
-                this.roundStats[round].blueCorner.roundPoints = POINTS.ROUND.CONVICING_LOSER;
+                this.scorecards[round].blueCorner.roundPoints = POINTS.ROUND.CONVICING_LOSER;
             else
-                this.roundStats[round].blueCorner.roundPoints = POINTS.ROUND.LOSER;
+                this.scorecards[round].blueCorner.roundPoints = POINTS.ROUND.LOSER;
         }
         else if(blueCornerDamage < redCornerDamage){
-            this.roundStats[round].blueCorner.roundPoints = POINTS.ROUND.WINNER;
+            this.scorecards[round].blueCorner.roundPoints = POINTS.ROUND.WINNER;
             if(redCornerDamage > 20 && blueCornerDamage < 2*redCornerDamage)
-                this.roundStats[round].redCorner.roundPoints = POINTS.ROUND.CONVICING_LOSER;
+                this.scorecards[round].redCorner.roundPoints = POINTS.ROUND.CONVICING_LOSER;
             else
-                this.roundStats[round].redCorner.roundPoints = POINTS.ROUND.LOSER;
+                this.scorecards[round].redCorner.roundPoints = POINTS.ROUND.LOSER;
         }
         else if(redCornerSignificantStrikes > blueCornerSignificantStrikes){
-                this.roundStats[round].redCorner.roundPoints = POINTS.ROUND.WINNER;
-                this.roundStats[round].blueCorner.roundPoints = POINTS.ROUND.LOSER;
+                this.scorecards[round].redCorner.roundPoints = POINTS.ROUND.WINNER;
+                this.scorecards[round].blueCorner.roundPoints = POINTS.ROUND.LOSER;
         }
         else if(redCornerSignificantStrikes < blueCornerSignificantStrikes){
-            this.roundStats[round].redCorner.roundPoints = POINTS.ROUND.LOSER;
-            this.roundStats[round].blueCorner.roundPoints = POINTS.ROUND.WINNER;
+            this.scorecards[round].redCorner.roundPoints = POINTS.ROUND.LOSER;
+            this.scorecards[round].blueCorner.roundPoints = POINTS.ROUND.WINNER;
         }
         else if(redCornerSubmissionAttempts > blueCornerSubmissionAttempts){
-            this.roundStats[round].redCorner.roundPoints = POINTS.ROUND.WINNER;
-            this.roundStats[round].blueCorner.roundPoints = POINTS.ROUND.LOSER;
+            this.scorecards[round].redCorner.roundPoints = POINTS.ROUND.WINNER;
+            this.scorecards[round].blueCorner.roundPoints = POINTS.ROUND.LOSER;
         }
         else if(redCornerSubmissionAttempts < blueCornerSubmissionAttempts){
-            this.roundStats[round].redCorner.roundPoints = POINTS.ROUND.LOSER;
-            this.roundStats[round].blueCorner.roundPoints = POINTS.ROUND.WINNER;
+            this.scorecards[round].redCorner.roundPoints = POINTS.ROUND.LOSER;
+            this.scorecards[round].blueCorner.roundPoints = POINTS.ROUND.WINNER;
         }
         else if(redCornerTakedowns > blueCornerTakedowns){
-            this.roundStats[round].redCorner.roundPoints = POINTS.ROUND.WINNER;
-            this.roundStats[round].blueCorner.roundPoints = POINTS.ROUND.LOSER;
+            this.scorecards[round].redCorner.roundPoints = POINTS.ROUND.WINNER;
+            this.scorecards[round].blueCorner.roundPoints = POINTS.ROUND.LOSER;
         }
         else if(redCornerTakedowns < blueCornerTakedowns){
-            this.roundStats[round].redCorner.roundPoints = POINTS.ROUND.LOSER;
-            this.roundStats[round].blueCorner.roundPoints = POINTS.ROUND.WINNER;
+            this.scorecards[round].redCorner.roundPoints = POINTS.ROUND.LOSER;
+            this.scorecards[round].blueCorner.roundPoints = POINTS.ROUND.WINNER;
         }
         this.renderWinner(Method.Decision, round)
     }
@@ -217,8 +267,8 @@ export class LiveComponent{
         };
         this.renderFightStats();
 
-        this.roundStats = [];
-        this.roundStats.push(null);
+        this.scorecards = [];
+        this.scorecards.push(null);
         for(let i=0; i < numberOfRounds; i++){
             let round = {
                 redCorner: {
@@ -234,12 +284,12 @@ export class LiveComponent{
                     takedowns: 0,
                 }
             };
-            this.roundStats.push(round);
+            this.scorecards.push(round);
         }
     }
 
     resetRounds() {
-        this.currentRound = 1;
+        this.round = 1;
         this.renderRound();
     }
 
@@ -254,12 +304,12 @@ export class LiveComponent{
     }
     
     addRound(){
-        this.currentRound++;
+        this.round++;
         this.renderRound();
         this.resetTime();
     }
 
-    renderWinner(method: Method, round: number = this.currentRound) {
+    renderWinner(method: Method, round: number = this.round) {
         let roundItem: HTMLElement;
         let winnerItemTemplate: HTMLElement;
         let winnerItem: HTMLElement;
@@ -272,7 +322,7 @@ export class LiveComponent{
         winnerLabel = selectElementByClass(winnerItem, CLASS_NAMES.LABELS.WINNER);
         winnerInfo = selectElementByClass(winnerItem, CLASS_NAMES.LABELS.WIN_INFO_LABEL);
 
-        if(this.roundStats[round].redCorner.roundPoints > this.roundStats[round].blueCorner.roundPoints){
+        if(this.scorecards[round].redCorner.roundPoints > this.scorecards[round].blueCorner.roundPoints){
             winnerLabel.innerHTML = Corner.RedCorner;
             winnerLabel.classList.add(CLASS_NAMES.STYLES.RED_TEXT);
         }
@@ -282,7 +332,7 @@ export class LiveComponent{
         }
         switch (method) {
             case Method.Decision:
-                winnerInfo.innerHTML = `${this.roundStats[round].redCorner.roundPoints} - ${this.roundStats[round].blueCorner.roundPoints}`;       
+                winnerInfo.innerHTML = `${this.scorecards[round].redCorner.roundPoints} - ${this.scorecards[round].blueCorner.roundPoints}`;       
                 break;
             case Method.KO_TKO:
                 winnerInfo.innerHTML = Method.KO_TKO;       
@@ -295,7 +345,7 @@ export class LiveComponent{
         roundItem.appendChild(winnerItem);
     }
 
-    private renderEvent(event: FightEvent, round: number = this.currentRound) {
+    private renderEvent(event: FightEvent, round: number = this.round) {
         let roundItem: HTMLElement;
         let eventItemTemplate: HTMLElement;
         let eventItem: HTMLElement;
@@ -323,7 +373,8 @@ export class LiveComponent{
         eventDamageLabel.innerHTML = event.damage.toString();
         eventEnergyLabel.innerHTML = event.energySpent.toString();
         eventTypeLabel.innerHTML = event.eventType;
-        eventSubtypeLabel.innerHTML = `(${event.eventSubType})`;
+        if(event.eventSubType)
+            eventSubtypeLabel.innerHTML = `(${event.eventSubType})`;
 
         switch (event.eventType) {
             case FightEventType.Punch:
@@ -347,13 +398,13 @@ export class LiveComponent{
         roundItem.appendChild(eventItem);
     }
 
-    private renderPosition(round: number = this.currentRound) {
+    private renderPosition(round: number = this.round) {
         let roundItem: HTMLElement;
         let changePositionItemTemplate: HTMLElement;
         let changePositionItem: HTMLElement;
 
         roundItem = selectElementByClass(this.container, CLASS_NAMES.ITEMS.ROUND + round);
-        if(this.currentPosition === Position.Standup)
+        if(this.position === Position.Standup)
             changePositionItemTemplate = selectElementByClass(this.container, CLASS_NAMES.TEMPLATES.LIVE.INFO_STANDUP_EVENT);
         else
             changePositionItemTemplate = selectElementByClass(this.container, CLASS_NAMES.TEMPLATES.LIVE.INFO_GROUND_EVENT);
@@ -369,7 +420,7 @@ export class LiveComponent{
 
     private renderRound(){
         let roundLabel = selectElementByClass(this.container, CLASS_NAMES.LABELS.ROUND);
-        roundLabel.innerHTML = `R${this.currentRound.toString()}`;
+        roundLabel.innerHTML = `R${this.round.toString()}`;
     }
 
     private renderSignificantStrikes() {

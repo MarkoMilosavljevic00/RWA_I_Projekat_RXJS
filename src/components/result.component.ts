@@ -1,5 +1,6 @@
 import roundToNearestMinutes from "date-fns/roundToNearestMinutes";
 import { Corner } from "../enums/corner.enum";
+import { FightEventType } from "../enums/fight-event-type.enum";
 import { Method } from "../enums/method.enum";
 import { Fight } from "../models/fight";
 import { FightCard } from "../models/fightCard";
@@ -8,33 +9,15 @@ import { Opponent } from "../models/opponent";
 import { Result } from "../models/result";
 import { CLASS_NAMES, IMAGES, INDEXES, PATHS, POINTS } from "../utilities/constants";
 import { appendItemToList, hideElement, selectElementByClass, selectElementsByClass, showElement } from "../utilities/helpers";
+import { Component } from "./component";
 
-export class ResultComponent{
-    container: HTMLElement;
+export class ResultComponent extends Component{
     fightCard: FightCard;
 
     constructor(fightCard: FightCard){
-        this.fightCard = fightCard;
+        super();
         this.container = selectElementByClass(document.body, CLASS_NAMES.CONTAINERS.RESULT);
-    }
-
-    getResultFromScorecards(scorecards: Scorecard[]): Result{
-        let result: Result;
-        let redCornerPoints: number = 0;
-        let blueCornerPoints: number = 0;
-
-        scorecards.forEach((scorecard, index) => {
-            if(index !== 0){
-                redCornerPoints += scorecard.redCorner.roundPoints;
-                blueCornerPoints += scorecard.blueCorner.roundPoints;
-            }
-        });
-        result = {
-            method: Method.Decision,
-            winner: redCornerPoints > blueCornerPoints ? Corner.RedCorner : Corner.BlueCorner,
-            round: 0,
-        }
-        return result;
+        this.fightCard = fightCard;
     }
 
     addResult(finalResult: Result, fightIndex: number, opponent: Opponent){
@@ -42,6 +25,7 @@ export class ResultComponent{
         let resultFightDiv: HTMLElement;
         let resultPickDiv: HTMLElement;
 
+        console.log(this.fightCard);
         let fight: Fight = this.fightCard.fights[fightIndex]
         fight.finalResult = finalResult;
         resultItem = appendItemToList(this.container, fightIndex, CLASS_NAMES.ITEMS.RESULT, CLASS_NAMES.LISTS.RESULT, CLASS_NAMES.TEMPLATES.RESULT);
@@ -62,6 +46,46 @@ export class ResultComponent{
         this.fightCard.yourTotalPoints += fight.yourPoints;
         this.fightCard.opponentTotalPoints += fight.opponentPoints;
         this.renderTotalPoints(this.fightCard.yourTotalPoints, this.fightCard.opponentTotalPoints);
+    }
+
+    getResultFromFinish(fightStats: FightStats, currentRound: number): Result{
+        let result: Result = null;
+
+        if(fightStats.redCorner.damage >= 100){
+            result = {
+                winner: Corner.BlueCorner,
+                method: fightStats.blueCorner.lastEvent.eventType === FightEventType.SubmissionAttempt ? Method.Submission : Method.KO_TKO,
+                round: currentRound,
+            }
+        }
+        else if(fightStats.blueCorner.damage >= 100){
+            result = {
+                winner: Corner.RedCorner,
+                method: fightStats.redCorner.lastEvent.eventType === FightEventType.SubmissionAttempt ? Method.Submission : Method.KO_TKO,
+                round: currentRound,
+            }
+        }
+
+        return result;
+    }
+
+    getResultFromScorecards(scorecards: Scorecard[]): Result{
+        let result: Result;
+        let redCornerPoints: number = 0;
+        let blueCornerPoints: number = 0;
+
+        scorecards.forEach((scorecard, index) => {
+            if(index !== 0){
+                redCornerPoints += scorecard.redCorner.roundPoints;
+                blueCornerPoints += scorecard.blueCorner.roundPoints;
+            }
+        });
+        result = {
+            method: Method.Decision,
+            winner: redCornerPoints > blueCornerPoints ? Corner.RedCorner : Corner.BlueCorner,
+            round: 0,
+        }
+        return result;
     }
 
     getPointsByHits(finalResult: Result, pick: Result) {

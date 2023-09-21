@@ -1,3 +1,5 @@
+import { FightEvent } from "./fightEvent";
+
 export interface FightStats{
     redCorner: FighterStats;
     blueCorner: FighterStats;
@@ -13,6 +15,7 @@ interface FighterStats{
     significantStrikes: number;
     takedowns: number;
     submissionAttempts: number;
+    lastEvent?: FightEvent;
 }
 
 interface FighterRoundStats extends FighterStats{
