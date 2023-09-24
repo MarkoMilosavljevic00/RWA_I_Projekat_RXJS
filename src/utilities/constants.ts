@@ -110,6 +110,7 @@ export const CLASS_NAMES = {
     LISTS: {
         FIGHT: "fight-list",
         LIVE: "live-list",
+        EVENT: "event-list-",
         RESULT: "result-list",
         RED_CORNER_WINNER: "red-corner-winner-list",
         BLUE_CORNER_WINNER: "blue-corner-winner-list",
@@ -163,16 +164,22 @@ export const RULES = {
         KICKBOXING: 1,
     },
     NUMBER_OF_ROUNDS: {
-        MMA: 2,
+        MMA: 3,
         Boxing: 12,
         Grappling: 1,
         Kickboxing: 5,
     },
-    ROUND_DURATION: {
-        MMA: 1,
+    ROUND_DURATION_IN_MINUTES: {
+        MMA: 3,
         Boxing: 3,
         Grappling: 10,
         Kickboxing: 3,
+    },
+    EVENTS_PER_FIGHT:{
+        MMA: 80,
+        Boxing: 100,
+        Kickboxing: 100,
+        Grappling: 80,
     },
 };
 
@@ -198,9 +205,12 @@ export const IMAGES = {
 };
 
 export const TIME = {
-    SECONDS_IN_MINUTE: 60,
-    SECOND_DURATION: 100,
-    EVENT_FREQ: 100,
+    INITIAL:{
+        SECONDS: 0,
+        ROUNDS: 1,
+    },
+    TICKS_IN_MINUTE: 60,
+    TICK_DURATION: 50,
 };
 
 export const INDEXES = {
@@ -249,7 +259,31 @@ export const PROBABILITY = {
         MEDIUM: 0.7,
         HARD: 0.9,
     },
-    EVENT_HAPPEN: 1,
+    EVENT_HAPPEN: 0.5,
+    GRAPPLING_MATCH:{
+        SUBMISSION_ATTEMPT: 0.9,
+        GETTING_UP: 0.1,
+    },
+    POWER:{
+        PUNCH: 0.1,
+        KICK: 0.1,
+        SUBMISSION_ATTEMPT: 0.05,
+        TAKEDOWN: 0,
+        GETTING_UP: 0,
+        GROUND_AND_POUND: 0.1,
+    },
+    AFFINITY:{
+        STRIKING:{
+            PUNCH: 1,
+            KICK: 0.35,
+            GETTING_UP: 0.5,
+            GROUND_AND_POUND: 1,
+        },
+        GRAPPLING:{
+            TAKEDOWN: 0.1,
+            SUBMISSION_ATTEMPT: 0.5,
+        }
+    }
 };
 
 export const DEFAULT = {
@@ -264,4 +298,74 @@ export const DEFAULT = {
 
 export const DAMAGE = {
     MAX: 100,
+    MIN: 0.1,
+    INITIAL: 0,
+    CONVICING:{
+        MIN: 50,
+        RATIO: 3
+    },
+    POWER:{
+        PUNCH:{
+            min: 2,
+            max: 10,
+        },
+        KICK:{
+            min: 5,
+            max: 15,
+        },
+        SUBMISSION_ATTEMPT:{
+            min: 50,
+            max: 100,
+        },
+        TAKEDOWN:{
+            min: 0,
+            max: 0,
+        },
+        GETTING_UP:{
+            min: 0,
+            max: 0,
+        },
+        GROUND_AND_POUND:{
+            min: 2,
+            max: 10,
+        },
+    },
+    REGULAR:{
+        PUNCH:{
+            min: 0.1,
+            max: 1,
+        },
+        KICK:{
+            min: 0.4,
+            max: 1.5,
+        },
+        SUBMISSION_ATTEMPT:{
+            min: 1,
+            max: 10,
+        },
+        TAKEDOWN:{
+            min: 0.1,
+            max: 0.5,
+        },
+        GETTING_UP:{
+            min: 0,
+            max: 0,
+        },
+        GROUND_AND_POUND:{
+            min: 0.1,
+            max: 0.5,
+        },
+    },
+    ENERGY_SPENT:{
+        PUNCH: 0.1,
+        KICK: 0.1,
+        SUBMISSION_ATTEMPT: 0.2,
+        GROUND_AND_POUND: 0.1,
+        GETTING_UP: 3,
+        TAKEDOWN: 3,
+    },
+
 };
+
+export const NUMBER_OF_DIGITS = 2;
+

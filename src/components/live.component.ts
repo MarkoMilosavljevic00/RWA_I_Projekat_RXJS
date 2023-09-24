@@ -1,15 +1,16 @@
 import { Corner, CornerKey, mapCornerToKey } from "../enums/corner.enum";
-import { FightEventType, PunchType, TakedownType } from "../enums/fight-event-type.enum";
+import { FightEventType, FightEventTypeKey, GettingUpType, GroundAndPoundType, KickType, mapFightEventTypeToKey, PunchType, SubmissionType, TakedownType } from "../enums/fight-event-type.enum";
 import { Method } from "../enums/method.enum";
 import { Position } from "../enums/position.enum";
-import { mapRulesToNumberOfRounds } from "../enums/rules.enum";
+import { mapRulesToNumberOfRounds, Rules } from "../enums/rules.enum";
 import { Fight } from "../models/fight";
 import { Fighter } from "../models/fighter";
 import { FightEvent } from "../models/fightEvent";
 import { FightStats, Scorecard } from "../models/fightStats";
 import { Result } from "../models/result";
-import {  CLASS_NAMES, DAMAGE, IMAGES, INDEXES, PATHS, POINTS, TIME } from "../utilities/constants";
-import { fillProgressBars, getPercentageStrings, selectElementByClass, selectElementsByClass } from "../utilities/helpers";
+import { ValueWithWeight } from "../models/valueWithWeight";
+import { CLASS_NAMES, DAMAGE, IMAGES, INDEXES, NUMBER_OF_DIGITS, PATHS, POINTS, PROBABILITY, RULES, TIME } from "../utilities/constants";
+import { calculateEmitProbability, clearElement, fillProgressBars, getPercentageStrings, getRandomValue, getRandomValueWithProbability, getRandomValueWithWeightedProbabilities, getRandomValueWithWeightedProbability, selectElementByClass, selectElementsByClass } from "../utilities/helpers";
 import { Component } from "./component";
 
 export class LiveComponent extends Component{
@@ -20,12 +21,14 @@ export class LiveComponent extends Component{
     fightStats: FightStats;
     scorecards: Scorecard[];
 
+    numberOfEvents: number = 0;
+
     get minutes(): string{
-        return Math.floor(this.secondsElapsed / 60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false});
+        return Math.floor(this.secondsElapsed / TIME.TICKS_IN_MINUTE).toLocaleString('en-US', {minimumIntegerDigits: NUMBER_OF_DIGITS, useGrouping: false});
     }
 
     get seconds(): string{
-        return (this.secondsElapsed % 60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false});
+        return (this.secondsElapsed % TIME.TICKS_IN_MINUTE).toLocaleString('en-US', {minimumIntegerDigits: NUMBER_OF_DIGITS, useGrouping: false});
     }
     
     constructor(){
@@ -40,6 +43,7 @@ export class LiveComponent extends Component{
     }
 
     setFight(fight: Fight){
+        this.numberOfEvents = 0;
         let numberOfRounds = mapRulesToNumberOfRounds(fight.rules);
 
         this.fight = fight;
@@ -47,6 +51,7 @@ export class LiveComponent extends Component{
         this.resetTime();
         this.resetRounds();
         this.resetFightStats(numberOfRounds);
+        this.resetEventList();
         this.position = Position.Standup;
 
         let rulesLabel = selectElementByClass(this.container, CLASS_NAMES.LABELS.RULES);
@@ -63,9 +68,13 @@ export class LiveComponent extends Component{
             let roundHeader = roundDiv.children[0] as HTMLElement;
             let roundBody = roundDiv.children[1] as HTMLElement;
             roundHeader.innerHTML = `${roundIndex.toString()}. Round`;
-            roundBody.classList.add(`${CLASS_NAMES.ITEMS.ROUND + roundIndex}`);
+            roundDiv.classList.add(`${CLASS_NAMES.ITEMS.ROUND + roundIndex}`);
+            roundBody.classList.add(`${CLASS_NAMES.LISTS.EVENT + roundIndex}`);
             liveListDiv.appendChild(roundDiv);
         }
+    }
+    resetEventList() {
+        clearElement(this.container, CLASS_NAMES.LISTS.LIVE, CLASS_NAMES.ITEMS.ROUND);
     }
 
     setFighters(redCorner: Fighter, blueCorner: Fighter) {
@@ -89,6 +98,7 @@ export class LiveComponent extends Component{
     }
 
     addFightEvent(event: FightEvent, round: number = this.round){
+        //console.log(this.numberOfEvents++)
         let attackerKey = mapCornerToKey(event.attacker);
         let defenderKey = mapCornerToKey(event.defender);
 
@@ -102,6 +112,7 @@ export class LiveComponent extends Component{
         this.fightStats[attackerKey].damage = 100;
         this.renderDamage();
 
+        //console.log(this.scorecards);
         this.scorecards[round][attackerKey].damage += event.energySpent;
         if(this.scorecards[round][attackerKey].damage >= 100)
             this.scorecards[round][attackerKey].damage = 100;
@@ -110,7 +121,7 @@ export class LiveComponent extends Component{
             this.scorecards[round][defenderKey].damage = 100;
 
         this.renderEvent(event, round);
-        switch (event.eventType) {
+        switch (event.type) {
             case FightEventType.Punch:
             case FightEventType.Kick:
                 this.fightStats[attackerKey].significantStrikes++;
@@ -121,6 +132,7 @@ export class LiveComponent extends Component{
                 this.fightStats[attackerKey].takedowns++;
                 this.scorecards[round][attackerKey].takedowns++;
                 this.changePosition(Position.Ground);
+                this.renderPosition(round);
                 this.renderTakedowns();
                 break;
             case FightEventType.SubmissionAttempt:
@@ -130,6 +142,7 @@ export class LiveComponent extends Component{
                 break;
             case FightEventType.GettingUp:
                 this.changePosition(Position.Standup);
+                this.renderPosition(round);
                 break;
         }
     }
@@ -141,56 +154,184 @@ export class LiveComponent extends Component{
         else{
             this.position = this.position === Position.Standup ? Position.Ground : Position.Standup;
         }
-        this.renderPosition(round);
+    }
+
+    checkForFinish(): boolean{
+        let redCornerDamage = this.fightStats.redCorner.damage;
+        let blueCornerDamage = this.fightStats.blueCorner.damage;
+
+        return redCornerDamage >= DAMAGE.MAX || blueCornerDamage >= DAMAGE.MAX;
     }
 
     generateEvent(): FightEvent {
-        if(Math.random() < 0.5)
-            return {
-                attacker: Corner.RedCorner,
-                defender: Corner.BlueCorner,
-                damage: 5,
-                energySpent: 1,
-                eventType: FightEventType.Takedown,
-                eventSubType: TakedownType.Suplex
-            }
-        else
-            return {
-                attacker: Corner.BlueCorner,
-                defender: Corner.RedCorner,
-                damage: 5,
-                energySpent: 1,
-                eventType: FightEventType.GettingUp,
-            }
-    }
+        let event: FightEvent = new FightEvent();
+        let cornerValues: ValueWithWeight<Corner>[] = [];
 
-    checkForFinish(fightEvent: FightEvent): Result {
-        let result: Result;
-        let keyAttacker = mapCornerToKey(fightEvent.attacker);
-        let keyDefender = mapCornerToKey(fightEvent.defender);
+        cornerValues.push({value: Corner.Red, weight: this.fight.redCorner.overall});
+        cornerValues.push({value: Corner.Blue, weight: this.fight.blueCorner.overall});
 
-        if(this.fightStats[keyAttacker].damage + fightEvent.energySpent >= DAMAGE.MAX)
-            result.winner = fightEvent.defender;
-        else if(this.fightStats[keyDefender].damage + fightEvent.damage >= DAMAGE.MAX)
-            result.winner = fightEvent.attacker;
-        else
-            return null;
-
-        switch(fightEvent.eventType){
-            case FightEventType.SubmissionAttempt:
-            result.method = Method.Submission;
+        event.attacker = getRandomValueWithWeightedProbability(cornerValues);
+        event.defender = event.attacker === Corner.Red ? Corner.Blue : Corner.Red;
+        let attacker = this.fight[mapCornerToKey(event.attacker)];
+        let defender = this.fight[mapCornerToKey(event.defender)];
+        switch (this.fight.rules) {
+            case Rules.MMA:
+                event.type = this.getEventTypeInMMA(attacker, defender);
+                break;
+            case Rules.Boxing:
+                event.type = this.getEventTypeInBoxing();
+                break;
+            case Rules.Kickboxing:
+                event.type = this.getEventTypeInKickboxing();
+                break;
+            case Rules.Grappling:
+                event.type = this.getEventTypeInGrappling();
                 break;
             default:
-            result.method = Method.KO_TKO;
                 break;
         }
+        let [attackerSkill, defenderSkill] = this.getEventRelevantSkills(event.type, attacker, defender);
+        let isEventSignificant = this.checkIsEventSignificant(attackerSkill, defenderSkill, mapFightEventTypeToKey(event.type));
+        event.damage = this.getEventDamage(attackerSkill, defenderSkill, mapFightEventTypeToKey(event.type), isEventSignificant);
+        event.energySpent = this.getEventEnergySpent(attackerSkill, defenderSkill, mapFightEventTypeToKey(event.type), event.damage);
+        event.subType = this.getEventSubType(event.type, isEventSignificant);
+        //console.log("Event generated: ", event);
+        return event;
+    }
+    getEventTypeInGrappling(): FightEventType {
+        let eventTypeValues: ValueWithWeight<FightEventType>[] = [];
+        if (this.position === Position.Standup) {
+            return FightEventType.Takedown;
+        }
+        else {
+            eventTypeValues.push({ value: FightEventType.SubmissionAttempt, weight: PROBABILITY.GRAPPLING_MATCH.SUBMISSION_ATTEMPT });
+            eventTypeValues.push({ value: FightEventType.GettingUp, weight: PROBABILITY.GRAPPLING_MATCH.GETTING_UP });
+        }
+        return getRandomValueWithWeightedProbability(eventTypeValues);
+    }
+    getEventTypeInKickboxing(): FightEventType {
+        return getRandomValue([FightEventType.Punch, FightEventType.Kick]);
+    }
+    getEventTypeInBoxing(): FightEventType {
+        return FightEventType.Punch;
+    }
 
-        result.round = this.round;
+    getEventTypeInMMA(attacker: Fighter, defender: Fighter): FightEventType {
+        let eventTypeValues: ValueWithWeight<FightEventType>[] = [];
+        if (this.position === Position.Standup) {
+            eventTypeValues.push({ value: FightEventType.Punch, weight: (attacker.striking + defender.grappling) * PROBABILITY.AFFINITY.STRIKING.PUNCH });
+            eventTypeValues.push({ value: FightEventType.Kick, weight: (attacker.striking + defender.grappling) * PROBABILITY.AFFINITY.STRIKING.KICK });
+            eventTypeValues.push({ value: FightEventType.Takedown, weight: (attacker.grappling + defender.striking) * PROBABILITY.AFFINITY.GRAPPLING.TAKEDOWN });
+        }
+        else {
+            eventTypeValues.push({ value: FightEventType.GroundAndPound, weight: (attacker.striking + attacker.grappling) * PROBABILITY.AFFINITY.STRIKING.GROUND_AND_POUND });
+            eventTypeValues.push({ value: FightEventType.SubmissionAttempt, weight: (attacker.grappling + defender.striking) * PROBABILITY.AFFINITY.GRAPPLING.SUBMISSION_ATTEMPT });
+            eventTypeValues.push({ value: FightEventType.GettingUp, weight: (attacker.striking + defender.grappling) * PROBABILITY.AFFINITY.STRIKING.GETTING_UP });
+        }
+        return getRandomValueWithWeightedProbability(eventTypeValues);
+    }
 
-        return result;
+    getEventRelevantSkills(eventType: FightEventType, attacker: Fighter, defender: Fighter): [number, number] {
+        switch(eventType){
+            case FightEventType.Punch:
+            case FightEventType.Kick:
+            case FightEventType.GroundAndPound:
+                return [attacker.striking, defender.striking];
+            case FightEventType.GettingUp:
+                return [attacker.striking + defender.grappling, defender.striking + attacker.grappling];
+            case FightEventType.Takedown:
+            case FightEventType.SubmissionAttempt:
+                return [attacker.grappling, defender.grappling];  
+        }
+    }
+
+    getEventSubType(fightEventType: FightEventType, isEventSignificant: boolean): PunchType | KickType | TakedownType | SubmissionType | GroundAndPoundType | GettingUpType{
+        let subTypeValues: PunchType[] | KickType[] | TakedownType[] | SubmissionType[] | GroundAndPoundType[] | GettingUpType[];
+        switch(fightEventType){
+            case FightEventType.Punch:
+                subTypeValues = Object.values(PunchType);
+                if(isEventSignificant)
+                    subTypeValues = subTypeValues.filter(type => type !== PunchType.Jab);
+                break;
+            case FightEventType.Kick:
+                subTypeValues = Object.values(KickType);
+                if(isEventSignificant)
+                    subTypeValues = subTypeValues.filter(type => type !== KickType.SideKick && type !== KickType.PushKick);
+                break;
+            case FightEventType.Takedown:
+                subTypeValues = Object.values(TakedownType);
+                break;
+            case FightEventType.SubmissionAttempt:
+                subTypeValues = Object.values(SubmissionType);
+                break;
+            case FightEventType.GroundAndPound:
+                subTypeValues = Object.values(GroundAndPoundType);
+                if(isEventSignificant)
+                    subTypeValues = subTypeValues.filter(type => type !== GroundAndPoundType.GroundAndPound);
+                break;
+            case FightEventType.GettingUp:
+                subTypeValues = Object.values(GettingUpType);
+                break;    
+        }
+        return getRandomValue<PunchType | KickType | TakedownType | SubmissionType | GroundAndPoundType | GettingUpType>(subTypeValues);
+    }
+
+    checkIsEventSignificant(attackerSkill: number, defenderSkill: number, fightEventType: FightEventTypeKey): boolean {
+        if(PROBABILITY.POWER[fightEventType] !== 0){
+            let booleanValues: ValueWithWeight<boolean>[] = [];
+            booleanValues.push({value: true, weight: attackerSkill * PROBABILITY.POWER[fightEventType]});
+            booleanValues.push({value: false, weight: defenderSkill});
+            return getRandomValueWithWeightedProbability(booleanValues);
+        }
+        else
+            return false;
+    }
+
+    getEventEnergySpent(attackerSkill: number, defenderSkill: number, fightEventType: FightEventTypeKey, damage: number) {
+        let energySpent: number;
+
+        if(fightEventType === FightEventTypeKey.Takedown || fightEventType === FightEventTypeKey.SubmissionAttempt){
+            let range: {min: number, max: number} = {min: DAMAGE.MIN, max: DAMAGE.ENERGY_SPENT[fightEventType]};
+            energySpent = this.calculateDamage(attackerSkill, defenderSkill, range);
+        }
+        else{
+            energySpent = damage * DAMAGE.ENERGY_SPENT[fightEventType];
+        }
+
+        return energySpent;
+    }
+    
+    getEventDamage(attackerSkill: number, defenderSkill: number, fightEventType: FightEventTypeKey, isEventSignificant: boolean) {
+        let damage: number;
+
+        if(isEventSignificant){
+            damage = this.calculateDamage(attackerSkill, defenderSkill, DAMAGE.POWER[fightEventType]);
+        }
+        else{
+            damage = this.calculateDamage(attackerSkill, defenderSkill, DAMAGE.REGULAR[fightEventType]);
+        }
+
+        return damage;
+    }
+
+    calculateDamage(attackerSkill: number, defenderSkill: number, damages: {min?: number, max: number}) {
+        if(!damages.min)
+            damages.min = DAMAGE.MIN;
+        let damageRange = damages.max - damages.min;
+        if(attackerSkill > defenderSkill)
+            damages.min = damages.min + damageRange * (attackerSkill - defenderSkill) / DAMAGE.MAX;
+        else
+            damages.max = damages.max - damageRange * (defenderSkill - attackerSkill) / DAMAGE.MAX;
+        return damages.min + Math.random() * damages.max;
+    }
+
+    getFightEventProbability(): number {
+        let rule = this.fight.rules;
+        return calculateEmitProbability(RULES.NUMBER_OF_ROUNDS[rule] * RULES.ROUND_DURATION_IN_MINUTES[rule] * TIME.TICKS_IN_MINUTE, RULES.EVENTS_PER_FIGHT[rule])
     }
 
     getWinnerOfRound(round: number = this.round){
+        let winner: Corner;
         let redCornerDamage: number;
         let blueCornerDamage: number;
         let redCornerSignificantStrikes: number;
@@ -211,14 +352,14 @@ export class LiveComponent extends Component{
 
         if(redCornerDamage < blueCornerDamage){
             this.scorecards[round].redCorner.roundPoints = POINTS.ROUND.WINNER;
-            if(blueCornerDamage > 20 && redCornerDamage < 2*blueCornerDamage)
+            if(blueCornerDamage > DAMAGE.CONVICING.MIN && redCornerDamage < (DAMAGE.CONVICING.RATIO * blueCornerDamage))
                 this.scorecards[round].blueCorner.roundPoints = POINTS.ROUND.CONVICING_LOSER;
             else
                 this.scorecards[round].blueCorner.roundPoints = POINTS.ROUND.LOSER;
         }
         else if(blueCornerDamage < redCornerDamage){
             this.scorecards[round].blueCorner.roundPoints = POINTS.ROUND.WINNER;
-            if(redCornerDamage > 20 && blueCornerDamage < 2*redCornerDamage)
+            if(redCornerDamage > DAMAGE.CONVICING.MIN && blueCornerDamage < (DAMAGE.CONVICING.RATIO * redCornerDamage))
                 this.scorecards[round].redCorner.roundPoints = POINTS.ROUND.CONVICING_LOSER;
             else
                 this.scorecards[round].redCorner.roundPoints = POINTS.ROUND.LOSER;
@@ -247,7 +388,30 @@ export class LiveComponent extends Component{
             this.scorecards[round].redCorner.roundPoints = POINTS.ROUND.LOSER;
             this.scorecards[round].blueCorner.roundPoints = POINTS.ROUND.WINNER;
         }
-        this.renderWinner(Method.Decision, round)
+
+        if(this.scorecards[round].redCorner.roundPoints > this.scorecards[round].blueCorner.roundPoints)
+            winner = Corner.Red;
+        else
+            winner = Corner.Blue;
+
+        this.renderWinner(winner, Method.Decision, round)
+    }
+
+    getWinnerFromFinish(fightEvent: FightEvent) {
+        let winner: Corner;
+        let method: Method;
+        if(this.fightStats[mapCornerToKey(fightEvent.attacker)].damage >= DAMAGE.MAX){
+            //console.log("DEFENDER JE POBEDNIK");
+            winner = fightEvent.defender;
+            method = Method.KO_TKO;
+        }
+        else if(this.fightStats[mapCornerToKey(fightEvent.defender)].damage >= DAMAGE.MAX){
+            //console.log("ATTACKER JE POBEDNIK");
+            winner = fightEvent.attacker;
+            method = fightEvent.type === FightEventType.SubmissionAttempt ? Method.Submission : Method.KO_TKO
+        }
+        else return;
+        this.renderWinner(winner, method);
     }
 
     resetFightStats(numberOfRounds: number) {
@@ -289,12 +453,34 @@ export class LiveComponent extends Component{
     }
 
     resetRounds() {
-        this.round = 1;
+        this.round = TIME.INITIAL.ROUNDS;
         this.renderRound();
     }
 
     resetTime() {
-        this.secondsElapsed = 0;
+        this.secondsElapsed = TIME.INITIAL.SECONDS;
+        this.renderTime();
+    }
+
+    tickSecond(rule: Rules, tick: number = 1): {round: number; secondsElapsed: number;} {
+        let secondsElapsed: number = this.secondsElapsed;
+        let round: number = this.round;
+
+        secondsElapsed += tick;
+        if(secondsElapsed >= TIME.TICKS_IN_MINUTE * RULES.ROUND_DURATION_IN_MINUTES[rule] && round !== RULES.NUMBER_OF_ROUNDS[this.fight.rules]){
+            round++;
+            secondsElapsed = TIME.INITIAL.SECONDS;
+        }
+        return {
+            round: round,
+            secondsElapsed: secondsElapsed
+        }
+    }
+
+    setTimer(time: {round: number; secondsElapsed: number;}){
+        this.round = time.round;
+        this.secondsElapsed = time.secondsElapsed;
+        this.renderRound();
         this.renderTime();
     }
 
@@ -309,27 +495,25 @@ export class LiveComponent extends Component{
         this.resetTime();
     }
 
-    renderWinner(method: Method, round: number = this.round) {
-        let roundItem: HTMLElement;
+    renderWinner(winner: Corner ,method: Method, round: number = this.round) {
+        let eventList: HTMLElement;
         let winnerItemTemplate: HTMLElement;
         let winnerItem: HTMLElement;
         let winnerLabel: HTMLElement
         let winnerInfo: HTMLElement;
 
-        roundItem = selectElementByClass(this.container, CLASS_NAMES.ITEMS.ROUND + round);
+        eventList = selectElementByClass(this.container, CLASS_NAMES.LISTS.EVENT + round);
         winnerItemTemplate = selectElementByClass(this.container, CLASS_NAMES.TEMPLATES.LIVE.INFO_ROUND_WINNER_EVENT);
         winnerItem = winnerItemTemplate.cloneNode(true) as HTMLElement;
         winnerLabel = selectElementByClass(winnerItem, CLASS_NAMES.LABELS.WINNER);
         winnerInfo = selectElementByClass(winnerItem, CLASS_NAMES.LABELS.WIN_INFO_LABEL);
 
-        if(this.scorecards[round].redCorner.roundPoints > this.scorecards[round].blueCorner.roundPoints){
-            winnerLabel.innerHTML = Corner.RedCorner;
+        winnerLabel.innerHTML = winner;
+        if(winner === Corner.Red)
             winnerLabel.classList.add(CLASS_NAMES.STYLES.RED_TEXT);
-        }
-        else{
-            winnerLabel.innerHTML = Corner.BlueCorner;
+        else
             winnerLabel.classList.add(CLASS_NAMES.STYLES.BLUE_TEXT);
-        }
+
         switch (method) {
             case Method.Decision:
                 winnerInfo.innerHTML = `${this.scorecards[round].redCorner.roundPoints} - ${this.scorecards[round].blueCorner.roundPoints}`;       
@@ -342,11 +526,11 @@ export class LiveComponent extends Component{
                 break;
         }
         winnerItem.classList.remove(CLASS_NAMES.STATES.COLLAPSE);
-        roundItem.appendChild(winnerItem);
+        eventList.appendChild(winnerItem);
     }
 
     private renderEvent(event: FightEvent, round: number = this.round) {
-        let roundItem: HTMLElement;
+        let eventList: HTMLElement;
         let eventItemTemplate: HTMLElement;
         let eventItem: HTMLElement;
         let eventTimeLabel: HTMLElement;
@@ -356,8 +540,8 @@ export class LiveComponent extends Component{
         let eventSubtypeLabel: HTMLElement;
         let eventImg: HTMLImageElement;
 
-        roundItem = selectElementByClass(this.container, CLASS_NAMES.ITEMS.ROUND + round);
-        if(event.attacker === Corner.RedCorner)
+        eventList = selectElementByClass(this.container, CLASS_NAMES.LISTS.EVENT + round);
+        if(event.attacker === Corner.Red)
             eventItemTemplate = selectElementByClass(this.container, CLASS_NAMES.TEMPLATES.LIVE.RED_CORNER_EVENT);
         else
             eventItemTemplate = selectElementByClass(this.container, CLASS_NAMES.TEMPLATES.LIVE.BLUE_CORNER_EVENT);
@@ -370,47 +554,48 @@ export class LiveComponent extends Component{
         eventImg = selectElementByClass(eventItem, CLASS_NAMES.IMAGES.EVENT) as HTMLImageElement;
         
         eventTimeLabel.innerHTML = `${this.minutes}'${this.seconds}''`
-        eventDamageLabel.innerHTML = event.damage.toString();
-        eventEnergyLabel.innerHTML = event.energySpent.toString();
-        eventTypeLabel.innerHTML = event.eventType;
-        if(event.eventSubType)
-            eventSubtypeLabel.innerHTML = `(${event.eventSubType})`;
+        eventDamageLabel.innerHTML = event.damage.toFixed(NUMBER_OF_DIGITS);
+        eventEnergyLabel.innerHTML = event.energySpent.toFixed(NUMBER_OF_DIGITS);
+        eventTypeLabel.innerHTML = event.type;
+        if(event.subType)
+            eventSubtypeLabel.innerHTML = `(${event.subType})`;
 
-        switch (event.eventType) {
+        switch (event.type) {
             case FightEventType.Punch:
-                eventImg.src = `${PATHS.IMAGES.ICONS + IMAGES.PUNCH}`
+            case FightEventType.GroundAndPound:
+                eventImg.src += `${IMAGES.PUNCH}`
                 break;
             case FightEventType.Kick:
-                eventImg.src = `${PATHS.IMAGES.ICONS + IMAGES.KICK}`
+                eventImg.src += `${IMAGES.KICK}`
                 break;
             case FightEventType.Takedown:
-                eventImg.src = `${PATHS.IMAGES.ICONS + IMAGES.TAKEDOWN}`
+                eventImg.src += `${IMAGES.TAKEDOWN}`
                 break;
             case FightEventType.SubmissionAttempt:
-                eventImg.src = `${PATHS.IMAGES.ICONS + IMAGES.SUBMISSION_ATTEMPT}`
+                eventImg.src += `${IMAGES.SUBMISSION_ATTEMPT}`
                 break;
             case FightEventType.GettingUp:
-                eventImg.src = `${PATHS.IMAGES.ICONS + IMAGES.GETTING_UP}`
+                eventImg.src += `${IMAGES.GETTING_UP}`
                 break;
         }
 
         eventItem.classList.remove(CLASS_NAMES.STATES.COLLAPSE);
-        roundItem.appendChild(eventItem);
+        eventList.appendChild(eventItem);
     }
 
     private renderPosition(round: number = this.round) {
-        let roundItem: HTMLElement;
+        let eventList: HTMLElement;
         let changePositionItemTemplate: HTMLElement;
         let changePositionItem: HTMLElement;
 
-        roundItem = selectElementByClass(this.container, CLASS_NAMES.ITEMS.ROUND + round);
+        eventList = selectElementByClass(this.container, CLASS_NAMES.LISTS.EVENT + round);
         if(this.position === Position.Standup)
             changePositionItemTemplate = selectElementByClass(this.container, CLASS_NAMES.TEMPLATES.LIVE.INFO_STANDUP_EVENT);
         else
             changePositionItemTemplate = selectElementByClass(this.container, CLASS_NAMES.TEMPLATES.LIVE.INFO_GROUND_EVENT);
         changePositionItem = changePositionItemTemplate.cloneNode(true) as HTMLElement;
         changePositionItem.classList.remove(CLASS_NAMES.STATES.COLLAPSE);
-        roundItem.appendChild(changePositionItem);
+        eventList.appendChild(changePositionItem);
     }
 
     private renderTime(){
@@ -425,24 +610,24 @@ export class LiveComponent extends Component{
 
     private renderSignificantStrikes() {
         let significantStrikesLabels = selectElementsByClass(this.container, CLASS_NAMES.LABELS.SIGNIFICIANT_STRIKES);
-        significantStrikesLabels[INDEXES.FIGHTERS.RED_CORNER].innerHTML = this.fightStats.redCorner.significantStrikes.toLocaleString('en-US', { minimumIntegerDigits: 3, useGrouping: false });
-        significantStrikesLabels[INDEXES.FIGHTERS.BLUE_CORNER].innerHTML = this.fightStats.blueCorner.significantStrikes.toLocaleString('en-US', { minimumIntegerDigits: 3, useGrouping: false });
+        significantStrikesLabels[INDEXES.FIGHTERS.RED_CORNER].innerHTML = this.fightStats.redCorner.significantStrikes.toLocaleString('en-US', { minimumIntegerDigits: NUMBER_OF_DIGITS, useGrouping: false });
+        significantStrikesLabels[INDEXES.FIGHTERS.BLUE_CORNER].innerHTML = this.fightStats.blueCorner.significantStrikes.toLocaleString('en-US', { minimumIntegerDigits: NUMBER_OF_DIGITS, useGrouping: false });
     }
 
     private renderSubmissionAttempts() {
         let submissionLabels = selectElementsByClass(this.container, CLASS_NAMES.LABELS.SUBMISSION);
-        submissionLabels[INDEXES.FIGHTERS.RED_CORNER].innerHTML = this.fightStats.redCorner.submissionAttempts.toLocaleString('en-US', { minimumIntegerDigits: 3, useGrouping: false });
-        submissionLabels[INDEXES.FIGHTERS.BLUE_CORNER].innerHTML = this.fightStats.blueCorner.submissionAttempts.toLocaleString('en-US', { minimumIntegerDigits: 3, useGrouping: false });
+        submissionLabels[INDEXES.FIGHTERS.RED_CORNER].innerHTML = this.fightStats.redCorner.submissionAttempts.toLocaleString('en-US', { minimumIntegerDigits: NUMBER_OF_DIGITS, useGrouping: false });
+        submissionLabels[INDEXES.FIGHTERS.BLUE_CORNER].innerHTML = this.fightStats.blueCorner.submissionAttempts.toLocaleString('en-US', { minimumIntegerDigits: NUMBER_OF_DIGITS, useGrouping: false });
     }
     
     private renderTakedowns() {
         let takedownsLabels = selectElementsByClass(this.container, CLASS_NAMES.LABELS.TAKEDOWNS);
-        takedownsLabels[INDEXES.FIGHTERS.RED_CORNER].innerHTML = this.fightStats.redCorner.takedowns.toLocaleString('en-US', { minimumIntegerDigits: 3, useGrouping: false });
-        takedownsLabels[INDEXES.FIGHTERS.BLUE_CORNER].innerHTML = this.fightStats.blueCorner.takedowns.toLocaleString('en-US', { minimumIntegerDigits: 3, useGrouping: false });
+        takedownsLabels[INDEXES.FIGHTERS.RED_CORNER].innerHTML = this.fightStats.redCorner.takedowns.toLocaleString('en-US', { minimumIntegerDigits: NUMBER_OF_DIGITS, useGrouping: false });
+        takedownsLabels[INDEXES.FIGHTERS.BLUE_CORNER].innerHTML = this.fightStats.blueCorner.takedowns.toLocaleString('en-US', { minimumIntegerDigits: NUMBER_OF_DIGITS, useGrouping: false });
     }
     
     private renderDamage() {
-        fillProgressBars(this.container, CLASS_NAMES.PROGRESS_BARS.DAMAGE, this.fightStats.redCorner.damage, this.fightStats.blueCorner.damage);
+        fillProgressBars(this.container, CLASS_NAMES.PROGRESS_BARS.DAMAGE, parseFloat(this.fightStats.redCorner.damage.toFixed(NUMBER_OF_DIGITS)), parseFloat(this.fightStats.blueCorner.damage.toFixed(NUMBER_OF_DIGITS)));
     }
 
     private renderFightStats() {

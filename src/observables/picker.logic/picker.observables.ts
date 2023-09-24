@@ -43,9 +43,9 @@ export function getChangeFighterObs(picker: PickerComponent): Observable<[Fighte
             let selectedFighter: Fighter = fighters.find(fighter => fighter.id.toString() === id);
             let fighter = new Fighter(selectedFighter);
             if (select.classList.contains(CLASS_NAMES.SELECTS.RED_CORNER))
-                return [fighter, Corner.RedCorner];
+                return [fighter, Corner.Red];
             else
-                return [fighter, Corner.BlueCorner];
+                return [fighter, Corner.Blue];
         })
     );
 }

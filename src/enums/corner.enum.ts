@@ -1,17 +1,17 @@
 
 export enum Corner {
-  RedCorner = "Red corner",
-  BlueCorner = "Blue corner",
+  Red = "Red corner",
+  Blue = "Blue corner",
 }
 
 export enum CornerKey{
-  RedCorner = "redCorner",
-  BlueCorner = "blueCorner",
+  Red = "redCorner",
+  Blue = "blueCorner",
 }
 
 export function mapCornerToKey(corner: Corner){
-  if(corner === Corner.RedCorner)
-    return CornerKey.RedCorner;
+  if(corner === Corner.Red)
+    return CornerKey.Red;
   else
-    return CornerKey.BlueCorner;
+    return CornerKey.Blue;
 }

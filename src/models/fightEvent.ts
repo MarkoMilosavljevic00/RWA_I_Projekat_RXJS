@@ -1,11 +1,25 @@
 import { Corner } from "../enums/corner.enum";
-import { FightEventType, KickType, PunchType, SubmissionType, TakedownType } from "../enums/fight-event-type.enum";
+import {
+    FightEventType,
+    GettingUpType,
+    GroundAndPoundType,
+    KickType,
+    PunchType,
+    SubmissionType,
+    TakedownType,
+} from "../enums/fight-event-type.enum";
 
-export class FightEvent{
-    eventType: FightEventType;
-    eventSubType?: PunchType | KickType | TakedownType | SubmissionType;
+export class FightEvent {
     attacker: Corner;
     defender: Corner;
+    type: FightEventType;
+    subType?:
+        | PunchType
+        | KickType
+        | TakedownType
+        | SubmissionType
+        | GroundAndPoundType
+        | GettingUpType;
     damage: number;
     energySpent: number;
 }

@@ -12,12 +12,6 @@ import { getResetFightcardObs } from "../app.logic/app.observables";
 import { getStartFightsObs } from "../live.logic/live.observables";
 import { getAddFightObs, getChangeFighterObs, getChangeFightInfoObs, getChangeRulesObs } from "./picker.observables";
 
-export function resetFightcardHandler(picker: PickerComponent, app: AppComponent){
-    getResetFightcardObs(app).subscribe(
-        () => picker.resetFightCard()
-    );
-}
-
 export function getChangeRulesHandler(picker: PickerComponent){
     getChangeRulesObs(picker).subscribe(
         () => {
@@ -42,8 +36,8 @@ export function getFightersByFightInfoHandler(picker: PickerComponent){
         setSelectOptions(redCornerSelect, fighterNames, fighterIds, CLASS_NAMES.OPTIONS.FIGHTER);
         setSelectOptions(blueCornerSelect, fighterNames, fighterIds, CLASS_NAMES.OPTIONS.FIGHTER);
 
-        picker.setFighter(new Fighter(), Corner.RedCorner);
-        picker.setFighter(new Fighter(), Corner.BlueCorner);
+        picker.setFighter(new Fighter(), Corner.Red);
+        picker.setFighter(new Fighter(), Corner.Blue);
     });
 }
 

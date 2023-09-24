@@ -1,6 +1,7 @@
 import Swal from "sweetalert2";
-import { ValueProbability } from "../models/valueProbability";
-import { CLASS_NAMES } from "./constants";
+import { Rules } from "../enums/rules.enum";
+import { ValueWithWeight } from "../models/valueWithWeight";
+import { CLASS_NAMES, DAMAGE, RULES } from "./constants";
 
 export function selectElementByClass(placeHolder: HTMLElement, className: string): HTMLElement {
     let element: HTMLElement = placeHolder.querySelector(`.${className}`);
@@ -179,18 +180,33 @@ export function getPercentageStrings(...percentages: number[]): string[] {
     return percentageStrings;
 }
 
-export function getRandomValueWithWeightedProbabilities<T>(values: ValueProbability<T>[]): T {
-    const totalProbability = values.reduce((sum, vp) => sum + vp.probability, 0);
+export function getRandomValueWithWeightedProbabilities<T>(valuesWithProbability: ValueWithWeight<T>[]): T {
+    const totalProbability = valuesWithProbability.reduce((sum, curr) => sum + curr.weight, 0);
     let random = Math.random() * totalProbability;
 
-    for (const vp of values) {
-        if (random < vp.probability) {
-            return vp.value;
+    for (const val of valuesWithProbability) {
+        if (random < val.weight) {
+            return val.value;
         }
-        random -= vp.probability;
+        random -= val.weight;
     }
 
-    return values[0].value;
+    return valuesWithProbability[0].value;
+}
+
+export function getRandomValueWithWeightedProbability<T>(values: ValueWithWeight<T>[]): T {
+    let sumOfProbabilities = values.reduce((sum: number, curr: ValueWithWeight<T>) => sum + curr.weight, 0);
+    for(let value of values) {
+        let random = Math.random();
+        //console.log("Random broj: " + random + " Treba da bude unutar: " + value.weight / sumOfProbabilities + "");
+        if(random < value.weight / sumOfProbabilities) {
+            //console.log("Vratio: " + value.value);
+            return value.value;
+        } else {
+            sumOfProbabilities -= value.weight;
+        }   
+    };
+    return null;
 }
 
 export function getRandomValueWithProbability<T>(
@@ -215,6 +231,10 @@ export function getRandomValueWithProbability<T>(
 export function getRandomValue<T>(values: T[]) {
     let index = Math.floor(Math.random() * values.length);
     return values[index];
+}
+
+export function calculateEmitProbability(totalTicks: number, desiredEmits: number): number {
+    return desiredEmits / totalTicks;
 }
 
 export function mapStringToEnum<T>(value: string, enumObject: Object): T {

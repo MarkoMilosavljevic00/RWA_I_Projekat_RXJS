@@ -2,7 +2,7 @@ import { concatMap, fromEvent, interval, map, Observable, range, switchMap, with
 import { LiveComponent } from "../../components/live.component";
 import { PickerComponent } from "../../components/picker.component";
 import { ResultComponent } from "../../components/result.component";
-import { mapCornerToKey } from "../../enums/corner.enum";
+import { Corner, mapCornerToKey } from "../../enums/corner.enum";
 import { FightEventType } from "../../enums/fight-event-type.enum";
 import { Method } from "../../enums/method.enum";
 import { mapRulesToNumberOfRounds, mapRulesToRoundDuration } from "../../enums/rules.enum";
@@ -15,64 +15,76 @@ import { CLASS_NAMES, DAMAGE, KEYS, PROBABILITY, RULES, TIME } from "../../utili
 import { mapNumberToIndex } from "../../utilities/helpers";
 import { getAddFightObs } from "../picker.logic/picker.observables";
 
-export function getFightTickObs(): Observable<number>{
-    return interval(TIME.SECOND_DURATION);
+export function getFightTickObs(live: LiveComponent): Observable<{round: number,secondsElapsed: number}>{
+    return interval(TIME.TICK_DURATION)
+        .pipe(
+            map(() => live.tickSecond(live.fight.rules)),
+        );
 }
 
 export function getFightEventObs(live: LiveComponent): Observable<FightEvent | null>{
-    return interval(TIME.EVENT_FREQ)
+    return interval(TIME.TICK_DURATION)
         .pipe(
-            map(() => 
-                Math.random() < PROBABILITY.EVENT_HAPPEN 
-                ? live.generateEvent() // razmisli da li ce biti deo live-a ili ovde direktno logika za generisanje
-                : null
+            map(() => {
+                let random = Math.random();
+                //console.log(`Random: ${random} < ${live.getFightEventProbability()},Tacnost:  ${random < live.getFightEventProbability()}`);
+                if(random < live.getFightEventProbability()) 
+                    return live.generateEvent();
+                else
+                    return null
+            }
             ),
         )
 }
 
 export function getCheckForFinishObs(live: LiveComponent){
-    return getFightEventObs(live)
+    return interval(TIME.TICK_DURATION)
         .pipe(
-            filter((fightEvent: FightEvent) =>
-                fightEvent && (
-                live.fightStats[mapCornerToKey(fightEvent.attacker)].damage >= DAMAGE.MAX || 
-                live.fightStats[mapCornerToKey(fightEvent.defender)].damage >= DAMAGE.MAX // proveriti da li ovde treba +
-                )
-            ),
+            filter(() => live.checkForFinish()),
             tap(() => console.log("NOKAUT"))
         );
 }
 
 export function getFightTimerObs(live: LiveComponent){
-    return timer(TIME.SECOND_DURATION * TIME.SECONDS_IN_MINUTE * mapRulesToRoundDuration(live.fight.rules) * mapRulesToNumberOfRounds(live.fight.rules))
+    return timer(TIME.TICK_DURATION * TIME.TICKS_IN_MINUTE * RULES.ROUND_DURATION_IN_MINUTES[live.fight.rules] * RULES.NUMBER_OF_ROUNDS[live.fight.rules])
         .pipe(
             tap(() => console.log("GOTOV TIMER")),
         );
 }
 
-export function getResultsObs(){
-    return new Subject<string>()
-}
-
 export function getFightEndObs(live: LiveComponent){
     const fightTimer$ = getFightTimerObs(live);
     const checkForFinish$ = getCheckForFinishObs(live);
-    const fightEndOb$ = getResultsObs();
 
     return race(fightTimer$, checkForFinish$)
         .pipe();
 }
 
-export function getFightLiveObs(live: LiveComponent){
-    const fightTick$ = getFightTickObs();
-    const fightEvent$ = getFightEventObs(live);
-    const fightEnd$ = getFightEndObs(live);
-    
+export function getFightCardLiveObs(live: LiveComponent, fightCard: FightCard, endOfFight$: Subject<[FightStats, Scorecard[], number, number]>){
+    return range(0 ,fightCard.fights.length)
+                .pipe(
+                    concatMap((indexOfFight: number) => {
+                        let fight = fightCard.fights[indexOfFight];
+                        return getFightLiveObs(live, fight, indexOfFight, endOfFight$);
+                    }),
+            );
+}
 
-    return zip(fightTick$, fightEvent$)
+export function getFightLiveObs(live: LiveComponent, fight: Fight, indexOfFight: number, endOfFight$: Subject<[FightStats, Scorecard[], number, number]>){
+    live.setFight(fight);
+    return zip(getFightTickObs(live), getFightEventObs(live))
         .pipe(
-            takeUntil(fightEnd$),
-        );
+            map(([time, fightEvent]: [{}, FightEvent]) => {
+                //console.log("Fight event unutar obs-a", fightEvent)
+                return [time, fightEvent]
+            }),
+            takeUntil(getFightEndObs(live)),
+            finalize(() => {
+                if(!live.checkForFinish())
+                    live.getWinnerOfRound();
+                endOfFight$.next([live.fightStats, live.scorecards, indexOfFight , live.round]);
+            }),
+        )
 }
 
 export function getStartFightsObs(picker: PickerComponent, live: LiveComponent, endOfFight$: Subject<[FightStats, Scorecard[], number, number]>, endOfFightCard$: Subject<FightCard>){
@@ -81,24 +93,6 @@ export function getStartFightsObs(picker: PickerComponent, live: LiveComponent, 
         .pipe(
             withLatestFrom(addFightClick$),
             map(([_, fightCard]: [Event, FightCard]) => fightCard),
-            switchMap((fightCard) => range(0 ,fightCard.fights.length)
-                .pipe(
-                    concatMap((numberOfFight: number) => {
-                        console.log(numberOfFight);
-                        live.setFight(fightCard.fights[numberOfFight]);
-                        return zip(getFightTickObs(), getFightEventObs(live))
-                            .pipe(
-                                map(([_, fightEvent]: [number, FightEvent]) => [fightEvent,fightCard.fights[numberOfFight].rules]),
-                                takeUntil(getFightEndObs(live)),
-                                finalize(() => {
-                                    endOfFight$.next([live.fightStats, live.scorecards, numberOfFight , live.round]);
-                                }),
-                            )
-                    }),
-                    finalize(() => {
-                        endOfFightCard$.next(fightCard);
-                    }
-            )),
-        )
+            switchMap((fightCard) => getFightCardLiveObs(live, fightCard, endOfFight$)),
     );
 }

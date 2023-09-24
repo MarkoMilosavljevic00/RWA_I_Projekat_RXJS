@@ -15,7 +15,7 @@ export class Fight {
 
     get favourite(): Corner {
         if (this.redCorner.overall > this.blueCorner.overall)
-            return Corner.RedCorner;
-        else return Corner.BlueCorner;
+            return Corner.Red;
+        else return Corner.Blue;
     }
 }

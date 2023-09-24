@@ -26,11 +26,11 @@ export class PickerComponent extends Component{
         setSelectsOptionsFromValues(this.container, CLASS_NAMES.SELECTS.RULES, CLASS_NAMES.OPTIONS.RULES, Rules);
     }
 
-    resetFightCard() {
+    resetFightList() {
         this.fightCard.reset();
         this.numberOfFights = 0;
-        this.setFighter(new Fighter(), Corner.RedCorner);
-        this.setFighter(new Fighter(), Corner.BlueCorner);
+        this.setFighter(new Fighter(), Corner.Red);
+        this.setFighter(new Fighter(), Corner.Blue);
         clearElement(this.container, CLASS_NAMES.LISTS.FIGHT, CLASS_NAMES.ITEMS.FIGHT);
     }
 
@@ -90,7 +90,7 @@ export class PickerComponent extends Component{
         let winnerLabel: HTMLLabelElement; 
         let skillBarsClassName: string;
 
-        if(corner == Corner.RedCorner){
+        if(corner == Corner.Red){
             this.currentRedCorner = fighter;
             cornerImg = selectElementByClass(this.container, CLASS_NAMES.IMAGES.RED_CORNER) as HTMLImageElement
             winnerLabel = selectElementByClass(this.container, CLASS_NAMES.LABELS.RED_CORNER_WINNER) as HTMLLabelElement;
@@ -156,7 +156,7 @@ export class PickerComponent extends Component{
         else
             roundLabel.innerHTML = `Round: ${newFight.yourPick.round}`;
 
-        if (newFight.favourite === Corner.RedCorner) {
+        if (newFight.favourite === Corner.Red) {
             redCornerOddLabel.innerHTML = "Favourite";
             redCornerOddLabel.classList.add(CLASS_NAMES.ICONS.STAR_FILL);
             blueCornerOddLabel.innerHTML = "Underdog";
@@ -169,7 +169,7 @@ export class PickerComponent extends Component{
             redCornerOddLabel.classList.add(CLASS_NAMES.ICONS.STAR);
         }
         // console.log(newFight.yourPick.winner);
-        if (newFight.yourPick.winner === Corner.RedCorner)
+        if (newFight.yourPick.winner === Corner.Red)
             pickDiv.classList.add(CLASS_NAMES.STYLES.RED_TEXT);
 
         else

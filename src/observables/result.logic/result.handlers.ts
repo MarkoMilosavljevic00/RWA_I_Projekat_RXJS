@@ -1,4 +1,5 @@
 import { Subject } from "rxjs";
+import { LiveComponent } from "../../components/live.component";
 import { ResultComponent } from "../../components/result.component";
 import { Corner, mapCornerToKey } from "../../enums/corner.enum";
 import { FightEventType } from "../../enums/fight-event-type.enum";
@@ -10,15 +11,16 @@ import { Result } from "../../models/result";
 import { getResultObs } from "./result.observables";
 
 export function getResultsHandler(result: ResultComponent, opponent: Opponent){
-    let endOfFight$ = getResultObs(result);
+    let endOfFight$ = getResultObs();
 
     endOfFight$.subscribe(([fightStats, scorecards, indexOfFight, currentRound]: [FightStats, Scorecard[], number, number]) => {
         let finalResult: Result;
         finalResult = result.getResultFromFinish(fightStats, currentRound);
         if(!finalResult)
             finalResult = result.getResultFromScorecards(scorecards);
-
+            
         result.addResult(finalResult, indexOfFight, opponent);
+        
     });
 
     return endOfFight$;

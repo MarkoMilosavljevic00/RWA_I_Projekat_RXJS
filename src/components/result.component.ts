@@ -8,7 +8,7 @@ import { FightStats, Scorecard } from "../models/fightStats";
 import { Opponent } from "../models/opponent";
 import { Result } from "../models/result";
 import { CLASS_NAMES, IMAGES, INDEXES, PATHS, POINTS } from "../utilities/constants";
-import { appendItemToList, hideElement, selectElementByClass, selectElementsByClass, showElement } from "../utilities/helpers";
+import { appendItemToList, clearElement, hideElement, selectElementByClass, selectElementsByClass, showElement } from "../utilities/helpers";
 import { Component } from "./component";
 
 export class ResultComponent extends Component{
@@ -53,15 +53,15 @@ export class ResultComponent extends Component{
 
         if(fightStats.redCorner.damage >= 100){
             result = {
-                winner: Corner.BlueCorner,
-                method: fightStats.blueCorner.lastEvent.eventType === FightEventType.SubmissionAttempt ? Method.Submission : Method.KO_TKO,
+                winner: Corner.Blue,
+                method: fightStats.blueCorner.lastEvent.type === FightEventType.SubmissionAttempt ? Method.Submission : Method.KO_TKO,
                 round: currentRound,
             }
         }
         else if(fightStats.blueCorner.damage >= 100){
             result = {
-                winner: Corner.RedCorner,
-                method: fightStats.redCorner.lastEvent.eventType === FightEventType.SubmissionAttempt ? Method.Submission : Method.KO_TKO,
+                winner: Corner.Red,
+                method: fightStats.redCorner.lastEvent.type === FightEventType.SubmissionAttempt ? Method.Submission : Method.KO_TKO,
                 round: currentRound,
             }
         }
@@ -82,7 +82,7 @@ export class ResultComponent extends Component{
         });
         result = {
             method: Method.Decision,
-            winner: redCornerPoints > blueCornerPoints ? Corner.RedCorner : Corner.BlueCorner,
+            winner: redCornerPoints > blueCornerPoints ? Corner.Red : Corner.Blue,
             round: 0,
         }
         return result;
@@ -98,6 +98,17 @@ export class ResultComponent extends Component{
                 points[2] = 5;
         }          
         return points;
+    }
+
+    resetResultList(){
+        this.resetTotalPoints();
+        clearElement(this.container, CLASS_NAMES.LISTS.RESULT, CLASS_NAMES.ITEMS.RESULT);
+    }
+
+    resetTotalPoints() {
+        this.fightCard.yourTotalPoints = 0;
+        this.fightCard.opponentTotalPoints = 0;
+        this.renderTotalPoints(this.fightCard.yourTotalPoints, this.fightCard.opponentTotalPoints);
     }
 
     renderTotalPoints(yourPoints: number, opponentPoints: number) {
@@ -177,7 +188,7 @@ export class ResultComponent extends Component{
         let blueCornerOddLabel = selectElementByClass(fightItem, CLASS_NAMES.LABELS.BLUE_CORNER_ODD);
 
         let winnerList: HTMLElement;
-        if(fight.finalResult.winner === Corner.RedCorner)
+        if(fight.finalResult.winner === Corner.Red)
             winnerList = selectElementByClass(fightItem, CLASS_NAMES.LISTS.RED_CORNER_WINNER);
         else
             winnerList = selectElementByClass(fightItem, CLASS_NAMES.LISTS.BLUE_CORNER_WINNER);
@@ -194,7 +205,7 @@ export class ResultComponent extends Component{
         blueCornerImg.src = `${PATHS.IMAGES.FIGHTERS + fight.blueCorner.pictureSrc}`;
         redCornerLabel.innerHTML = fight.redCorner.name;
         blueCornerLabel.innerHTML = fight.blueCorner.name;
-        if (fight.favourite === Corner.RedCorner) {
+        if (fight.favourite === Corner.Red) {
             redCornerOddLabel.innerHTML = "Favourite";
             redCornerOddLabel.classList.add(CLASS_NAMES.ICONS.STAR_FILL);
             blueCornerOddLabel.innerHTML = "Underdog";

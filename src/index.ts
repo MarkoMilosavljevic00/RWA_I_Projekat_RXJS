@@ -11,12 +11,13 @@ import { FightCard } from "./models/fightCard";
 import { Fighter } from "./models/fighter";
 import { FightStats, Scorecard } from "./models/fightStats";
 import { Opponent } from "./models/opponent";
-import { changeDifficultyHandler, getOpponentHandler, goToPickerHandler, restartPointsHandler } from "./observables/app.logic/app.handlers";
+import { changeDifficultyHandler, getOpponentHandler, goToPickerHandler, restartPointsHandler, resetFightcardHandler } from "./observables/app.logic/app.handlers";
 import { getChangeDifficultyObs, getGoToPickerObs, getRestartPointsObs } from "./observables/app.logic/app.observables";
 import { startFightsHandler } from "./observables/live.logic/live.handlers";
-import { changeFighterHandler, getFightersByFightInfoHandler, getChangeRulesHandler, resetFightcardHandler } from "./observables/picker.logic/picker.handlers";
+import { changeFighterHandler, getFightersByFightInfoHandler, getChangeRulesHandler } from "./observables/picker.logic/picker.handlers";
 import { getChangeRulesObs } from "./observables/picker.logic/picker.observables";
 import { getResultsHandler } from "./observables/result.logic/result.handlers";
+import { getRandomValueWithWeightedProbability } from "./utilities/helpers";
 
 let fightCard: FightCard = new FightCard();
 let picker: PickerComponent = new PickerComponent(fightCard);
@@ -127,7 +128,7 @@ goToPickerHandler(app);
 restartPointsHandler(app);
 getOpponentHandler(app);
 
-resetFightcardHandler(picker, app);// nije testirano
+resetFightcardHandler(picker,result, live, app);// nije testirano
 getChangeRulesHandler(picker);
 getFightersByFightInfoHandler(picker);
 changeFighterHandler(picker);
