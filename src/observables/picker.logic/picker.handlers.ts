@@ -1,41 +1,39 @@
-import { AppComponent } from "../../components/app.component";
-import { LiveComponent } from "../../components/live.component";
 import { PickerComponent } from "../../components/picker.component";
-import { ResultComponent } from "../../components/result.component";
 import { Corner } from "../../enums/corner.enum";
 import { Method } from "../../enums/method.enum";
-import { mapRulesToNumberOfRounds, mapRulesToRoundDuration, Rules } from "../../enums/rules.enum";
 import { Fighter } from "../../models/fighter";
-import { FightEvent } from "../../models/fightEvent";
-import { CLASS_NAMES, DEFAULT, RULES, TIME } from "../../utilities/constants";
-import { disableElement, enableElement, hideElement, setSelectOptions, showElement } from "../../utilities/helpers";
-import { getResetFightcardObs } from "../app.logic/app.observables";
-import { getStartFightsObs } from "../live.logic/live.observables";
-import { getAddFightObs, getChangeFighterObs, getChangeFightInfoObs, getChangeMethodObs, getChangeRulesObs } from "./picker.observables";
+import { CLASS_NAMES } from "../../utilities/constants";
+import { hideElement, setSelectOptions, showElement } from "../../utilities/helpers";
+import {
+    getChangeFighterObs,
+    getChangeFightInfoObs,
+    getChangeMethodObs,
+    getChangeRulesObs,
+} from "./picker.observables";
 
-export function getChangeRulesHandler(picker: PickerComponent){
-    getChangeRulesObs(picker).subscribe(
-        () => {
-            let rule = picker.getRules();
-            picker.setSelectOptionsForRounds(rule);
-            picker.setSelectOptionsForMethods(rule);
+export function changeRulesHandler(picker: PickerComponent) {
+    getChangeRulesObs(picker).subscribe(() => {
+        let rule = picker.getRules();
+        picker.setSelectOptionsForRounds(rule);
+        picker.setSelectOptionsForMethods(rule);
     });
 }
 
-export function getChangeMethodHandler(picker: PickerComponent){
-    getChangeMethodObs(picker).subscribe(
-        (method) => {
-        if(method === Method.Decision)
-            hideElement(picker.getElement(CLASS_NAMES.SELECTS.ROUND));
-        else 
-            showElement(picker.getElement(CLASS_NAMES.SELECTS.ROUND));
+export function changeMethodHandler(picker: PickerComponent) {
+    getChangeMethodObs(picker).subscribe((method) => {
+        if (method === Method.Decision) hideElement(picker.getElement(CLASS_NAMES.SELECTS.ROUND));
+        else showElement(picker.getElement(CLASS_NAMES.SELECTS.ROUND));
     });
 }
 
-export function getFightersByFightInfoHandler(picker: PickerComponent){
+export function changeFightersByFightInfoHandler(picker: PickerComponent) {
     getChangeFightInfoObs(picker).subscribe((fighters) => {
-        let redCornerSelect = picker.getElement(CLASS_NAMES.SELECTS.RED_CORNER) as HTMLSelectElement;
-        let blueCornerSelect = picker.getElement(CLASS_NAMES.SELECTS.BLUE_CORNER) as HTMLSelectElement;
+        let redCornerSelect = picker.getElement(
+            CLASS_NAMES.SELECTS.RED_CORNER
+        ) as HTMLSelectElement;
+        let blueCornerSelect = picker.getElement(
+            CLASS_NAMES.SELECTS.BLUE_CORNER
+        ) as HTMLSelectElement;
         let fighterNames: string[] = [];
         let fighterIds: string[] = [];
 
@@ -43,7 +41,7 @@ export function getFightersByFightInfoHandler(picker: PickerComponent){
             fighterNames.push(fighter.name);
             fighterIds.push(fighter.id.toString());
         });
-        
+
         setSelectOptions(redCornerSelect, fighterNames, fighterIds, CLASS_NAMES.OPTIONS.FIGHTER);
         setSelectOptions(blueCornerSelect, fighterNames, fighterIds, CLASS_NAMES.OPTIONS.FIGHTER);
 
@@ -52,8 +50,8 @@ export function getFightersByFightInfoHandler(picker: PickerComponent){
     });
 }
 
-export function changeFighterHandler(picker: PickerComponent){
-    getChangeFighterObs(picker).subscribe(([fighter, corner]: [Fighter, Corner]) => 
+export function changeFighterHandler(picker: PickerComponent) {
+    getChangeFighterObs(picker).subscribe(([fighter, corner]: [Fighter, Corner]) =>
         picker.setFighter(fighter, corner)
     );
 }

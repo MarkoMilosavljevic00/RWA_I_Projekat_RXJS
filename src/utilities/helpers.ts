@@ -1,9 +1,18 @@
 import Swal from "sweetalert2";
+import { Corner, CornerKey } from "../enums/corner.enum";
+import {
+    FightEventType,
+    FightEventTypeKey,
+} from "../enums/fight-event-type.enum";
+import { Method } from "../enums/method.enum";
 import { Rules } from "../enums/rules.enum";
 import { ValueWithWeight } from "../models/valueWithWeight";
-import { CLASS_NAMES, DAMAGE, RULES } from "./constants";
+import { CLASS_NAMES } from "./constants";
 
-export function selectElementByClass(placeHolder: HTMLElement, className: string): HTMLElement {
+export function selectElementByClass(
+    placeHolder: HTMLElement,
+    className: string
+): HTMLElement {
     let element: HTMLElement = placeHolder.querySelector(`.${className}`);
     return element;
 }
@@ -12,7 +21,9 @@ export function selectElementsByClass(
     placeHolder: HTMLElement,
     className: string
 ): NodeListOf<HTMLElement> {
-    let elements: NodeListOf<HTMLElement> = placeHolder.querySelectorAll(`.${className}`);
+    let elements: NodeListOf<HTMLElement> = placeHolder.querySelectorAll(
+        `.${className}`
+    );
     return elements;
 }
 
@@ -21,7 +32,9 @@ export function selectElementByClassAndType(
     className: string,
     typeOfElement: string
 ): HTMLElement {
-    let element: HTMLElement = placeHolder.querySelector(`.${className} ${typeOfElement}`);
+    let element: HTMLElement = placeHolder.querySelector(
+        `.${className} ${typeOfElement}`
+    );
     return element;
 }
 
@@ -97,7 +110,12 @@ export function setSelectsOptionsFromValues(
     const values = Object.values(value);
     let selects = selectElementsByClass(container, selectClassName);
     selects.forEach((select) =>
-        setSelectOptions(select as HTMLSelectElement, values, values, optionClassName)
+        setSelectOptions(
+            select as HTMLSelectElement,
+            values,
+            values,
+            optionClassName
+        )
     );
 }
 
@@ -111,7 +129,12 @@ export function setSelectOptionsToNumber(
     let values: string[] = [];
     for (let i = 1; i <= num; i++) values.push(i.toString());
     selects.forEach((select) =>
-        setSelectOptions(select as HTMLSelectElement, values, values, optionClassName)
+        setSelectOptions(
+            select as HTMLSelectElement,
+            values,
+            values,
+            optionClassName
+        )
     );
 }
 
@@ -158,8 +181,14 @@ export function clearElement(
     });
 }
 
-export function getSelectedValue(container: HTMLElement, className: string): string {
-    let select: HTMLSelectElement = selectElementByClass(container, className) as HTMLSelectElement;
+export function getSelectedValue(
+    container: HTMLElement,
+    className: string
+): string {
+    let select: HTMLSelectElement = selectElementByClass(
+        container,
+        className
+    ) as HTMLSelectElement;
     let value = select.options[select.selectedIndex].value;
     return value;
 }
@@ -180,32 +209,21 @@ export function getPercentageStrings(...percentages: number[]): string[] {
     return percentageStrings;
 }
 
-export function getRandomValueWithWeightedProbabilities<T>(valuesWithProbability: ValueWithWeight<T>[]): T {
-    const totalProbability = valuesWithProbability.reduce((sum, curr) => sum + curr.weight, 0);
-    let random = Math.random() * totalProbability;
-
-    for (const val of valuesWithProbability) {
-        if (random < val.weight) {
-            return val.value;
-        }
-        random -= val.weight;
-    }
-
-    return valuesWithProbability[0].value;
-}
-
-export function getRandomValueWithWeightedProbability<T>(values: ValueWithWeight<T>[]): T {
-    let sumOfProbabilities = values.reduce((sum: number, curr: ValueWithWeight<T>) => sum + curr.weight, 0);
-    for(let value of values) {
+export function getRandomValueWithWeightedProbability<T>(
+    values: ValueWithWeight<T>[]
+): T {
+    let sumOfProbabilities = values.reduce(
+        (sum: number, curr: ValueWithWeight<T>) => sum + curr.weight,
+        0
+    );
+    for (let value of values) {
         let random = Math.random();
-        //console.log("Random broj: " + random + " Treba da bude unutar: " + value.weight / sumOfProbabilities + "");
-        if(random < value.weight / sumOfProbabilities) {
-            //console.log("Vratio: " + value.value);
+        if (random < value.weight / sumOfProbabilities) {
             return value.value;
         } else {
             sumOfProbabilities -= value.weight;
-        }   
-    };
+        }
+    }
     return null;
 }
 
@@ -215,18 +233,16 @@ export function getRandomValueWithProbability<T>(
     probability: number
 ): T {
     let random = Math.random();
-    console.log(random)
+    //console.log(random);
     if (random < probability) {
-        console.log("uso u dobro")
+        // console.log("Pogodio")
         return finalValue;
     } else {
-        console.log("uso u lose")
+        // console.log("Promasio")
         let otherValues = values.filter((value) => value !== finalValue);
-        console.log("other values: " + otherValues);
-        if(otherValues.length !== 0)
-            return getRandomValue<T>(otherValues);
-        else 
-            return finalValue;
+        // console.log("Other values: " + otherValues);
+        if (otherValues.length !== 0) return getRandomValue<T>(otherValues);
+        else return finalValue;
     }
 }
 
@@ -235,7 +251,10 @@ export function getRandomValue<T>(values: T[]) {
     return values[index];
 }
 
-export function calculateEmitProbability(totalTicks: number, desiredEmits: number): number {
+export function calculateEmitProbability(
+    totalTicks: number,
+    desiredEmits: number
+): number {
     return desiredEmits / totalTicks;
 }
 
@@ -247,8 +266,48 @@ export function mapStringToEnum<T>(value: string, enumObject: Object): T {
     return undefined;
 }
 
-export function mapNumberToIndex(numberOfItem: number){
-    return numberOfItem - 1;
+export function mapEnumToEnumKeys<
+    Enum1 extends { [key: string]: string },
+    Enum2 extends { [key: string]: string }
+>(key: keyof Enum1, enum2: Enum2): Enum2[keyof Enum2] | null {
+    return key in enum2 ? enum2[key as keyof Enum2] : null;
+}
+
+export function mapFightEventTypeToKey(
+    fightEventType: FightEventType
+): FightEventTypeKey {
+    const fightEventKeyMap = new Map<FightEventType, FightEventTypeKey>();
+    fightEventKeyMap.set(FightEventType.Punch, FightEventTypeKey.Punch);
+    fightEventKeyMap.set(FightEventType.Kick, FightEventTypeKey.Kick);
+    fightEventKeyMap.set(FightEventType.Takedown, FightEventTypeKey.Takedown);
+    fightEventKeyMap.set(
+        FightEventType.SubmissionAttempt,
+        FightEventTypeKey.SubmissionAttempt
+    );
+    fightEventKeyMap.set(FightEventType.GettingUp, FightEventTypeKey.GettingUp);
+    fightEventKeyMap.set(
+        FightEventType.GroundAndPound,
+        FightEventTypeKey.GroundAndPound
+    );
+    return fightEventKeyMap.get(fightEventType);
+}
+
+export function mapRulesToMethods(rule: Rules) {
+    const methodsMap = new Map<Rules, Method[]>();
+    methodsMap.set(Rules.MMA, [
+        Method.KO_TKO,
+        Method.Decision,
+        Method.Submission,
+    ]);
+    methodsMap.set(Rules.Boxing, [Method.KO_TKO, Method.Decision]);
+    methodsMap.set(Rules.Kickboxing, [Method.KO_TKO, Method.Decision]);
+    methodsMap.set(Rules.Grappling, [Method.Submission, Method.Decision]);
+    return methodsMap.get(rule);
+}
+
+export function mapCornerToKey(corner: Corner) {
+    if (corner === Corner.Red) return CornerKey.Red;
+    else return CornerKey.Blue;
 }
 
 export function showElement(element: HTMLElement) {

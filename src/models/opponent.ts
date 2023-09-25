@@ -1,8 +1,8 @@
 import { Corner } from "../enums/corner.enum";
 import { DifficultyLevel } from "../enums/difficulty-level.enum";
 import { Method } from "../enums/method.enum";
-import { mapRulesToNumberOfRounds, Rules } from "../enums/rules.enum";
-import { PROBABILITY } from "../utilities/constants";
+import { Rules } from "../enums/rules.enum";
+import { PROBABILITY, RULES } from "../utilities/constants";
 import { getRandomValue, getRandomValueWithProbability } from "../utilities/helpers";
 import { Result } from "./result";
 
@@ -27,12 +27,11 @@ export class Opponent {
 
       let winnerValues = Object.values(Corner);
       let methodValues = Object.values(Method);
-      let roundValues = Array.from({ length: mapRulesToNumberOfRounds(rules) }, (_, i) => i + 1);
+      let roundValues = Array.from({ length: RULES.NUMBER_OF_ROUNDS[rules] }, (_, i) => i + 1);
 
       let opponentsWinner = getRandomValueWithProbability<Corner>(winnerValues, winner, probability);
       let opponentsMethod = getRandomValueWithProbability<Method>(methodValues, method, probability);
       let opponentsRound: number;
-      //console.log(roundValues, round);
       if(opponentsMethod !== Method.Decision)
         if(method === Method.Decision)
           opponentsRound = getRandomValue(roundValues);
@@ -40,8 +39,6 @@ export class Opponent {
           opponentsRound = getRandomValueWithProbability<number>(roundValues, round, probability);
       else
         opponentsRound = 0;
-
-      //console.log(opponentsWinner, opponentsMethod, opponentsRound);
 
       return {
         winner: opponentsWinner,

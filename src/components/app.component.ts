@@ -5,7 +5,6 @@ import { CLASS_NAMES, PATHS } from "../utilities/constants";
 import {
     selectElementByClass,
     setSelectsOptionsFromValues,
-    selectElementsByClass,
     selectElementsByPartialClass,
 } from "../utilities/helpers";
 import { Component } from "./component";

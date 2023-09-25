@@ -32,9 +32,10 @@ export class ResultComponent extends Component{
         let fight: Fight = this.fightCard.fights[fightIndex]
         fight.finalResult = finalResult;
         resultItem = appendItemToList(this.container, fightIndex, CLASS_NAMES.ITEMS.RESULT, CLASS_NAMES.LISTS.RESULT, CLASS_NAMES.TEMPLATES.RESULT);
-        resultFightDiv = selectElementByClass(resultItem, CLASS_NAMES.RESULT_FIGHT_DIV);
+        resultFightDiv = selectElementByClass(resultItem, CLASS_NAMES.DIVS.RESULT_FIGHT);
         this.renderFightInformation(resultFightDiv, fight);
-        resultPickDiv = selectElementByClass(resultItem, CLASS_NAMES.RESULT_PICK_DIV);
+        resultPickDiv = selectElementByClass(resultItem, CLASS_NAMES.DIVS.RESULT_PICK);
+        
         fight.opponentPick = this.opponent.getPick(finalResult, fight.rules);
         this.addPointsFromFight(resultPickDiv, fight);
     }
@@ -213,7 +214,7 @@ export class ResultComponent extends Component{
         let roundImg = selectElementByClass(winnerList, CLASS_NAMES.IMAGES.ROUND) as HTMLImageElement;
         let methodLabel = selectElementByClass(winnerList, CLASS_NAMES.LABELS.METHOD);
         let roundLabel = selectElementByClass(winnerList, CLASS_NAMES.LABELS.ROUND);
-        let roundDiv = selectElementByClass(winnerList, CLASS_NAMES.ROUND_DIV);
+        let roundDiv = selectElementByClass(winnerList, CLASS_NAMES.DIVS.ROUND);
 
         rulesLabel.innerHTML = fight.rules;
         weightclassLabel.innerHTML = fight.redCorner.weightclass;

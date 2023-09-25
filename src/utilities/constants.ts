@@ -141,13 +141,15 @@ export const CLASS_NAMES = {
         START_FIGHTS: "start-fights-button",
         UNDO: "undo-button",
     },
-    RED_CORNER_RADIO: "red-corner-radio",
-    BLUE_CORNER_RADIO: "blue-corner-radio",
-    WINNER_RADIO: "winner-radio",
-    PICK_DIV: "pick-div",
-    RESULT_FIGHT_DIV: "result-fight-div",
-    RESULT_PICK_DIV: "result-pick-div",
-    ROUND_DIV: "round-div",
+    RADIO:{
+        WINNER: "winner-radio",
+    },
+    DIVS:{
+        PICK: "pick-div",
+        RESULT_FIGHT: "result-fight-div",
+        RESULT_PICK: "result-pick-div",
+        ROUND: "round-div",
+    },
     MAIN_SCOREBOARD: "main-scoreboard",
 };
 
@@ -230,8 +232,10 @@ export const INDEXES = {
 };
 
 export const KEYS = {
-    RED_CORNER: "redCorner",
-    BLUE_CORNER: "blueCorner",
+    FIGHTERS:{
+        RED_CORNER: "redCorner",
+        BLUE_CORNER: "blueCorner",
+    },
     DAMAGE: "damage",
     SIGNIFICIANT_STRIKES: "significiantStrikes",
     TAKEDOWNS: "takedowns",

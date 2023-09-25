@@ -16,24 +16,6 @@ export enum FightEventTypeKey {
     GroundAndPound = "GROUND_AND_POUND",
 }
 
-export function mapFightEventTypeToKey(fightEventType: FightEventType): FightEventTypeKey {
-    switch (fightEventType) {
-        case FightEventType.Punch:
-            return FightEventTypeKey.Punch;
-        case FightEventType.Kick:
-            return FightEventTypeKey.Kick;
-        case FightEventType.Takedown:
-            return FightEventTypeKey.Takedown;
-        case FightEventType.SubmissionAttempt:
-            return FightEventTypeKey.SubmissionAttempt;
-        case FightEventType.GettingUp:
-            return FightEventTypeKey.GettingUp;
-        case FightEventType.GroundAndPound:
-            return FightEventTypeKey.GroundAndPound;
-    }
-}
-
-
 export enum GroundAndPoundType {
     GroundAndPound = "Ground and Pound",
     Hammer = "Hammer Fists",
@@ -58,7 +40,6 @@ export enum KickType {
     SpinningBackKick = "Spinning Back Kick",
 }
 
-
 export enum TakedownType {
     SingleLeg = "Single Leg",
     DoubleLeg = "Double Leg",
@@ -67,18 +48,18 @@ export enum TakedownType {
     AnklePick = "Ankle Pick",
 }
 
-export enum SubmissionType{
+export enum SubmissionType {
     RearNaked = "Rear-Naked Choke",
     Armbar = "Armbar",
     Triangle = "Triangle Choke",
     Kimura = "Kimura",
-    Guillotine = "Guillotine Choke", 
+    Guillotine = "Guillotine Choke",
     HeelHook = "Heel Hook",
     Americana = "Americana",
-    Kneebar = "Kneebar"
+    Kneebar = "Kneebar",
 }
 
-export enum GettingUpType{
+export enum GettingUpType {
     GetUp = "Get Up",
     Roll = "Roll",
     WallWalk = "Wall Walk",
