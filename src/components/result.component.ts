@@ -13,26 +13,29 @@ import { Component } from "./component";
 
 export class ResultComponent extends Component{
     fightCard: FightCard;
+    opponent: Opponent;
+    yourTotalPoints: number = POINTS.INITIAL;
+    opponentTotalPoints: number = POINTS.INITIAL;
 
     constructor(fightCard: FightCard){
         super();
         this.container = selectElementByClass(document.body, CLASS_NAMES.CONTAINERS.RESULT);
         this.fightCard = fightCard;
+        this.hidePlayAgain();
     }
 
-    addResult(finalResult: Result, fightIndex: number, opponent: Opponent){
+    addResult(finalResult: Result, fightIndex: number){
         let resultItem: HTMLElement; 
         let resultFightDiv: HTMLElement;
         let resultPickDiv: HTMLElement;
 
-        console.log(this.fightCard);
         let fight: Fight = this.fightCard.fights[fightIndex]
         fight.finalResult = finalResult;
         resultItem = appendItemToList(this.container, fightIndex, CLASS_NAMES.ITEMS.RESULT, CLASS_NAMES.LISTS.RESULT, CLASS_NAMES.TEMPLATES.RESULT);
         resultFightDiv = selectElementByClass(resultItem, CLASS_NAMES.RESULT_FIGHT_DIV);
         this.renderFightInformation(resultFightDiv, fight);
         resultPickDiv = selectElementByClass(resultItem, CLASS_NAMES.RESULT_PICK_DIV);
-        fight.opponentPick = opponent.getPick(finalResult, fight.rules);
+        fight.opponentPick = this.opponent.getPick(finalResult, fight.rules);
         this.addPointsFromFight(resultPickDiv, fight);
     }
     
@@ -43,9 +46,21 @@ export class ResultComponent extends Component{
 
         fight.yourPoints = yourPointsByHits.reduce((prev, curr) => prev + curr, 0);
         fight.opponentPoints = opponentPointsByHits.reduce((prev, curr) => prev + curr, 0);
-        this.fightCard.yourTotalPoints += fight.yourPoints;
-        this.fightCard.opponentTotalPoints += fight.opponentPoints;
-        this.renderTotalPoints(this.fightCard.yourTotalPoints, this.fightCard.opponentTotalPoints);
+        this.yourTotalPoints += fight.yourPoints;
+        this.opponentTotalPoints += fight.opponentPoints;
+        this.renderTotalPoints(this.yourTotalPoints, this.opponentTotalPoints);
+    }
+
+    setOpponent(opponent: Opponent) {
+        this.opponent = new Opponent(opponent.id, opponent. name, opponent.difficulty, opponent.pictureSrc);
+    }
+
+    getOpponentPoints(): number {
+        return this.opponentTotalPoints;
+    }
+    
+    getYourPoints(): number {
+        return this.yourTotalPoints;
     }
 
     getResultFromFinish(fightStats: FightStats, currentRound: number): Result{
@@ -101,14 +116,15 @@ export class ResultComponent extends Component{
     }
 
     resetResultList(){
+        this.hidePlayAgain();
         this.resetTotalPoints();
         clearElement(this.container, CLASS_NAMES.LISTS.RESULT, CLASS_NAMES.ITEMS.RESULT);
     }
 
     resetTotalPoints() {
-        this.fightCard.yourTotalPoints = 0;
-        this.fightCard.opponentTotalPoints = 0;
-        this.renderTotalPoints(this.fightCard.yourTotalPoints, this.fightCard.opponentTotalPoints);
+        this.yourTotalPoints = POINTS.INITIAL;
+        this.opponentTotalPoints = POINTS.INITIAL;
+        this.renderTotalPoints(this.yourTotalPoints, this.opponentTotalPoints);
     }
 
     renderTotalPoints(yourPoints: number, opponentPoints: number) {
@@ -235,6 +251,16 @@ export class ResultComponent extends Component{
         methodLabel.innerText = fight.finalResult.method;
         roundImg.src = `${PATHS.IMAGES.ICONS + IMAGES.ROUND}`
         roundLabel.innerText = fight.finalResult.round.toString();
+    }
+
+    hidePlayAgain() {
+        let playAgainButton = selectElementByClass(this.container, CLASS_NAMES.BUTTONS.PLAY_AGAIN);
+        hideElement(playAgainButton);
+    }
+
+    showPlayAgain() {
+        let playAgainButton = selectElementByClass(this.container, CLASS_NAMES.BUTTONS.PLAY_AGAIN);
+        showElement(playAgainButton);
     }
 }
 

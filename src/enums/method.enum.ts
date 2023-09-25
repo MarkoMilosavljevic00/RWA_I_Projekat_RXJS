@@ -1,5 +1,5 @@
 export enum Method {
-  Decision = "Decision",
   KO_TKO = "KO/TKO",
+  Decision = "Decision",
   Submission = "Submission",
 }

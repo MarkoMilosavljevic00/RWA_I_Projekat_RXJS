@@ -2,15 +2,27 @@ import { combineLatest, take, concatMap, fromEvent, interval, map, merge, Observ
 import { LiveComponent } from "../../components/live.component";
 import { PickerComponent } from "../../components/picker.component";
 import { Corner } from "../../enums/corner.enum";
+import { Method } from "../../enums/method.enum";
 import { FightCard } from "../../models/fightCard";
 import { Fighter } from "../../models/fighter";
 import { FightEvent } from "../../models/fightEvent";
 import { CLASS_NAMES } from "../../utilities/constants";
+import { disableElement, enableElement, hideElement } from "../../utilities/helpers";
 import { getFightersByRulesAndWeightclass } from "../api.service";
 import { getFightEndObs, getFightEventObs, getFightTickObs } from "../live.logic/live.observables";
 
 export function getChangeRulesObs(picker: PickerComponent) {
     return fromEvent(picker.getElement(CLASS_NAMES.SELECTS.RULES), "change");
+}
+
+export function getChangeMethodObs(picker: PickerComponent) {
+    return fromEvent(picker.getElement(CLASS_NAMES.SELECTS.METHOD), "change")
+        .pipe(
+            map((eventChange: Event) => {
+                let select = eventChange.target as HTMLSelectElement;
+                return select.value as Method;
+            })
+        );
 }
 
 export function getChangeFightInfoObs(picker: PickerComponent): Observable<Fighter[]> {
@@ -61,4 +73,18 @@ export function getAddFightObs(picker: PickerComponent): Observable<FightCard> {
                 return picker.getFightCard();
             })
         );
+}
+
+export function getUndoObs(picker : PickerComponent) {
+    return fromEvent(picker.getElement(CLASS_NAMES.BUTTONS.UNDO), "click")
+        .pipe(
+            map(() => {
+                if (!picker.checkIsFightCardEmpty()){
+                    picker.removeFight();
+                }
+                return picker.getFightCard();
+            }
+        )
+    );
+
 }

@@ -3,14 +3,15 @@ import { LiveComponent } from "../../components/live.component";
 import { PickerComponent } from "../../components/picker.component";
 import { ResultComponent } from "../../components/result.component";
 import { Corner } from "../../enums/corner.enum";
+import { Method } from "../../enums/method.enum";
 import { mapRulesToNumberOfRounds, mapRulesToRoundDuration, Rules } from "../../enums/rules.enum";
 import { Fighter } from "../../models/fighter";
 import { FightEvent } from "../../models/fightEvent";
 import { CLASS_NAMES, DEFAULT, RULES, TIME } from "../../utilities/constants";
-import { setSelectOptions } from "../../utilities/helpers";
+import { disableElement, enableElement, hideElement, setSelectOptions, showElement } from "../../utilities/helpers";
 import { getResetFightcardObs } from "../app.logic/app.observables";
 import { getStartFightsObs } from "../live.logic/live.observables";
-import { getAddFightObs, getChangeFighterObs, getChangeFightInfoObs, getChangeRulesObs } from "./picker.observables";
+import { getAddFightObs, getChangeFighterObs, getChangeFightInfoObs, getChangeMethodObs, getChangeRulesObs } from "./picker.observables";
 
 export function getChangeRulesHandler(picker: PickerComponent){
     getChangeRulesObs(picker).subscribe(
@@ -18,6 +19,16 @@ export function getChangeRulesHandler(picker: PickerComponent){
             let rule = picker.getRules();
             picker.setSelectOptionsForRounds(rule);
             picker.setSelectOptionsForMethods(rule);
+    });
+}
+
+export function getChangeMethodHandler(picker: PickerComponent){
+    getChangeMethodObs(picker).subscribe(
+        (method) => {
+        if(method === Method.Decision)
+            hideElement(picker.getElement(CLASS_NAMES.SELECTS.ROUND));
+        else 
+            showElement(picker.getElement(CLASS_NAMES.SELECTS.ROUND));
     });
 }
 

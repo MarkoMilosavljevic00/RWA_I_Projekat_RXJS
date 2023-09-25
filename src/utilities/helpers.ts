@@ -215,16 +215,18 @@ export function getRandomValueWithProbability<T>(
     probability: number
 ): T {
     let random = Math.random();
-    //console.log(random)
+    console.log(random)
     if (random < probability) {
-        //console.log("uso u dobro")
+        console.log("uso u dobro")
         return finalValue;
     } else {
-        //console.log("uso u lose")
+        console.log("uso u lose")
         let otherValues = values.filter((value) => value !== finalValue);
-        // let index = Math.floor(Math.random() * otherValues.length);
-        // return otherValues[index];
-        return getRandomValue<T>(otherValues);
+        console.log("other values: " + otherValues);
+        if(otherValues.length !== 0)
+            return getRandomValue<T>(otherValues);
+        else 
+            return finalValue;
     }
 }
 
@@ -259,6 +261,16 @@ export function hideElement(element: HTMLElement) {
         element.classList.add(CLASS_NAMES.STATES.COLLAPSE);
 }
 
+export function disableElement(element: HTMLElement) {
+    if (!element.classList.contains(CLASS_NAMES.STATES.DISABLED))
+        element.classList.add(CLASS_NAMES.STATES.DISABLED);
+}
+
+export function enableElement(element: HTMLElement) {
+    if (element.classList.contains(CLASS_NAMES.STATES.DISABLED))
+        element.classList.remove(CLASS_NAMES.STATES.DISABLED);
+}
+
 export function showError(text: string): boolean {
     Swal.fire({
         icon: "warning",
@@ -268,32 +280,26 @@ export function showError(text: string): boolean {
     return false;
 }
 
-// export function showVictory(yourScore: number, opponentScore: number): void {
-//     Swal.fire({
-//         icon: "success",
-//         title: "Congratulations, you won!",
-//         text: `It's ${yourScore} : ${opponentScore}. You can play again in ${
-//             TIME.PLAY_AGAIN / 1000
-//         } seconds or click on button Play Again!`,
-//     });
-// }
+export function showVictory(): void {
+    Swal.fire({
+        icon: "success",
+        title: "Congratulations, you won!",
+        text: `You won the game! If you want to play again, click on button Play Again!`,
+    });
+}
 
-// export function showDefeat(yourScore: number, opponentScore: number): void {
-//     Swal.fire({
-//         icon: "error",
-//         title: "You lost!",
-//         text: `It's ${yourScore} : ${opponentScore}. You can play again in ${
-//             TIME.PLAY_AGAIN / 1000
-//         } seconds or click on button Play Again!`,
-//     });
-// }
+export function showDefeat(): void {
+    Swal.fire({
+        icon: "error",
+        title: "You lost!",
+        text: `Unfortunately you lost but don't give up, click on button Play Again and try again!`,
+    });
+}
 
-// export function showDraw(yourScore: number, opponentScore: number): void {
-//     Swal.fire({
-//         icon: "question",
-//         title: `It's draw!`,
-//         text: `It's ${yourScore} : ${opponentScore}. You can play again in ${
-//             TIME.PLAY_AGAIN / 1000
-//         } seconds or click on button Play Again!`,
-//     });
-// }
+export function showDraw(): void {
+    Swal.fire({
+        icon: "question",
+        title: `It's draw!`,
+        text: `It's draw, you and your opponent have the same score! If you want to play again, click on button Play Again!`,
+    });
+}

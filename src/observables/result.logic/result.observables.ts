@@ -8,3 +8,7 @@ import { TIME } from "../../utilities/constants";
 export function getResultObs(): Subject<[FightStats, Scorecard[], number, number]>{
     return new Subject<[FightStats, Scorecard[], number, number]>();
 }
+
+export function getFightCardIsOverObs(): Subject<boolean>{
+    return new Subject<boolean>();
+}

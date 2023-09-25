@@ -37,9 +37,9 @@ export function mapRulesToRoundDuration(rule: Rules): number {
 
 export function mapRulesToMethods(rule: Rules){
   const methodsMap = new Map<Rules, Method[]>();
-  methodsMap.set(Rules.MMA, [Method.Decision, Method.KO_TKO, Method.Submission]);
-  methodsMap.set(Rules.Boxing, [Method.Decision, Method.KO_TKO]);
-  methodsMap.set(Rules.Kickboxing, [Method.Decision, Method.KO_TKO]);
-  methodsMap.set(Rules.Grappling, [Method.Decision, Method.Submission]);
+  methodsMap.set(Rules.MMA, [Method.KO_TKO, Method.Decision, Method.Submission]);
+  methodsMap.set(Rules.Boxing, [Method.KO_TKO, Method.Decision]);
+  methodsMap.set(Rules.Kickboxing, [Method.KO_TKO, Method.Decision]);
+  methodsMap.set(Rules.Grappling, [Method.Submission, Method.Decision]);
   return methodsMap.get(rule);
 }

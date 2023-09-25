@@ -2,10 +2,11 @@ import { AppComponent } from "../../components/app.component";
 import { LiveComponent } from "../../components/live.component";
 import { PickerComponent } from "../../components/picker.component";
 import { ResultComponent } from "../../components/result.component";
+import { FightCard } from "../../models/fightCard";
 import { Opponent } from "../../models/opponent";
 import { CLASS_NAMES, POINTS } from "../../utilities/constants";
 import { showElement } from "../../utilities/helpers";
-import { getChangeDifficultyObs, getGoToPickerObs, getOppponentObs, getResetFightcardObs, getRestartPointsObs } from "./app.observables";
+import { getChangeDifficultyObs, getGoToLiveAndResultObs, getGoToPickerObs, getOppponentObs, getResetFightcardObs, getRestartPointsObs } from "./app.observables";
 
 export function changeDifficultyHandler(app: AppComponent){
     getChangeDifficultyObs(app).subscribe(
@@ -18,7 +19,8 @@ export function changeDifficultyHandler(app: AppComponent){
 export function resetFightcardHandler(picker: PickerComponent, result: ResultComponent, live: LiveComponent, app: AppComponent){
     getResetFightcardObs(app).subscribe(
         () => {
-            picker.resetFightList()
+            picker.resetFightList();
+            picker.renderUndoButton();
             result.resetResultList();
             live.resetEventList();
         }
@@ -34,14 +36,28 @@ export function restartPointsHandler(app: AppComponent){
 export function goToPickerHandler(app: AppComponent){
     getGoToPickerObs(app).subscribe(() => {
         showElement(app.getElement(CLASS_NAMES.MAIN_SCOREBOARD));
+        let tabs = Object.values(CLASS_NAMES.TABS.NAV_LINKS);
+        app.disableTabs(...tabs);
         app.enableTabs(CLASS_NAMES.TABS.NAV_LINKS.PICKER);
-        app.disableTabs(CLASS_NAMES.TABS.NAV_LINKS.START);
         app.activateTab(CLASS_NAMES.TABS.NAV_LINKS.PICKER, CLASS_NAMES.TABS.PANES.PICKER);
     });
 }
 
-export function getOpponentHandler(app: AppComponent){
-    getOppponentObs(app).subscribe((opponent: Opponent) => app.setOpponent(opponent));
+export function goToLiveAndResultHandler(app: AppComponent, fightCard: FightCard){
+    getGoToLiveAndResultObs(app, fightCard).subscribe(() => {
+        let tabs = Object.values(CLASS_NAMES.TABS.NAV_LINKS);
+        app.disableTabs(...tabs);
+        app.enableTabs(CLASS_NAMES.TABS.NAV_LINKS.LIVE);
+        app.enableTabs(CLASS_NAMES.TABS.NAV_LINKS.RESULT);
+        app.activateTab(CLASS_NAMES.TABS.NAV_LINKS.LIVE, CLASS_NAMES.TABS.PANES.LIVE);
+    });
+}
+
+export function getOpponentHandler(app: AppComponent, result: ResultComponent){
+    getOppponentObs(app).subscribe((opponent: Opponent) => {
+        app.setOpponent(opponent);
+        result.setOpponent(opponent);
+    });
 }
 
 

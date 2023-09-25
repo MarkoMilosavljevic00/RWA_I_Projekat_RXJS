@@ -6,8 +6,6 @@ import { Fight } from "./fight";
 export class FightCard{
 
     fights: Fight[];
-    yourTotalPoints: number = 0;
-    opponentTotalPoints: number = 0;
     currentFightIndex: number | undefined;
 
     constructor(){
@@ -53,7 +51,5 @@ export class FightCard{
     reset(){
       this.fights = [];
       this.currentFightIndex = undefined;
-      this.yourTotalPoints = POINTS.INITIAL;
-      this.opponentTotalPoints = POINTS.INITIAL;
     }
 }

@@ -139,11 +139,11 @@ export const CLASS_NAMES = {
         PLAY_AGAIN: "play-again-button",
         ADD_FIGHT: "add-fight-button",
         START_FIGHTS: "start-fights-button",
+        UNDO: "undo-button",
     },
     RED_CORNER_RADIO: "red-corner-radio",
     BLUE_CORNER_RADIO: "blue-corner-radio",
     WINNER_RADIO: "winner-radio",
-    REMOVE_BUTTON: "remove-button",
     PICK_DIV: "pick-div",
     RESULT_FIGHT_DIV: "result-fight-div",
     RESULT_PICK_DIV: "result-pick-div",
@@ -210,7 +210,7 @@ export const TIME = {
         ROUNDS: 1,
     },
     TICKS_IN_MINUTE: 60,
-    TICK_DURATION: 50,
+    TICK_DURATION: 10,
 };
 
 export const INDEXES = {
@@ -255,9 +255,9 @@ export const POINTS = {
 
 export const PROBABILITY = {
     DIFFICULTY: {
-        EASY: 0.5,
-        MEDIUM: 0.7,
-        HARD: 0.9,
+        Easy: 0.5,
+        Medium: 0.7,
+        Hard: 0.9,
     },
     EVENT_HAPPEN: 0.5,
     GRAPPLING_MATCH:{

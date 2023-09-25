@@ -1,9 +1,10 @@
-import { concatMap, fromEvent, interval, map, Observable, range, switchMap, withLatestFrom, zip, takeUntil, filter, timer, race, mapTo, tap, Subject, take, finalize } from "rxjs";
+import { concatMap, fromEvent, interval, map, Observable, range, switchMap, withLatestFrom, zip, takeUntil, filter, timer, race, mapTo, tap, Subject, take, finalize, merge } from "rxjs";
 import { LiveComponent } from "../../components/live.component";
 import { PickerComponent } from "../../components/picker.component";
 import { ResultComponent } from "../../components/result.component";
 import { Corner, mapCornerToKey } from "../../enums/corner.enum";
 import { FightEventType } from "../../enums/fight-event-type.enum";
+import { Message } from "../../enums/message.enum";
 import { Method } from "../../enums/method.enum";
 import { mapRulesToNumberOfRounds, mapRulesToRoundDuration } from "../../enums/rules.enum";
 import { Fight } from "../../models/fight";
@@ -12,8 +13,8 @@ import { FightEvent } from "../../models/fightEvent";
 import { FightStats, Scorecard } from "../../models/fightStats";
 import { Result } from "../../models/result";
 import { CLASS_NAMES, DAMAGE, KEYS, PROBABILITY, RULES, TIME } from "../../utilities/constants";
-import { mapNumberToIndex } from "../../utilities/helpers";
-import { getAddFightObs } from "../picker.logic/picker.observables";
+import { mapNumberToIndex, showError } from "../../utilities/helpers";
+import { getAddFightObs, getUndoObs } from "../picker.logic/picker.observables";
 
 export function getFightTickObs(live: LiveComponent): Observable<{round: number,secondsElapsed: number}>{
     return interval(TIME.TICK_DURATION)
@@ -60,12 +61,15 @@ export function getFightEndObs(live: LiveComponent){
         .pipe();
 }
 
-export function getFightCardLiveObs(live: LiveComponent, fightCard: FightCard, endOfFight$: Subject<[FightStats, Scorecard[], number, number]>){
+export function getFightCardLiveObs(live: LiveComponent, fightCard: FightCard, endOfFight$: Subject<[FightStats, Scorecard[], number, number]>, endOfFightCard$: Subject<boolean>){
     return range(0 ,fightCard.fights.length)
                 .pipe(
                     concatMap((indexOfFight: number) => {
                         let fight = fightCard.fights[indexOfFight];
                         return getFightLiveObs(live, fight, indexOfFight, endOfFight$);
+                    }),
+                    finalize(() => {
+                        endOfFightCard$.next(true);
                     }),
             );
 }
@@ -87,12 +91,25 @@ export function getFightLiveObs(live: LiveComponent, fight: Fight, indexOfFight:
         )
 }
 
-export function getStartFightsObs(picker: PickerComponent, live: LiveComponent, endOfFight$: Subject<[FightStats, Scorecard[], number, number]>, endOfFightCard$: Subject<FightCard>){
-    let addFightClick$ = getAddFightObs(picker);
+export function getStartFightsObs(picker: PickerComponent, live: LiveComponent, endOfFight$: Subject<[FightStats, Scorecard[], number, number]>, endOfFightCard$: Subject<boolean>){
     return fromEvent(picker.getElement(CLASS_NAMES.BUTTONS.START_FIGHTS), "click")
         .pipe(
-            withLatestFrom(addFightClick$),
+            withLatestFrom(getCollectFightsObs(picker)),
             map(([_, fightCard]: [Event, FightCard]) => fightCard),
-            switchMap((fightCard) => getFightCardLiveObs(live, fightCard, endOfFight$)),
+            tap((fightCard) => {
+                if(fightCard.fights.length === 0)
+                    showError(Message.EmptyFightcard)
+            }),
+            filter((fightCard) => fightCard.fights.length > 0),
+            switchMap((fightCard) => getFightCardLiveObs(live, fightCard, endOfFight$, endOfFightCard$)),
     );
+}
+
+function getCollectFightsObs(picker: PickerComponent) {
+    let addFightClick$ = getAddFightObs(picker);
+    let undoClick$ = getUndoObs(picker);
+    return merge(addFightClick$, undoClick$)
+        .pipe(
+            tap(() => picker.renderUndoButton()),
+        );
 }

@@ -3,7 +3,7 @@ import { DifficultyLevel } from "../enums/difficulty-level.enum";
 import { Method } from "../enums/method.enum";
 import { mapRulesToNumberOfRounds, Rules } from "../enums/rules.enum";
 import { PROBABILITY } from "../utilities/constants";
-import { getRandomValueWithProbability } from "../utilities/helpers";
+import { getRandomValue, getRandomValueWithProbability } from "../utilities/helpers";
 import { Result } from "./result";
 
 export class Opponent {
@@ -19,17 +19,8 @@ export class Opponent {
       this.pictureSrc = pictureSrc;
     }
 
-    mapDifficultyToProbability(difficulty: DifficultyLevel){
-      const probabilityMap = {
-        Easy: PROBABILITY.DIFFICULTY.EASY,
-        Medium: PROBABILITY.DIFFICULTY.MEDIUM,
-        Hard: PROBABILITY.DIFFICULTY.HARD,
-      };
-      return probabilityMap[difficulty];
-    }
-
     getPick(finalResult: Result, rules: Rules):Result {
-      let probability = this.mapDifficultyToProbability(this.difficulty);
+      let probability = PROBABILITY.DIFFICULTY[this.difficulty];
       let winner = finalResult.winner;
       let method = finalResult.method;
       let round = finalResult.round;
@@ -41,10 +32,16 @@ export class Opponent {
       let opponentsWinner = getRandomValueWithProbability<Corner>(winnerValues, winner, probability);
       let opponentsMethod = getRandomValueWithProbability<Method>(methodValues, method, probability);
       let opponentsRound: number;
+      //console.log(roundValues, round);
       if(opponentsMethod !== Method.Decision)
-        opponentsRound = getRandomValueWithProbability<number>(roundValues, round, probability);
+        if(method === Method.Decision)
+          opponentsRound = getRandomValue(roundValues);
+        else
+          opponentsRound = getRandomValueWithProbability<number>(roundValues, round, probability);
       else
         opponentsRound = 0;
+
+      //console.log(opponentsWinner, opponentsMethod, opponentsRound);
 
       return {
         winner: opponentsWinner,

@@ -75,6 +75,13 @@ export class PickerComponent extends Component{
         return this.fightCard;
     }
 
+    checkIsFightCardEmpty() {
+        if(this.fightCard.fights.length === 0){
+            return true;
+        }
+        return false;
+    }
+
     setSelectOptionsForRounds(rule: Rules){
         let numberOfRounds = mapRulesToNumberOfRounds(rule);
         setSelectOptionsToNumber(this.container, CLASS_NAMES.SELECTS.ROUND, CLASS_NAMES.OPTIONS.ROUND, numberOfRounds);
@@ -176,11 +183,20 @@ export class PickerComponent extends Component{
             pickDiv.classList.add(CLASS_NAMES.STYLES.BLUE_TEXT);
     }
 
-    removeFight(fightIndex: number){
+    renderUndoButton() {
+        let undoButton = selectElementByClass(this.container, CLASS_NAMES.BUTTONS.UNDO);
+        if(this.checkIsFightCardEmpty())
+            undoButton.classList.add(CLASS_NAMES.STATES.COLLAPSE);
+        else
+            undoButton.classList.remove(CLASS_NAMES.STATES.COLLAPSE);
+    }
+
+    removeFight(fightIndex: number = this.numberOfFights - 1){
         this.fightCard.removeFight(fightIndex);
         let fightDiv = selectElementByClass(this.container, CLASS_NAMES.ITEMS.FIGHT + fightIndex);
         fightDiv.remove();
         this.updateFightDivsIds(fightIndex, CLASS_NAMES.ITEMS.FIGHT);
+        this.numberOfFights--;
     }
 
     updateFightDivsIds(fightIndex: number, partOfClassName: string) {

@@ -9,11 +9,9 @@ import { FightEvent } from "../../models/fightEvent";
 import { TIME } from "../../utilities/constants";
 import { getStartFightsObs } from "./live.observables";
 
-export function startFightsHandler(picker: PickerComponent, live: LiveComponent, endOfFight$: Subject<any>, endOfFightCard$: Subject<FightCard>){
+export function startFightsHandler(picker: PickerComponent, live: LiveComponent, endOfFight$: Subject<any>, endOfFightCard$: Subject<boolean>){
     getStartFightsObs(picker, live, endOfFight$, endOfFightCard$)
         .subscribe(([time ,fightEvent]: [{secondsElapsed: number, round: number},FightEvent]) => {
-            // console.log("Fight event u handleru");
-            // console.log(fightEvent, rule);
             if(fightEvent){
                 live.addFightEvent(fightEvent);
                 live.getWinnerFromFinish(fightEvent);

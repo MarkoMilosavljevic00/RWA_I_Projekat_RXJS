@@ -1,6 +1,7 @@
-import { fromEvent, map, merge, Observable, switchMap } from "rxjs";
+import { filter, fromEvent, map, merge, Observable, switchMap } from "rxjs";
 import { AppComponent } from "../../components/app.component";
 import { PickerComponent } from "../../components/picker.component";
+import { FightCard } from "../../models/fightCard";
 import { Opponent } from "../../models/opponent";
 import { CLASS_NAMES, POINTS } from "../../utilities/constants";
 import { getRandomValue, showElement } from "../../utilities/helpers";
@@ -33,6 +34,13 @@ export function getGoToPickerObs(app: AppComponent): Observable<Event> {
     let findNewOpponentClick$ = fromEvent(app.getElement(CLASS_NAMES.BUTTONS.FIND_NEW_OPPONENT),"click");
 
     return merge(playAgainClick$, startClick$, findNewOpponentClick$);
+}
+
+export function getGoToLiveAndResultObs(app: AppComponent, fightCard: FightCard): Observable<Event> {
+    return fromEvent(app.getElement(CLASS_NAMES.BUTTONS.START_FIGHTS), "click")
+        .pipe(
+            filter(() => fightCard.fights.length > 0),
+        );
 }
 
 export function getOppponentObs(app: AppComponent): Observable<Opponent> {

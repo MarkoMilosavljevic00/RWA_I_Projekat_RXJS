@@ -27,6 +27,10 @@ export class AppComponent extends Component {
             CLASS_NAMES.OPTIONS.DIFFICULTY,
             DifficultyLevel
         );
+
+        this.disableTabs(CLASS_NAMES.TABS.NAV_LINKS.PICKER);
+        this.disableTabs(CLASS_NAMES.TABS.NAV_LINKS.LIVE);
+        this.disableTabs(CLASS_NAMES.TABS.NAV_LINKS.RESULT);
     }
 
     getDifficulty(): DifficultyLevel {
@@ -43,7 +47,7 @@ export class AppComponent extends Component {
             if (
                 !(
                     tab.classList.contains(CLASS_NAMES.STATES.DISABLED) &&
-                    tab.classList.contains(CLASS_NAMES.STYLES.DARK_TEXT)
+                    tab.classList.contains(CLASS_NAMES.STYLES.GRAY_TEXT)
                 )
             ) {
                 tab.classList.add(CLASS_NAMES.STATES.DISABLED);
@@ -57,7 +61,7 @@ export class AppComponent extends Component {
             let tab = selectElementByClass(this.container, tabClassName);
             if (
                 tab.classList.contains(CLASS_NAMES.STATES.DISABLED) &&
-                tab.classList.contains(CLASS_NAMES.STYLES.DARK_TEXT)
+                tab.classList.contains(CLASS_NAMES.STYLES.GRAY_TEXT)
             ) {
                 tab.classList.remove(CLASS_NAMES.STATES.DISABLED);
                 tab.classList.remove(CLASS_NAMES.STYLES.GRAY_TEXT);
