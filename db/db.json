@@ -1,227 +1,452 @@
 {
-  "opponents": [
-    {
-      "id": 1,
-      "name": "Marko",
-      "difficulty": "Easy",
-      "pictureSrc": "../src/assets/opponent-pictures/img1.jpg"
-    },
-    {
-      "id": 2,
-      "name": "Milan",
-      "difficulty": "Medium",
-      "pictureSrc": "../src/assets/opponent-pictures/img2.jpg"
-    },
-    {
-      "id": 3,
-      "name": "Aleksa",
-      "difficulty": "Hard",
-      "pictureSrc": "../src/assets/opponent-pictures/img2.jpg"
-    },
-    {
-      "id": 4,
-      "name": "Stevan",
-      "difficulty": "Medium",
-      "pictureSrc": "../src/assets/opponent-pictures/img4.jpg"
-    },
-    {
-      "id": 5,
-      "name": "Stojan",
-      "difficulty": "Easy",
-      "pictureSrc": "../src/assets/opponent-pictures/img5.jpg"
-    },
-    {
-      "id": 6,
-      "name": "Milovan",
-      "difficulty": "Medium",
-      "pictureSrc": "../src/assets/opponent-pictures/img6.jpg"
-    },
-    {
-      "id": 7,
-      "name": "Nenad",
-      "difficulty": "Hard",
-      "pictureSrc": "../src/assets/opponent-pictures/img7.jpg"
-    },
-    {
-      "id": 8,
-      "name": "Senad",
-      "difficulty": "Easy",
-      "pictureSrc": "../src/assets/opponent-pictures/img1.jpg"
-    },
-    {
-      "id": 9,
-      "name": "Ivan",
-      "difficulty": "Medium",
-      "pictureSrc": "../src/assets/opponent-pictures/default-user.png"
-    },
-    {
-      "id": 10,
-      "name": "Nikola",
-      "difficulty": "Hard",
-      "pictureSrc": "../src/assets/opponent-pictures/default-user.png"
-    }
-  ],
-  "fighters": [
-    {
-      "id": 1,
-      "name": "Jiri Prochazka",
-      "weightClass": "Lightheavyweight",
-      "standup": 80,
-      "grappling": 92
-    },
-    {
-      "id": 2,
-      "name": "Charles Oliveira",
-      "weightClass": "Lightweight",
-      "standup": 1,
-      "grappling": 95
-    },
-    {
-      "id": 3,
-      "name": "Islam Makachev",
-      "weightClass": "Lightweight",
-      "standup": 70,
-      "grappling": 99
-    },
-    {
-      "id": 4,
-      "name": "Dustin Poirier",
-      "weightClass": "Lightweight",
-      "standup": 70,
-      "grappling": 97
-    },
-    {
-      "id": 5,
-      "name": "Justin Gaethje",
-      "weightClass": "Lightweight",
-      "standup": 70,
-      "grappling": 97
-    },
-    {
-      "id": 6,
-      "name": "Michael Chandler",
-      "weightClass": "Lightweight",
-      "standup": 1,
-      "grappling": 1
-    },
-    {
-      "id": 7,
-      "name": "Beneil Dariush",
-      "weightClass": "Lightweight",
-      "standup": 70,
-      "grappling": 97
-    },
-    {
-      "id": 8,
-      "name": "Rafael Fiziev",
-      "weightClass": "Lightweight",
-      "standup": 70,
-      "grappling": 97
-    },
-    {
-      "id": 9,
-      "name": "Conor McGregor",
-      "weightClass": "Lightweight",
-      "standup": 70,
-      "grappling": 97
-    },
-    {
-      "id": 10,
-      "name": "Tony Ferguson",
-      "weightClass": "Lightweight",
-      "standup": 70,
-      "grappling": 97
-    },
-    {
-      "id": 11,
-      "name": "Dan Hooker",
-      "weightClass": "Lightweight",
-      "standup": 70,
-      "grappling": 97
-    },
-    {
-      "id": 12,
-      "name": "Jan Blachowicz",
-      "weightClass": "Lightheavyweight",
-      "standup": 80,
-      "grappling": 92
-    },
-    {
-      "id": 13,
-      "name": "Magomed Ankalaev",
-      "weightClass": "Lightheavyweight",
-      "standup": 80,
-      "grappling": 92
-    },
-    {
-      "id": 14,
-      "name": "Aleksandar Rakic",
-      "weightClass": "Lightheavyweight",
-      "standup": 80,
-      "grappling": 92
-    },
-    {
-      "id": 15,
-      "name": "Anthony Smith",
-      "weightClass": "Lightheavyweight",
-      "standup": 80,
-      "grappling": 92
-    },
-    {
-      "id": 16,
-      "name": "Jamahal Hill",
-      "weightClass": "Lightheavyweight",
-      "standup": 80,
-      "grappling": 92
-    },
-    {
-      "id": 17,
-      "name": "Dominick Reyes",
-      "weightClass": "Lightheavyweight",
-      "standup": 80,
-      "grappling": 92
-    },
-    {
-      "id": 18,
-      "name": "Paul Craig",
-      "weightClass": "Lightheavyweight",
-      "standup": 80,
-      "grappling": 92
-    },
-    {
-      "id": 19,
-      "name": "Kamaru Usman",
-      "weightClass": "Welterweight",
-      "standup": 80,
-      "grappling": 92
-    },
-    {
-      "id": 20,
-      "name": "Colby Covington",
-      "weightClass": "Welterweight",
-      "standup": 80,
-      "grappling": 92
-    },
-    {
-      "id": 21,
-      "name": "Khamzat Chimaev",
-      "weightClass": "Welterweight",
-      "standup": 80,
-      "grappling": 92
-    },
-    {
-      "id": 22,
-      "name": "Gilbert Burns",
-      "weightClass": "Welterweight",
-      "standup": 80,
-      "grappling": 92
-    },
-    {
-      "id": 23,
-      "name": "Belal Muhammad",
-      "weightClass": "Welterweight",
-      "standup": 80,
-      "grappling": 92
-    }
-  ]
+    "opponents": [
+        {
+            "id": 1,
+            "name": "Marko",
+            "difficulty": "Easy",
+            "pictureSrc": "img1.jpg"
+        },
+        {
+            "id": 2,
+            "name": "Milan",
+            "difficulty": "Easy",
+            "pictureSrc": "img2.jpg"
+        },
+        {
+            "id": 3,
+            "name": "Aleksa",
+            "difficulty": "Easy",
+            "pictureSrc": "img3.jpeg"
+        },
+        {
+            "id": 4,
+            "name": "Stevan",
+            "difficulty": "Medium",
+            "pictureSrc": "img4.jpg"
+        },
+        {
+            "id": 5,
+            "name": "Stojan",
+            "difficulty": "Medium",
+            "pictureSrc": "img5.jpg"
+        },
+        {
+            "id": 6,
+            "name": "Milovan",
+            "difficulty": "Medium",
+            "pictureSrc": "img6.jpg"
+        },
+        {
+            "id": 7,
+            "name": "Joe Rogan",
+            "difficulty": "Hard",
+            "pictureSrc": "rogan.png"
+        },
+        {
+            "id": 8,
+            "name": "Arnold Schwarzenegger",
+            "difficulty": "Hard",
+            "pictureSrc": "schwarzenegger.png"
+        },
+        {
+            "id": 9,
+            "name": "Sylvester Stalone",
+            "difficulty": "Hard",
+            "pictureSrc": "stalone.png"
+        },
+        {
+            "id": 10,
+            "name": "Dana White",
+            "difficulty": "Hard",
+            "pictureSrc": "white.png"
+        }
+    ],
+    "fighters": [
+        {
+            "id": 1,
+            "name": "Yair Rodriguez",
+            "pictureSrc": "rodriguez.png",
+            "rule": "MMA",
+            "weightclass": "Featherweight",
+            "striking": 88,
+            "grappling": 79
+        },
+        {
+            "id": 2,
+            "name": "Alexander Volkanovski",
+            "pictureSrc": "volkanovski.png",
+            "rule": "MMA",
+            "weightclass": "Featherweight",
+            "striking": 96,
+            "grappling": 90
+        },
+        {
+            "id": 3,
+            "name": "Max Holloway",
+            "pictureSrc": "holloway.png",
+            "weightclass": "Featherweight",
+            "rule": "MMA",
+            "striking": 94,
+            "grappling": 82
+        },
+        {
+            "id": 4,
+            "name": "Ilia Topuria",
+            "pictureSrc": "topuria.png",
+            "weightclass": "Featherweight",
+            "rule": "MMA",
+            "striking": 85,
+            "grappling": 88
+        },
+        {
+            "id": 5,
+            "name": "Arnold Allen",
+            "pictureSrc": "allen.png",
+            "weightclass": "Featherweight",
+            "rule": "MMA",
+            "striking": 83,
+            "grappling": 82
+        },
+        {
+            "id": 6,
+            "name": "Islam Makhachev",
+            "pictureSrc": "makhachev.png",
+            "weightclass": "Lightweight",
+            "rule": "MMA",
+            "striking": 82,
+            "grappling": 97
+        },
+        {
+            "id": 7,
+            "name": "Charles Oliveira",
+            "pictureSrc": "oliveira.png",
+            "weightclass": "Lightweight",
+            "rule": "MMA",
+            "striking": 86,
+            "grappling": 95
+        },
+        {
+            "id": 8,
+            "name": "Justin Gaethje",
+            "pictureSrc": "geathje.png",
+            "weightclass": "Lightweight",
+            "rule": "MMA",
+            "striking": 92,
+            "grappling": 80
+        },
+        {
+            "id": 9,
+            "name": "Dustin Poirier",
+            "pictureSrc": "poirier.png",
+            "weightclass": "Lightweight",
+            "rule": "MMA",
+            "striking": 93,
+            "grappling": 81
+        },
+        {
+            "id": 10,
+            "name": "Beneil Dariush",
+            "pictureSrc": "dariush.png",
+            "weightclass": "Lightweight",
+            "rule": "MMA",
+            "striking": 88,
+            "grappling": 88
+        },
+        {
+            "id": 11,
+            "name": "Kamaru Usman",
+            "weightclass": "Welterweight",
+            "rule": "MMA",
+            "striking": 90,
+            "grappling": 90
+        },
+        {
+            "id": 12,
+            "name": "Colby Covington",
+            "pictureSrc": "covington.png",
+            "weightclass": "Welterweight",
+            "rule": "MMA",
+            "striking": 85,
+            "grappling": 87
+        },
+        {
+            "id": 13,
+            "name": "Belal Muhammad",
+            "weightclass": "Welterweight",
+            "rule": "MMA",
+            "striking": 88,
+            "grappling": 86
+        },
+        {
+            "id": 14,
+            "name": "Khamzat Chimaev",
+            "weightclass": "Welterweight",
+            "rule": "MMA",
+            "striking": 87,
+            "grappling": 94
+        },
+        {
+            "id": 15,
+            "name": "Gilbert Burns",
+            "weightclass": "Welterweight",
+            "rule": "MMA",
+            "striking": 86,
+            "grappling": 91
+        },
+        {
+            "id": 16,
+            "name": "Israel Adesanya",
+            "weightclass": "Middleweight",
+            "rule": "MMA",
+            "striking": 95,
+            "grappling": 78
+        },
+        {
+            "id": 17,
+            "name": "Robert Whittaker",
+            "weightclass": "Middleweight",
+            "rule": "MMA",
+            "striking": 85,
+            "grappling": 83
+        },
+        {
+            "id": 18,
+            "name": "Dricus Du Plessis",
+            "weightclass": "Middleweight",
+            "rule": "MMA",
+            "striking": 82,
+            "grappling": 81
+        },
+        {
+            "id": 19,
+            "name": "Jared Cannonier",
+            "weightclass": "Middleweight",
+            "rule": "MMA",
+            "striking": 80,
+            "grappling": 82
+        },
+        {
+            "id": 20,
+            "name": "Marvin Vettori",
+            "weightclass": "Middleweight",
+            "rule": "MMA",
+            "striking": 86,
+            "grappling": 84
+        },
+        {
+            "id": 21,
+            "name": "Magomed Ankalaev",
+            "weightclass": "Lightheavyweight",
+            "rule": "MMA",
+            "striking": 86,
+            "grappling": 90
+        },
+        {
+            "id": 22,
+            "name": "Jamahal Hill",
+            "weightclass": "Lightheavyweight",
+            "rule": "MMA",
+            "striking": 92,
+            "grappling": 82
+        },
+        {
+            "id": 23,
+            "name": "Alex Pereira",
+            "weightclass": "Lightheavyweight",
+            "rule": "MMA",
+            "striking": 94,
+            "grappling": 75
+        },
+        {
+            "id": 24,
+            "name": "Nikita Krylov",
+            "weightclass": "Lightheavyweight",
+            "rule": "MMA",
+            "striking": 86,
+            "grappling": 84
+        },
+        {
+            "id": 25,
+            "name": "Aleksandar Rakić",
+            "weightclass": "Lightheavyweight",
+            "rule": "MMA",
+            "striking": 86,
+            "grappling": 86
+        },
+        {
+            "id": 26,
+            "name": "Francis Ngannou",
+            "weightclass": "Heavyweight",
+            "rule": "MMA",
+            "striking": 95,
+            "grappling": 80
+        },
+        {
+            "id": 27,
+            "name": "Derrick Lewis",
+            "weightclass": "Heavyweight",
+            "rule": "MMA",
+            "striking": 88,
+            "grappling": 78
+        },
+        {
+            "id": 28,
+            "name": "Ciryl Gane",
+            "weightclass": "Heavyweight",
+            "rule": "MMA",
+            "striking": 93,
+            "grappling": 76
+        },
+        {
+            "id": 29,
+            "name": "Stipe Miocic",
+            "weightclass": "Heavyweight",
+            "rule": "MMA",
+            "striking": 91,
+            "grappling": 92
+        },
+        {
+            "id": 30,
+            "name": "Jon Jones",
+            "weightclass": "Heavyweight",
+            "rule": "MMA",
+            "striking": 95,
+            "grappling": 95
+        },
+        {
+            "id": 31,
+            "name": "Tyson Fury",
+            "weightclass": "Heavyweight",
+            "rule": "Boxing",
+            "striking": 95,
+            "grappling": 0
+        },
+        {
+            "id": 32,
+            "name": "Anthony Joshua",
+            "weightclass": "Heavyweight",
+            "rule": "Boxing",
+            "striking": 90,
+            "grappling": 0
+        },
+        {
+            "id": 33,
+            "name": "Deontay Wilder",
+            "weightclass": "Heavyweight",
+            "rule": "Boxing",
+            "striking": 88,
+            "grappling": 0
+        },
+        {
+            "id": 34,
+            "name": "Canelo Alvarez",
+            "weightclass": "Middleweight",
+            "rule": "Boxing",
+            "striking": 97,
+            "grappling": 0
+        },
+        {
+            "id": 35,
+            "name": "Gennady Golovkin",
+            "weightclass": "Middleweight",
+            "rule": "Boxing",
+            "striking": 93,
+            "grappling": 0
+        },
+        {
+            "id": 36,
+            "name": "Errol Spence Jr.",
+            "weightclass": "Welterweight",
+            "rule": "Boxing",
+            "striking": 90,
+            "grappling": 0
+        },
+        {
+            "id": 37,
+            "name": "Terence Crawford",
+            "weightclass": "Welterweight",
+            "rule": "Boxing",
+            "striking": 96,
+            "grappling": 0
+        },
+        {
+            "id": 38,
+            "name": "Vasyl Lomachenko",
+            "pictureSrc": "lomachenko.png",
+            "weightclass": "Lightweight",
+            "rule": "Boxing",
+            "striking": 90,
+            "grappling": 0
+        },
+        {
+            "id": 39,
+            "name": "Teofimo Lopez",
+            "pictureSrc": "lopez.png",
+            "weightclass": "Lightweight",
+            "rule": "Boxing",
+            "striking": 89,
+            "grappling": 0
+        },
+        {
+            "id": 40,
+            "name": "Andy Ruiz",
+            "weightclass": "Heavyweight",
+            "rule": "Boxing",
+            "striking": 85,
+            "grappling": 0
+        },
+        {
+            "id": 41,
+            "name": "Badr Hari",
+            "weightclass": "Heavyweight",
+            "rule": "Kickboxing",
+            "striking": 96,
+            "grappling": 0
+        },
+        {
+            "id": 42,
+            "name": "Antonio Plazibat",
+            "pictureSrc": "plazibat.png",
+            "weightclass": "Heavyweight",
+            "rule": "Kickboxing",
+            "striking": 90,
+            "grappling": 0
+        },
+        {
+            "id": 43,
+            "name": "Gordon Ryan",
+            "pictureSrc": "ryan.png",
+            "weightclass": "Heavyweight",
+            "rule": "Grappling",
+            "striking": 0,
+            "grappling": 98
+        },
+        {
+            "id": 44,
+            "name": "Felipe Pena",
+            "pictureSrc": "pena.png",
+            "weightclass": "Heavyweight",
+            "rule": "Grappling",
+            "striking": 0,
+            "grappling": 93
+        },
+        {
+            "id": 45,
+            "name": "Conor McGregor",
+            "pictureSrc": "mcgregor.png",
+            "weightclass": "Lightweight",
+            "rule": "MMA",
+            "striking": 90,
+            "grappling": 80
+        },
+        {
+            "id": 46,
+            "name": "Tony Ferguson",
+            "pictureSrc": "ferguson.png",
+            "weightclass": "Lightweight",
+            "rule": "MMA",
+            "striking": 82,
+            "grappling": 80
+        }
+    ]
 }
