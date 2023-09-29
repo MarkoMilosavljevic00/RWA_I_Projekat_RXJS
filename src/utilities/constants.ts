@@ -179,7 +179,7 @@ export const RULES = {
         Kickboxing: 3,
     },
     EVENTS_PER_FIGHT:{
-        MMA: 80,
+        MMA: 200,
         Boxing: 100,
         Kickboxing: 100,
         Grappling: 80,
