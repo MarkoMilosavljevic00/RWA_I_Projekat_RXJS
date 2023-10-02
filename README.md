@@ -137,7 +137,7 @@ npm run api
 
 4.  In the lower right corner press  **Go Live**  to run  **Live-Server** (*image1*)
 
- ![image1](src/assets/readme/rm-01.jpg)
+ ![image1](src/assets/readme/installation-01.jpg)
 
 > Required extensions for running: 
 
